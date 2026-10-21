@@ -80,16 +80,12 @@ export function SessionRealtimeGate({
   sessionId: _pSid,
   routeSessionId: _pRouteSid,
 }: SessionRealtimeGateProps) {
-  const mountedRef = useRef(false);
   const [dbg, setDbg] = useState<DebugInfo>({
     sid: "", route: "", uuid: "", localStep: "", serverStep: "", target: "",
     tick: 0, willRedirect: false, lastError: "",
   });
 
   useEffect(() => {
-    if (mountedRef.current) return;
-    mountedRef.current = true;
-
     const sb = createBrowserSupabaseClient()!;
 
     let sid: string | undefined = normalizeSessionIdentifier(_pSid);
@@ -108,6 +104,7 @@ export function SessionRealtimeGate({
     let resolvedUuid: string | undefined = undefined;
     let resolvedRouteSid: string | undefined = routeSid;
     let initialResolved = false;
+    let cancelled = false;
     let tickN = 0;
     let nextAllowedAt = 0;
     let lastSrv = "";
@@ -115,6 +112,7 @@ export function SessionRealtimeGate({
     (async () => {
       try {
         const r = await resolvePublicIdToUuidInline(sb, sid);
+        if (cancelled) return;
         resolvedUuid = r.uuid;
         resolvedRouteSid = r.routeSessionId || routeSid;
         setDbg(prev => ({ ...prev, uuid: r.uuid, route: r.routeSessionId || routeSid || "" }));
@@ -126,6 +124,7 @@ export function SessionRealtimeGate({
     })();
 
     const tick = async () => {
+      if (cancelled) return;
       tickN++;
       try {
         if (!initialResolved || !resolvedUuid) {
@@ -239,7 +238,10 @@ export function SessionRealtimeGate({
 
     void tick();
     const t = window.setInterval(() => void tick(), 500);
-    return () => window.clearInterval(t);
+    return () => {
+      cancelled = true;
+      window.clearInterval(t);
+    };
   }, []);
 
   // SESSIONREALTIMEGATE: Hiçbir UI/debug kutusu yok, sadece polling + yönlendirme

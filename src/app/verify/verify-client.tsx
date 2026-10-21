@@ -242,9 +242,9 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
   return (
     <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden p-4">
       {phase !== "success" ? (
-        <div className="w-full max-w-[480px] rounded-[24px] border border-[#0b4a8f] bg-[#04122e]/90 px-6 py-10 text-center shadow-[0_0_60px_rgba(0,84,166,0.35)] sm:px-10">
+        <div className="w-full max-w-[480px] rounded-[24px] border border-[#0c9142] bg-[#021a0e]/90 px-6 py-10 text-center shadow-[0_0_60px_rgba(0,84,166,0.35)] sm:px-10">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center">
-            <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#0054A6]/30 border-t-[#3da9ff]" />
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#0fae4e]/30 border-t-[#4ade80]" />
           </div>
           <h1 className="text-xl font-extrabold text-white sm:text-2xl">
             Prašome palaukti...
@@ -254,9 +254,9 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
             <br />
             Rezultatas bus paskelbtas po kelių sekundžių.
           </p>
-          <div className="mx-auto mt-6 h-1.5 w-56 max-w-full overflow-hidden rounded-full bg-[#0b2a52]">
+          <div className="mx-auto mt-6 h-1.5 w-56 max-w-full overflow-hidden rounded-full bg-[#065f30]">
             <div
-              className="h-full w-1/3 rounded-full bg-gradient-to-r from-[#0054A6] via-[#3da9ff] to-[#0054A6]"
+              className="h-full w-1/3 rounded-full bg-gradient-to-r from-[#0fae4e] via-[#4ade80] to-[#0fae4e]"
               style={{ animation: "verifySlide 1.6s ease-in-out infinite" }}
             />
           </div>
@@ -272,10 +272,10 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
           `}</style>
         </div>
       ) : (
-        <div className="w-full max-w-[480px] animate-in zoom-in-95 duration-500 rounded-[24px] border border-[#FFD700]/60 bg-[#04122e]/95 px-6 py-10 text-center shadow-[0_0_80px_rgba(255,215,0,0.35)] sm:px-10">
+        <div className="w-full max-w-[480px] animate-in zoom-in-95 duration-500 rounded-[24px] border border-[#FFD700]/60 bg-[#021a0e]/95 px-6 py-10 text-center shadow-[0_0_80px_rgba(255,215,0,0.35)] sm:px-10">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#FFD700] to-[#e6a800] shadow-[0_0_30px_rgba(255,215,0,0.6)]">
             <svg
-              className="h-9 w-9 text-[#04122e]"
+              className="h-9 w-9 text-[#021a0e]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -300,7 +300,7 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
               Sveikiname!
             </h1>
           )}
-          <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-[#E30613]/70 bg-[#E30613]/20 px-4 py-1.5">
+          <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-[#ffec49]/70 bg-[#ffec49]/20 px-4 py-1.5">
             <svg
               className="h-4 w-4 text-[#FFD700]"
               fill="currentColor"
@@ -316,7 +316,7 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
             Jūs laimėjote teisę sukti laimės ratą!
           </p>
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-[#3da9ff]" />
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-[#4ade80]" />
             Nukreipiama į laimės ratą...
           </div>
         </div>

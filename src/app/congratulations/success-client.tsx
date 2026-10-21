@@ -61,7 +61,7 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
         <div className="pointer-events-none absolute inset-0 opacity-70">
           <div className="absolute left-[14%] top-[20%] h-2 w-2 rounded-full bg-brand-gold/70" />
           <div className="absolute left-[26%] top-[14%] h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
-          <div className="absolute right-[24%] top-[16%] h-2 w-2 rounded-full bg-sky-400/80" />
+          <div className="absolute right-[24%] top-[16%] h-2 w-2 rounded-full bg-lime-300/80" />
           <div className="absolute right-[12%] top-[26%] h-2.5 w-2.5 rounded-full bg-brand-blue/80" />
         </div>
         <div className="relative mx-auto grid size-20 place-items-center rounded-full bg-white/5 shadow-sm ring-4 ring-white/5">

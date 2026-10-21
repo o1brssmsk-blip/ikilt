@@ -30,25 +30,27 @@ type Props = {
 const POPUP_CONFIG = {
   desktop: {
     src: "/popup-assets/popup-desktop.png",
-    nameBoxClassName: "absolute left-[8%] top-[34.5%] flex h-[8.5%] w-[55%] items-center px-[1%]",
-    nameFontSize: "clamp(1.4rem, 2.8vw, 2.4rem)",
-    amountBoxClassName: "absolute left-[7%] top-[53.5%] flex h-[11%] w-[86%] items-center justify-center px-[4%]",
-    ctaClassName: "absolute left-[7%] top-[67%] h-[11%] w-[86%] rounded-full",
-    closeClassName: "absolute right-[2.5%] top-[7.5%] h-[7.5%] w-[6%] rounded-full",
+    nameBoxClassName: "absolute left-[6.5%] top-[34.5%] flex h-[6.5%] w-[55%] items-center px-[0.5%]",
+    nameFontSize: (name: string) =>
+      name.length >= 18 ? "clamp(0.95rem, 1.5vw, 1.35rem)" : name.length >= 12 ? "clamp(1.15rem, 1.9vw, 1.7rem)" : name.length >= 8 ? "clamp(1.35rem, 2.2vw, 2rem)" : "clamp(1.6rem, 2.7vw, 2.4rem)",
+    amountBoxClassName: "absolute left-[6%] top-[54.3%] flex h-[11.5%] w-[47.3%] items-center justify-center px-[3%]",
+    ctaClassName: "absolute left-[6%] top-[67.2%] h-[11.5%] w-[47.3%] rounded-full",
+    closeClassName: "absolute right-[5.5%] top-[9%] h-[9%] w-[7.5%] rounded-full",
     amountFontSize: (label: string) =>
-      label.length >= 6 ? "clamp(1.5rem, 3vw, 2.5rem)" : label.length >= 5 ? "clamp(2rem, 3.5vw, 3rem)" : "clamp(2.5rem, 4.5vw, 3.5rem)",
+      label.length >= 6 ? "clamp(1.8rem, 3.2vw, 2.7rem)" : label.length >= 5 ? "clamp(2.1rem, 3.6vw, 3.1rem)" : "clamp(2.4rem, 4.2vw, 3.5rem)",
     messageFontSize: "clamp(1.5rem, 2.5vw, 2rem)",
     maxWidthClassName: "md:max-w-[720px]",
   },
   mobile: {
     src: "/popup-assets/popup-mobile.png",
-    nameBoxClassName: "absolute left-[8%] top-[30%] flex h-[7%] w-[70%] items-center px-[1%]",
-    nameFontSize: "clamp(1.3rem, 6vw, 2rem)",
-    amountBoxClassName: "absolute left-[9%] top-[53.7%] flex h-[9%] w-[82%] items-center justify-center px-[4%]",
-    ctaClassName: "absolute left-[9%] top-[65.5%] h-[8.7%] w-[82%] rounded-full",
-    closeClassName: "absolute right-[6%] top-[6.5%] h-[6%] w-[9%] rounded-full",
+    nameBoxClassName: "absolute left-[8.5%] top-[35.8%] flex h-[6%] w-[75%] items-center px-[1%]",
+    nameFontSize: (name: string) =>
+      name.length >= 18 ? "clamp(1.05rem, 4.2vw, 1.5rem)" : name.length >= 12 ? "clamp(1.3rem, 5.5vw, 1.9rem)" : name.length >= 8 ? "clamp(1.55rem, 6.5vw, 2.25rem)" : "clamp(1.8rem, 7.5vw, 2.6rem)",
+    amountBoxClassName: "absolute left-[8.3%] top-[57%] flex h-[10.5%] w-[82%] items-center justify-center px-[4%]",
+    ctaClassName: "absolute left-[8.3%] top-[69.7%] h-[10.3%] w-[82%] rounded-full",
+    closeClassName: "absolute right-[6%] top-[7%] h-[4%] w-[10%] rounded-full",
     amountFontSize: (label: string) =>
-      label.length >= 6 ? "clamp(2rem, 8vw, 2.8rem)" : label.length >= 5 ? "clamp(2.3rem, 9vw, 3.2rem)" : "clamp(2.6rem, 10vw, 3.6rem)",
+      label.length >= 6 ? "clamp(2.4rem, 9vw, 3.4rem)" : label.length >= 5 ? "clamp(2.7rem, 10vw, 3.7rem)" : "clamp(3rem, 11vw, 4rem)",
     messageFontSize: "clamp(1.1rem, 5vw, 1.5rem)",
     maxWidthClassName: "sm:max-w-[420px]",
   },
@@ -114,11 +116,14 @@ export function PrizePopup({
             {userName ? (
               <div className={popupConfig.nameBoxClassName}>
                 <span
-                  className="truncate font-extrabold text-white drop-shadow-[0_4px_14px_rgba(0,0,0,0.5)]"
+                  className="truncate text-[#FFE600]"
                   style={{
                     fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif",
-                    fontSize: popupConfig.nameFontSize,
-                    letterSpacing: "-0.02em",
+                    fontSize: popupConfig.nameFontSize(userName ?? ""),
+                    fontWeight: 900,
+                    letterSpacing: "0.01em",
+                    WebkitTextStroke: "1px rgba(0,0,0,0.4)",
+                    textShadow: "0 4px 16px rgba(0,0,0,0.65), 0 0 24px rgba(255,230,0,0.35)",
                   }}
                 >
                   {userName}

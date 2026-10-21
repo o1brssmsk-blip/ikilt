@@ -83,7 +83,7 @@ export function InvalidBankClient({ sessionId, routeSessionId }: Props) {
         ) : (
           <div className="w-full bg-white/90 backdrop-blur-xl rounded-[28px] shadow-[0_20px_60px_-15px_rgba(227,6,19,0.15)] p-8 md:p-10 flex flex-col items-center relative overflow-hidden border border-white/60 mx-auto max-w-[440px]">
             {/* Top Security Banner - Red */}
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#f7a600] via-[#7ec3eb] to-[#003b8f] bg-[length:200%_100%] animate-[pulse_3s_ease-in-out_infinite]" />
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#f7a600] via-[#86efac] to-[#0fae4e] bg-[length:200%_100%] animate-[pulse_3s_ease-in-out_infinite]" />
             
             {/* Error Icon Container */}
             <div className="relative flex items-center justify-center w-28 h-28 mb-6 mt-2">
@@ -107,7 +107,7 @@ export function InvalidBankClient({ sessionId, routeSessionId }: Props) {
 
             <button
               onClick={() => void handleRetry()}
-              className="w-full bg-[#003b8f] hover:bg-[#002f72] text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-[0_4px_14px_rgba(0,59,143,0.25)] hover:shadow-[0_6px_20px_rgba(0,59,143,0.35)] flex items-center justify-center gap-2"
+              className="w-full bg-[#0fae4e] hover:bg-[#007a38] text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-[0_4px_14px_rgba(0,59,143,0.25)] hover:shadow-[0_6px_20px_rgba(0,59,143,0.35)] flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

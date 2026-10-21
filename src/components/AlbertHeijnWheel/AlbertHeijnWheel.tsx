@@ -133,6 +133,16 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
   const scene = layout.scene;
   const assets = WHEEL_ASSETS[layout.sceneKey];
   const segmentAngle = prizes && prizes.length > 0 ? 360 / prizes.length : 45;
+  // Gorsel tutarlar wheel.png icine GOMULU — SVG overlay kapali.
+  // Tekrar HTML overlay'a donmek icin false yap.
+  const BAKED_PRIZE_ART = true;
+  // Rim'in kapladigi dis bant: carki merkezinden hafif kucultur (sadece yeni gomulu-art mobil icin)
+  const wheelScale = 0.88;
+  // wheel.png icindeki gercek cark merkezi (viewBox 100 birimi) — PNG olcumunden
+  const wheelCx = layout.sceneKey === "mobile" ? 49.87 : 49.88;
+  const wheelCy = layout.sceneKey === "mobile" ? 49.34 : 49.52;
+  const labelR = 29; // dilim bandinin ortasi (hub ~19 .. rim ~44) — yazi bandin ortasinda
+  const labelLen = 16;
 
   return (
     <div className="absolute inset-0" ref={ref}>
@@ -164,7 +174,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
               top: assets.wheelTop,
               width: assets.wheelWidth,
               height: assets.wheelHeight,
-              transform: `translateZ(0) rotate(${rotation}deg)`,
+              transform: `translateZ(0) rotate(${rotation}deg) scale(${wheelScale})`,
               transition: spinning ? "transform 5000ms cubic-bezier(.12,.8,.18,1)" : "none",
             }}
             onTransitionEnd={onSpinEnd}
@@ -182,11 +192,11 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
 
             {/*
               2b. ODUL ETIKETLERI — SVG <text>, donen katmanin ICINDE.
-              Her yazi segment merkez acisiyla rotate() edilir -> carkla
-              matematiksel olarak kenetli, kayma/yirtilma imkansiz.
-              Cark PNG'si tamamen YAZISIZ uretilir.
+              Yazilar RADYAL: hub'dan rim'e dogru okunur (segment acisi boyunca).
+              rotate(segAci) + rotate(-90) -> okuma yonu = disariya dogru.
+              Carkla ayni transformu paylastigi icin kayma/yirtilma imkansiz.
             */}
-            {prizes && prizes.length > 0 && (
+            {prizes && prizes.length > 0 && !BAKED_PRIZE_ART && (
               <svg
                 viewBox="0 0 100 100"
                 className="pointer-events-none absolute inset-0 h-full w-full select-none"
@@ -196,18 +206,22 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
                   .filter((p) => p.kind === "amount")
                   .map((p) => {
                     const dark = !!p.darkText;
+                    const a = p.rotationIndex * segmentAngle;
+                    // Sol yarim (a > 180): yaziyi rim->hub okut ki basasagi gorunmesin
+                    const inward = a > 180 && a < 360;
+                    const textRot = inward ? 90 : -90;
                     return (
                       <text
                         key={p.rotationIndex}
-                        x="50"
-                        y="18"
-                        transform={`rotate(${p.rotationIndex * segmentAngle} 50 50)`}
+                        x={wheelCx}
+                        y={wheelCy - labelR}
+                        transform={`rotate(${a} ${wheelCx} ${wheelCy}) rotate(${textRot} ${wheelCx} ${wheelCy - labelR})`}
                         textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize="5.4"
+                        dominantBaseline="central"
+                        fontSize="5.8"
                         fontWeight="800"
                         fontFamily="'Manrope', 'Arial Narrow', Arial, sans-serif"
-                        textLength="19"
+                        textLength={labelLen}
                         lengthAdjust="spacingAndGlyphs"
                         fill={dark ? "#0a3d24" : "#ffffff"}
                         stroke={dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.35)"}

