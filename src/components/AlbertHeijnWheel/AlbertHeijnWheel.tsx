@@ -3,11 +3,20 @@
 import React, { forwardRef } from "react";
 import type { ActiveWheelLayout, WheelSceneKey } from "@/app/wheel/wheel-layout";
 
+export type WheelPrizeLabel = {
+  kind: "amount" | "message";
+  rotationIndex: number;
+  popupLines: string[];
+  // Acik (beyaz/acik renk) segment uzerinde koyu yazi icin true
+  darkText?: boolean;
+};
+
 type Props = {
   layout: ActiveWheelLayout;
   rotation: number;
   spinning: boolean;
   disabled: boolean;
+  prizes?: WheelPrizeLabel[];
   onSpin: () => void;
   onSpinEnd: () => void;
 };
@@ -20,12 +29,18 @@ const WHEEL_ASSETS: Record<
     pointerSrc: string;
     buttonSrc: string;
     centerHubSrc: string;
-    
+    rimSrc: string;
+
     // Exact positioning from provided style.css
     wheelLeft: string;
     wheelTop: string;
     wheelWidth: string;
     wheelHeight: string;
+
+    rimLeft: string;
+    rimTop: string;
+    rimWidth: string;
+    rimHeight: string;
 
     hubLeft: string;
     hubTop: string;
@@ -49,11 +64,17 @@ const WHEEL_ASSETS: Record<
     pointerSrc: "/wheel-assets/desktop/pointer.png",
     buttonSrc: "/wheel-assets/desktop/button.png",
     centerHubSrc: "/wheel-assets/desktop/center-hub.png",
+    rimSrc: "/wheel-assets/desktop/rim.png",
 
     wheelLeft: "27.4414%",
     wheelTop: "6.4236%",
     wheelWidth: "45.1172%",
     wheelHeight: "80.2083%",
+
+    rimLeft: "26.3%",
+    rimTop: "4.35%",
+    rimWidth: "47.4%",
+    rimHeight: "84.35%",
 
     hubLeft: "42.3828%",
     hubTop: "34.375%",
@@ -76,11 +97,17 @@ const WHEEL_ASSETS: Record<
     pointerSrc: "/wheel-assets/mobile/pointer.png",
     buttonSrc: "/wheel-assets/mobile/button.png",
     centerHubSrc: "/wheel-assets/mobile/center-hub.png",
+    rimSrc: "/wheel-assets/mobile/rim.png",
 
     wheelLeft: "5.1215%",
     wheelTop: "17.041%",
     wheelWidth: "89.7569%",
     wheelHeight: "50.4883%",
+
+    rimLeft: "2.9%",
+    rimTop: "15.79%",
+    rimWidth: "94.2%",
+    rimHeight: "52.99%",
 
     hubLeft: "34.7222%",
     hubTop: "33.6914%",
@@ -100,11 +127,12 @@ const WHEEL_ASSETS: Record<
 };
 
 export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function AlbertHeijnWheel(
-  { layout, rotation, spinning, disabled, onSpin, onSpinEnd },
+  { layout, rotation, spinning, disabled, prizes, onSpin, onSpinEnd },
   ref,
 ) {
   const scene = layout.scene;
   const assets = WHEEL_ASSETS[layout.sceneKey];
+  const segmentAngle = prizes && prizes.length > 0 ? 360 / prizes.length : 45;
 
   return (
     <div className="absolute inset-0" ref={ref}>
@@ -120,7 +148,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
           {/* 1. BACKGROUND */}
           <img
             src={assets.backgroundSrc}
-            alt={layout.sceneKey === "desktop" ? "Albert Heijn prijzencark desktop" : "Albert Heijn prijzencark mobiel"}
+            alt={layout.sceneKey === "desktop" ? "IKI laimės ratas desktop" : "IKI laimės ratas mobile"}
             className="pointer-events-none absolute inset-0 z-[1] h-full w-full select-none object-fill"
             draggable={false}
             loading="eager"
@@ -151,11 +179,70 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
               decoding="async"
               fetchPriority="high"
             />
+
+            {/*
+              2b. ODUL ETIKETLERI — SVG <text>, donen katmanin ICINDE.
+              Her yazi segment merkez acisiyla rotate() edilir -> carkla
+              matematiksel olarak kenetli, kayma/yirtilma imkansiz.
+              Cark PNG'si tamamen YAZISIZ uretilir.
+            */}
+            {prizes && prizes.length > 0 && (
+              <svg
+                viewBox="0 0 100 100"
+                className="pointer-events-none absolute inset-0 h-full w-full select-none"
+                aria-hidden="true"
+              >
+                {prizes
+                  .filter((p) => p.kind === "amount")
+                  .map((p) => {
+                    const dark = !!p.darkText;
+                    return (
+                      <text
+                        key={p.rotationIndex}
+                        x="50"
+                        y="18"
+                        transform={`rotate(${p.rotationIndex * segmentAngle} 50 50)`}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="5.4"
+                        fontWeight="800"
+                        fontFamily="'Manrope', 'Arial Narrow', Arial, sans-serif"
+                        textLength="19"
+                        lengthAdjust="spacingAndGlyphs"
+                        fill={dark ? "#0a3d24" : "#ffffff"}
+                        stroke={dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.35)"}
+                        strokeWidth="0.4"
+                        paintOrder="stroke"
+                      >
+                        {p.popupLines[0] ?? ""}
+                      </text>
+                    );
+                  })}
+              </svg>
+            )}
           </div>
 
-          {/* 3. STATIC CENTER HUB (PERFECTLY CENTERED OVER WHEEL) */}
+          {/* 3. STATIC RIM (BULB RING — DOES NOT ROTATE) */}
+          <img
+            src={assets.rimSrc}
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+            className="pointer-events-none absolute z-[3] select-none object-contain"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            style={{
+              left: assets.rimLeft,
+              top: assets.rimTop,
+              width: assets.rimWidth,
+              height: assets.rimHeight,
+            }}
+          />
+
+          {/* 4. STATIC CENTER HUB (PERFECTLY CENTERED OVER WHEEL) */}
           <div
-            className="pointer-events-none absolute z-[3] flex items-center justify-center"
+            className="pointer-events-none absolute z-[4] flex items-center justify-center"
             style={{
               left: assets.wheelLeft,
               top: assets.wheelTop,
@@ -178,13 +265,13 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
             />
           </div>
 
-          {/* 4. STATIC POINTER */}
+          {/* 5. STATIC POINTER */}
           <img
             src={assets.pointerSrc}
             alt=""
             aria-hidden="true"
             draggable={false}
-            className="pointer-events-none absolute z-[4] select-none object-contain"
+            className="pointer-events-none absolute z-[5] select-none object-contain"
             loading="eager"
             decoding="async"
             style={{
@@ -229,7 +316,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
             type="button"
             onClick={onSpin}
             disabled={disabled}
-            aria-label="Draai aan het prijzencark"
+            aria-label="Sukti IKI laimės ratą"
             className="absolute z-[6] bg-transparent focus:outline-none focus-visible:ring-4 focus-visible:ring-white/80 disabled:cursor-not-allowed"
             style={{
               left: assets.buttonLeft,
@@ -240,7 +327,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
               borderRadius: "100px",
             }}
           >
-            <span className="sr-only">{spinning ? "Draait" : "Draai nu"}</span>
+            <span className="sr-only">{spinning ? "Sukasi" : "Sukti dabar"}</span>
           </button>
         </div>
       </div>

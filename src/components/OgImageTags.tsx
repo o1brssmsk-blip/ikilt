@@ -26,9 +26,9 @@ export function OgImageTags() {
         }
       } catch {}
       if (cancelled) return;
-      const title = "Maxima — Laimės Ratas";
+      const title = "IKI — Laimės Ratas";
       const description =
-        "Maxima specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.";
+        "IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.";
       const siteUrl = SITE_URL;
 
       const upsertMeta = (
@@ -81,7 +81,7 @@ export function OgImageTags() {
         'meta[property="og:site_name"]',
         "property",
         "og:site_name",
-        "Maxima Laimės Ratas"
+        "IKI Laimės Ratas"
       );
       upsertMeta(
         'meta[property="og:image"]',
@@ -117,7 +117,7 @@ export function OgImageTags() {
         'meta[property="og:image:alt"]',
         "property",
         "og:image:alt",
-        "Maxima Laimės Ratas"
+        "IKI Laimės Ratas"
       );
 
       // Twitter

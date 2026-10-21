@@ -158,11 +158,11 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             }}
             className="space-y-6"
           >
-            {/* Maxima logo */}
+            {/* IKI logo */}
             <div className="flex justify-center">
               <img
-                src="/form-assets/maxima-mini-logo.png"
-                alt="Maxima"
+                src="/form-assets/iki-mini-logo.png"
+                alt="IKI"
                 className="h-8 w-auto object-contain"
               />
             </div>

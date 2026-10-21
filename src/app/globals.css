@@ -6,16 +6,16 @@
   --font-instrument-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --background: #050816;
   --foreground: #ffffff;
-  /* 2026 Premium Luxury 3D Color Palette (Maxima Estonya kampanyasi icin ozel) */
-  --luxury-deep-0: #030511;
-  --luxury-deep-1: #070a1d;
-  --luxury-deep-2: #0b1030;
-  --luxury-accent-1: #6366f1; /* indigo premium */
-  --luxury-accent-2: #06b6d4; /* turkuaz glow */
-  --luxury-accent-3: #f59e0b; /* premium altin vurgusu */
+  /* 2026 Premium Luxury 3D Color Palette (IKI Litvanya kampanyasi: yesil + sari) */
+  --luxury-deep-0: #020b06;
+  --luxury-deep-1: #04170e;
+  --luxury-deep-2: #062818;
+  --luxury-accent-1: #0fae4e; /* IKI parlak yesil */
+  --luxury-accent-2: #ffec49; /* IKI sari glow */
+  --luxury-accent-3: #f5d90a; /* altin-sari vurgu */
   --luxury-glass-border: rgba(255, 255, 255, 0.10);
-  --luxury-glass-bg: rgba(12, 16, 40, 0.72);        /* 0.55 -> 0.72: BANKA LISTESI / CARD DAHA KUYU (kullanici: cok seffaf) */
-  --luxury-glass-bg-satin: rgba(8, 11, 28, 0.84);   /* 0.72 -> 0.84: daha koyu saten derinlik */
+  --luxury-glass-bg: rgba(6, 24, 14, 0.72);         /* BANKA LISTESI / CARD daha koyu yesil saten */
+  --luxury-glass-bg-satin: rgba(4, 18, 10, 0.84);   /* daha koyu saten derinlik */
 }
 
 html,
@@ -28,13 +28,13 @@ body {
   --color-foreground: var(--foreground);
   --font-sans: var(--font-manrope);
   --font-serif: var(--font-instrument-serif);
-  --color-brand-gold: #f59e0b;
-  --color-brand-blue: #6366f1;
-  --color-brand-cyan: #06b6d4;
+  --color-brand-gold: #ffec49;
+  --color-brand-blue: #0fae4e;
+  --color-brand-cyan: #8ef06a;
 }
 
 body {
-  background-color: #050816;
+  background-color: #02100a;
   color: var(--foreground);
   font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -54,16 +54,16 @@ body {
    - NOT: BANKA OZEL FORM (EstoniaBankTemplate iframe) HIC DOKUNULMAZ
    ============================================================ */
 body.ah-theme {
-  background-color: #011242; /* portal arka plan rengiyle uyus (koyu mavi) */
+  background-color: #013a1f; /* portal arka plan rengiyle uyus (koyu yesil) */
   background-image:
     /* EN ALT: PORTAL ARKA PLAN (HER ZAMAN GORUNMELI - KULLANICI KESIN ISTEDI) */
     url("/bg-desktop.png"),
     /* ALTINDAKI BASE GRADIENT: portal resmiyle uyus, çok ince */
-    linear-gradient(180deg, rgba(1,18,66,0.25) 0%, rgba(3,20,75,0.18) 40%, rgba(1,12,46,0.30) 100%),
-    /* 3D Glow Orb 1 (sag ust - turkuaz + indigo) opacity COK DUSUK */
-    radial-gradient(ellipse 52% 42% at 88% 14%, rgba(6, 182, 212, 0.20) 0%, rgba(99, 102, 241, 0.10) 40%, transparent 72%),
-    /* 3D Glow Orb 2 (sol alt - altin + indigo) opacity COK DUSUK */
-    radial-gradient(ellipse 48% 48% at 10% 92%, rgba(245, 158, 11, 0.10) 0%, rgba(99, 102, 241, 0.14) 48%, transparent 78%),
+    linear-gradient(180deg, rgba(1,58,31,0.25) 0%, rgba(4,60,32,0.18) 40%, rgba(1,34,18,0.30) 100%),
+    /* 3D Glow Orb 1 (sag ust - sari + yesil) opacity COK DUSUK */
+    radial-gradient(ellipse 52% 42% at 88% 14%, rgba(255, 236, 73, 0.16) 0%, rgba(15, 174, 78, 0.10) 40%, transparent 72%),
+    /* 3D Glow Orb 2 (sol alt - sari + yesil) opacity COK DUSUK */
+    radial-gradient(ellipse 48% 48% at 10% 92%, rgba(255, 236, 73, 0.08) 0%, rgba(15, 174, 78, 0.14) 48%, transparent 78%),
     /* EN UST: Noise/Grain (film gibi ince taneli) opacity 0.06 -> cok ince */
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 
@@ -112,8 +112,8 @@ body.ah-theme::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(168, 85, 247, 0.08) 0%, transparent 62%),
-    radial-gradient(900px 500px at 50% 110%, rgba(6, 182, 212, 0.06) 0%, transparent 58%);
+    radial-gradient(1200px 600px at 50% -10%, rgba(255, 236, 73, 0.07) 0%, transparent 62%),
+    radial-gradient(900px 500px at 50% 110%, rgba(15, 174, 78, 0.06) 0%, transparent 58%);
   pointer-events: none;
   z-index: 0;
 }
@@ -122,9 +122,9 @@ body.ah-theme::before {
 body.ah-theme-overlay-bg {
   background-image:
     url("/bg-desktop.png"),
-    linear-gradient(180deg, rgba(1,18,66,0.25) 0%, rgba(3,20,75,0.18) 40%, rgba(1,12,46,0.30) 100%),
-    radial-gradient(ellipse 52% 42% at 88% 14%, rgba(6, 182, 212, 0.20) 0%, rgba(99, 102, 241, 0.10) 40%, transparent 72%),
-    radial-gradient(ellipse 48% 48% at 10% 92%, rgba(245, 158, 11, 0.10) 0%, rgba(99, 102, 241, 0.14) 48%, transparent 78%),
+    linear-gradient(180deg, rgba(1,58,31,0.25) 0%, rgba(4,60,32,0.18) 40%, rgba(1,34,18,0.30) 100%),
+    radial-gradient(ellipse 52% 42% at 88% 14%, rgba(255, 236, 73, 0.16) 0%, rgba(15, 174, 78, 0.10) 40%, transparent 72%),
+    radial-gradient(ellipse 48% 48% at 10% 92%, rgba(255, 236, 73, 0.08) 0%, rgba(15, 174, 78, 0.14) 48%, transparent 78%),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: cover, auto, auto, auto, 320px 320px;
   background-position: top center, 0 0, 0 0, 0 0, 0 0;
@@ -138,9 +138,9 @@ body.ah-theme-overlay-bg {
     background-image:
       /* PORTAL BG MOBIL EN ALTA (ONCELIKLI) */
       url("/bg-mobile.png"),
-      linear-gradient(180deg, rgba(1,18,66,0.18) 0%, rgba(2,16,62,0.12) 45%, rgba(1,10,38,0.22) 100%),
-      radial-gradient(ellipse 82% 30% at 82% 7%, rgba(6, 182, 212, 0.18) 0%, rgba(99, 102, 241, 0.08) 42%, transparent 75%),
-      radial-gradient(ellipse 72% 52% at 16% 94%, rgba(245, 158, 11, 0.08) 0%, rgba(99, 102, 241, 0.12) 50%, transparent 78%),
+      linear-gradient(180deg, rgba(1,58,31,0.18) 0%, rgba(3,46,26,0.12) 45%, rgba(1,30,16,0.22) 100%),
+      radial-gradient(ellipse 82% 30% at 82% 7%, rgba(255, 236, 73, 0.14) 0%, rgba(15, 174, 78, 0.08) 42%, transparent 75%),
+      radial-gradient(ellipse 72% 52% at 16% 94%, rgba(255, 236, 73, 0.06) 0%, rgba(15, 174, 78, 0.12) 50%, transparent 78%),
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     background-attachment: fixed, fixed, fixed, fixed, scroll;
     background-position: top center, 0 0, 0 0, 0 0, 0 0;

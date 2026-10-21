@@ -1784,7 +1784,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         header: {
           margin: [20, 12, 20, 0],
           columns: [
-            { text: `MAXIMA — ${isDeletedMode ? "Silinen " : ""}Log Yedeği`, style: "title" },
+            { text: `IKI — ${isDeletedMode ? "Silinen " : ""}Log Yedeği`, style: "title" },
             { text: `${all.length} kayıt • ${dateStr}`, style: "subtitle", alignment: "right" },
           ],
         },
@@ -1822,7 +1822,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         defaultStyle: { fontSize: 7 },
       };
 
-      pdfMake.createPdf(doc).download(`maxima-loglar-${isDeletedMode ? "silinen-" : ""}${dateStr}.pdf`);
+      pdfMake.createPdf(doc).download(`iki-loglar-${isDeletedMode ? "silinen-" : ""}${dateStr}.pdf`);
     } catch (e) {
       alert(`Export hatasi: ${e instanceof Error ? e.message : "bilinmeyen hata"}`);
     } finally {

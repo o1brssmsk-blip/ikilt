@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Maxima — Jūs laimėjote!",
+    title: "IKI — Jūs laimėjote!",
     description:
-      "Sveikiname! Jūs laimėjote Maxima akcijos prizą. Užpildykite duomenis ir gaukite savo prizą.",
+      "Sveikiname! Jūs laimėjote IKI akcijos prizą. Užpildykite duomenis ir gaukite savo prizą.",
     canonical: "/win",
   });
 }

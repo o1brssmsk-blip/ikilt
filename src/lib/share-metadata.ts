@@ -54,14 +54,14 @@ export async function buildShareMetadata(opts: {
       locale: "lt_LT",
       alternateLocale: ["en_US", "pl_PL", "ru_RU"],
       url: SITE_URL,
-      siteName: "Maxima Laimės Ratas",
+      siteName: "IKI Laimės Ratas",
       title: opts.title,
       description: opts.description,
       images: [
         {
           url: imageUrl,
           secureUrl: imageUrl,
-          alt: "Maxima Laimės Ratas",
+          alt: "IKI Laimės Ratas",
           type: imageType,
         },
       ],

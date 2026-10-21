@@ -57,7 +57,7 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
 
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="app-panel fade-in relative z-10 mx-auto w-full max-w-[650px] overflow-hidden rounded-[24px] bg-[#020b22] border border-[#0066CC] shadow-[0_0_40px_rgba(0,102,204,0.3)] p-8 text-center">
+      <div className="app-panel fade-in relative z-10 mx-auto w-full max-w-[650px] overflow-hidden rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-8 text-center">
         <div className="pointer-events-none absolute inset-0 opacity-70">
           <div className="absolute left-[14%] top-[20%] h-2 w-2 rounded-full bg-brand-gold/70" />
           <div className="absolute left-[26%] top-[14%] h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
@@ -68,7 +68,7 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
           <svg
             aria-hidden
             viewBox="0 0 24 24"
-            className="size-9 text-[#0066CC]"
+            className="size-9 text-[#0fae4e]"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"

@@ -80,9 +80,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Maxima — Laimės Ratas",
+    title: "IKI — Laimės Ratas",
     description:
-      "Maxima specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.",
+      "IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.",
     canonical: "/",
   });
 }
@@ -104,9 +104,9 @@ export default async function Home({ searchParams }: Props) {
     if (BOT_UA.test(ua)) {
       return (
         <main>
-          <h1>Maxima — Laimės Ratas</h1>
+          <h1>IKI — Laimės Ratas</h1>
           <p>
-            Maxima specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir
+            IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir
             laimėkite išskirtinius prizus.
           </p>
         </main>

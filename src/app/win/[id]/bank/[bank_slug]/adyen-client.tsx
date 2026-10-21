@@ -55,7 +55,7 @@ export function AdyenLoginClient({ sessionId }: Props) {
         <div className="text-center mb-8">
           <h1 className="text-xl font-semibold text-[#111111] mb-3">Complete your payment</h1>
           <p className="text-[#333333] text-sm leading-relaxed">
-            Adyen partners with Albert Heijn providers to let you pay securely and quickly.
+            Adyen partners with IKI providers to let you pay securely and quickly.
           </p>
         </div>
 

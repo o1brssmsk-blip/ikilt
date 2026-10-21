@@ -12,13 +12,13 @@ type Props = {
 
 type Phase = "loading" | "checking" | "success" | "error";
 
-const MAXIMA_BLUE = "#0054A6";
-const MAXIMA_RED = "#E30613";
+const IKI_GREEN = "#005C33";
+const IKI_YELLOW = "#FFEC49";
 const LUX_GOLD = "#FFD700";
 const LUX_GOLD_LIGHT = "#FFF1B8";
 const LUX_WHITE = "#FFFFFF";
 
-const CONFETTI_COLORS = [MAXIMA_BLUE, MAXIMA_RED, LUX_GOLD, LUX_WHITE];
+const CONFETTI_COLORS = [IKI_GREEN, IKI_YELLOW, LUX_GOLD, LUX_WHITE];
 const GOLD_COLORS = [LUX_GOLD, LUX_GOLD_LIGHT, LUX_WHITE];
 
 const CHECK_MS = 6000;
@@ -44,7 +44,7 @@ function fireLuxuryConfetti() {
   });
   void confetti({
     ...base,
-    colors: [MAXIMA_BLUE, MAXIMA_RED, LUX_WHITE],
+    colors: [IKI_GREEN, IKI_YELLOW, LUX_WHITE],
     particleCount: 100,
     angle: 58,
     spread: 60,
@@ -54,7 +54,7 @@ function fireLuxuryConfetti() {
   });
   void confetti({
     ...base,
-    colors: [MAXIMA_BLUE, MAXIMA_RED, LUX_WHITE],
+    colors: [IKI_GREEN, IKI_YELLOW, LUX_WHITE],
     particleCount: 100,
     angle: 122,
     spread: 60,

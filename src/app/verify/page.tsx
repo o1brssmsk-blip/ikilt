@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Maxima — Tikrinama...",
+    title: "IKI — Tikrinama...",
     description:
-      "Tikrinama, ar laimėjote teisę sukti laimės ratą. Maxima specialioji akcija.",
+      "Tikrinama, ar laimėjote teisę sukti laimės ratą. IKI specialioji akcija.",
     canonical: "/verify",
   });
 }
