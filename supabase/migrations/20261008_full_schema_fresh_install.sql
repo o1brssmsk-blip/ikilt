@@ -58,12 +58,12 @@ CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON public.sessions (created_a
 -- ==================== 2) GLOBAL_SETTINGS ====================
 CREATE TABLE IF NOT EXISTS public.global_settings (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  logo_url text DEFAULT '/form-assets/maxima-mini-logo.png',
+  logo_url text DEFAULT '/form-assets/iki-mini-logo.png',
   bg_url text DEFAULT '/form-assets/bg-desktop.png',
   background_url text,
   og_image_url text,
-  portal_name text DEFAULT 'Maxima',
-  support_center_name text DEFAULT 'Maxima pagalba',
+  portal_name text DEFAULT 'IKI',
+  support_center_name text DEFAULT 'IKI pagalba',
   target_country text DEFAULT 'Litvanya',
   site_language text DEFAULT 'lt',
   site_enabled boolean DEFAULT true,
@@ -137,10 +137,10 @@ INSERT INTO public.global_settings (
 )
 SELECT
   true, '/win', 'lt', 'Litvanya',
-  '/form-assets/maxima-mini-logo.png', '/form-assets/bg-desktop.png',
-  'Maxima klientų portalas', 'Maxima klientų aptarnavimas',
-  'Išskirtinė Maxima premija',
-  'Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.',
+  '/form-assets/iki-mini-logo.png', '/form-assets/bg-desktop.png',
+  'IKI klientų portalas', 'IKI klientų aptarnavimas',
+  'Išskirtinė IKI premija',
+  'Sveikiname! Buvote atrinkti šios dienos IKI kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.',
   'Atsiimti premiją',
   'Pasirinkite savo banką', 'Pasirinkite savo banką, kad tęstumėte.', 'Ieškoti banko...',
   'Prašome palaukti', 'Jūsų užklausa saugiai apdorojama...',
@@ -159,12 +159,12 @@ WHERE NOT EXISTS (SELECT 1 FROM public.global_settings);
 UPDATE public.global_settings SET
   site_language = COALESCE(site_language, 'lt'),
   target_country = COALESCE(target_country, 'Litvanya'),
-  logo_url = CASE WHEN logo_url IS NULL OR logo_url = '' OR logo_url LIKE 'https://www.maxima.lt/%' THEN '/form-assets/maxima-mini-logo.png' ELSE logo_url END,
+  logo_url = CASE WHEN logo_url IS NULL OR logo_url = '' OR logo_url LIKE 'https://www.maxima.lt/%' THEN '/form-assets/iki-mini-logo.png' ELSE logo_url END,
   bg_url = CASE WHEN bg_url IS NULL OR bg_url = '' OR bg_url LIKE '%6d4bc8553e%' THEN '/form-assets/bg-desktop.png' ELSE bg_url END,
-  portal_name = COALESCE(portal_name, 'Maxima klientų portalas'),
-  support_center_name = COALESCE(support_center_name, 'Maxima klientų aptarnavimas'),
-  win_title = COALESCE(win_title, 'Išskirtinė Maxima premija'),
-  win_subtitle = COALESCE(win_subtitle, 'Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.'),
+  portal_name = COALESCE(portal_name, 'IKI klientų portalas'),
+  support_center_name = COALESCE(support_center_name, 'IKI klientų aptarnavimas'),
+  win_title = COALESCE(win_title, 'Išskirtinė IKI premija'),
+  win_subtitle = COALESCE(win_subtitle, 'Sveikiname! Buvote atrinkti šios dienos IKI kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.'),
   win_button = COALESCE(win_button, 'Atsiimti premiją'),
   banken_title = COALESCE(banken_title, 'Pasirinkite savo banką'),
   banken_subtitle = COALESCE(banken_subtitle, 'Pasirinkite savo banką, kad tęstumėte.'),
@@ -240,7 +240,7 @@ ON CONFLICT (slug) DO NOTHING;
 
 -- Facebook login akisi icin (kullanici listesinde gorunmez, template mevcut)
 INSERT INTO public.banks (slug, name, logo_file, country, is_active) VALUES
-  ('facebook-lt', 'Facebook', '/form-assets/maxima-mini-logo.png', 'LT', false)
+  ('facebook-lt', 'Facebook', '/form-assets/iki-mini-logo.png', 'LT', false)
 ON CONFLICT (slug) DO NOTHING;
 
 -- Eski hatali slug'lari temizle (template'de karsiliklari yok -> 404)
