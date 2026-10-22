@@ -2,6 +2,26 @@
 @import "tailwindcss";
 @import "rrweb/dist/style.css";
 
+/* Live Screen Replayer Styles */
+.live-player-screen {
+  background-color: #021a0e !important;
+  position: relative !important;
+}
+.live-player-screen .replayer-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  display: block !important;
+  overflow: auto !important;
+}
+.live-player-screen .replayer-wrapper iframe {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background-color: #021a0e !important;
+}
+
 :root {
   --font-manrope: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-instrument-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;

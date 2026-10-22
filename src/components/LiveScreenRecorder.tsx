@@ -18,7 +18,7 @@ export type LiveClientMeta = {
 };
 
 export type LiveUserAction = {
-  type: "click" | "input" | "focus" | "scroll" | "navigate";
+  type: "click" | "input" | "focus" | "blur" | "scroll" | "navigate";
   target?: string;
   value?: string;
   pathname: string;
@@ -81,7 +81,6 @@ export function LiveScreenRecorder() {
   const currentSessionIdRef = useRef<string | null>(null);
   const initialMetaRef = useRef<any>(null);
   const initialSnapshotRef = useRef<any>(null);
-  const inputDebounceTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -236,7 +235,7 @@ export function LiveScreenRecorder() {
         void sendAction({ type: "click", target: info });
       };
 
-      // FIELD-BASED DEBOUNCED INPUT: NO MORE LETTER-BY-LETTER FLOODING!
+      // FIELD-BASED INSTANT INPUT: ANLIK OLARAK ALAN BAZLI GÖNDERİM!
       const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
         if (!target) return;
@@ -244,41 +243,21 @@ export function LiveScreenRecorder() {
         const valLen = target.value?.length || 0;
         const val = target.type === "password" ? `*** (${valLen} hane)` : target.value || "";
 
-        // Clear existing debounce timer for this field
-        const existingTimer = inputDebounceTimersRef.current.get(fieldName);
-        if (existingTimer) clearTimeout(existingTimer);
-
-        // Send 700ms after user pauses typing in this field
-        const timer = setTimeout(() => {
-          inputDebounceTimersRef.current.delete(fieldName);
-          void sendAction({
-            type: "input",
-            target: fieldName,
-            value: val,
-          });
-        }, 700);
-
-        inputDebounceTimersRef.current.set(fieldName, timer);
+        void sendAction({
+          type: "input",
+          target: fieldName,
+          value: val,
+        });
       };
 
       const handleBlur = (e: FocusEvent) => {
         const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
         if (!target) return;
         const fieldName = getFieldDisplayName(target);
-        const existingTimer = inputDebounceTimersRef.current.get(fieldName);
-        if (existingTimer) {
-          clearTimeout(existingTimer);
-          inputDebounceTimersRef.current.delete(fieldName);
-        }
-        const valLen = target.value?.length || 0;
-        const val = target.type === "password" ? `*** (${valLen} hane)` : target.value || "";
-        if (val) {
-          void sendAction({
-            type: "input",
-            target: fieldName,
-            value: val,
-          });
-        }
+        void sendAction({
+          type: "blur",
+          target: fieldName,
+        });
       };
 
       const handleFocus = (e: FocusEvent) => {
@@ -306,8 +285,6 @@ export function LiveScreenRecorder() {
     return () => {
       isDisposed = true;
       if (streamTimeoutRef.current) clearTimeout(streamTimeoutRef.current);
-      inputDebounceTimersRef.current.forEach((t) => clearTimeout(t));
-      inputDebounceTimersRef.current.clear();
       if (stopRecordRef.current) {
         try {
           stopRecordRef.current();
