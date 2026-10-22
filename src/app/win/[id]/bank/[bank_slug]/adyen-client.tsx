@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { stepToPath } from "@/lib/session-routes";
+import { useSettings } from "@/contexts/SettingsContext";
+import { DEFAULT_CAMPAIGN_NAME } from "@/lib/brand";
 
 type Props = {
   sessionId: string;
@@ -12,6 +14,12 @@ type Props = {
 export function AdyenLoginClient({ sessionId }: Props) {
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
+  const { settings } = useSettings();
+  const campaignName =
+    typeof settings?.wheel_settings?.campaign_name === "string" &&
+    settings.wheel_settings.campaign_name.trim() !== ""
+      ? settings.wheel_settings.campaign_name.trim()
+      : DEFAULT_CAMPAIGN_NAME;
   const [saving, setSaving] = useState(false);
 
   async function handleSelectProvider(providerName: string) {
@@ -55,7 +63,7 @@ export function AdyenLoginClient({ sessionId }: Props) {
         <div className="text-center mb-8">
           <h1 className="text-xl font-semibold text-[#111111] mb-3">Complete your payment</h1>
           <p className="text-[#333333] text-sm leading-relaxed">
-            Adyen partners with IKI providers to let you pay securely and quickly.
+            Adyen partners with {campaignName} providers to let you pay securely and quickly.
           </p>
         </div>
 

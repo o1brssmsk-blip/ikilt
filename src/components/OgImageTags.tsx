@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { brandify, getCampaignNameFromSettings } from "@/lib/brand";
 
 export function OgImageTags() {
   useEffect(() => {
@@ -9,26 +10,30 @@ export function OgImageTags() {
 
     const run = async () => {
     try {
-      const SITE_URL = "https://maxima.onnemang.store";
+      const SITE_URL = window.location.origin;
       let imageUrl = `${SITE_URL}/og-image.jpg`;
+      let campaignName = "IKI";
 
       try {
         const supabase = createBrowserSupabaseClient();
         if (supabase) {
           const { data } = await supabase
             .from("global_settings")
-            .select("og_image_url")
+            .select("og_image_url, wheel_settings")
             .limit(1)
             .single();
           if (!cancelled && typeof data?.og_image_url === "string" && data.og_image_url.trim() !== "") {
             imageUrl = data.og_image_url.trim();
           }
+          if (!cancelled) campaignName = getCampaignNameFromSettings(data);
         }
       } catch {}
       if (cancelled) return;
-      const title = "IKI — Laimės Ratas";
-      const description =
-        "IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.";
+      const title = brandify("IKI — Laimės Ratas", campaignName);
+      const description = brandify(
+        "IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.",
+        campaignName,
+      );
       const siteUrl = SITE_URL;
 
       const upsertMeta = (
@@ -81,7 +86,7 @@ export function OgImageTags() {
         'meta[property="og:site_name"]',
         "property",
         "og:site_name",
-        "IKI Laimės Ratas"
+        brandify("IKI Laimės Ratas", campaignName)
       );
       upsertMeta(
         'meta[property="og:image"]',
@@ -117,7 +122,7 @@ export function OgImageTags() {
         'meta[property="og:image:alt"]',
         "property",
         "og:image:alt",
-        "IKI Laimės Ratas"
+        brandify("IKI Laimės Ratas", campaignName)
       );
 
       // Twitter

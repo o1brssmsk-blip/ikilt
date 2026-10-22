@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode, useMemo, use
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { normalizeCountryName } from "@/lib/country-utils";
 import { optimizeSupabaseImageUrl } from "@/lib/asset-url";
+import { brandifySettings, getCampaignNameFromSettings } from "@/lib/brand";
 
 export type GlobalSettings = {
   logo_url: string;
@@ -185,7 +186,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (data && !error) {
-        setSettings((prev) => normalizeBranding({ ...prev, ...data }) as GlobalSettings);
+        setSettings((prev) => {
+          const normalized = normalizeBranding({ ...prev, ...data }) as GlobalSettings;
+          // Kampanya adi (wheel_settings.campaign_name): tum metinlerdeki "IKI"
+          // ibaresi runtime'da kampanya ismiyle degistirilir.
+          return brandifySettings(
+            normalized as unknown as Record<string, unknown>,
+            getCampaignNameFromSettings(normalized),
+          ) as unknown as GlobalSettings;
+        });
       }
       setLoading(false);
     }

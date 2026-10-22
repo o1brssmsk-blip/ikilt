@@ -1,23 +1,59 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import {
+  brandify,
+  DEFAULT_CAMPAIGN_NAME,
+  getCampaignNameFromSettings,
+} from "@/lib/brand";
 
-const SITE_URL = "https://maxima.onnemang.store";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const FALLBACK_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://maxima.onnemang.store";
 
-async function getOgImageUrl(): Promise<string> {
+async function getSiteOrigin(): Promise<string> {
+  try {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") || h.get("host");
+    const proto = h.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
+    if (host) return `${proto}://${host}`;
+  } catch {
+    /* headers erisilemezse env fallback */
+  }
+  return FALLBACK_SITE_URL;
+}
+
+async function getShareSettings(): Promise<{ ogImageUrl: string | null; campaignName: string }> {
   try {
     const supabase = await createServerSupabaseClient();
-    if (!supabase) return DEFAULT_OG_IMAGE;
+    if (!supabase) return { ogImageUrl: null, campaignName: DEFAULT_CAMPAIGN_NAME };
     const { data } = await supabase
       .from("global_settings")
-      .select("og_image_url")
+      .select("og_image_url, wheel_settings")
       .limit(1)
       .single();
-    const url = data?.og_image_url;
-    return typeof url === "string" && url.trim() !== "" ? url.trim() : DEFAULT_OG_IMAGE;
+    return {
+      ogImageUrl:
+        typeof data?.og_image_url === "string" && data.og_image_url.trim() !== ""
+          ? data.og_image_url.trim()
+          : null,
+      campaignName: getCampaignNameFromSettings(data),
+    };
   } catch {
-    return DEFAULT_OG_IMAGE;
+    return { ogImageUrl: null, campaignName: DEFAULT_CAMPAIGN_NAME };
   }
+}
+
+function resolveOgImage(ogImageUrl: string | null, origin: string): string {
+  if (ogImageUrl) {
+    // Relative path ise ayni domain uzerinden absolutize et
+    if (ogImageUrl.startsWith("/")) return `${origin}${ogImageUrl}`;
+    return ogImageUrl;
+  }
+  return `${origin}/og-image.jpg`;
+}
+
+export async function getCampaignNameServer(): Promise<string> {
+  const { campaignName } = await getShareSettings();
+  return campaignName;
 }
 
 export async function buildShareMetadata(opts: {
@@ -25,16 +61,22 @@ export async function buildShareMetadata(opts: {
   description: string;
   canonical: string;
 }): Promise<Metadata> {
-  const imageUrl = await getOgImageUrl();
+  const origin = await getSiteOrigin();
+  const { ogImageUrl, campaignName } = await getShareSettings();
+  const imageUrl = resolveOgImage(ogImageUrl, origin);
   const imageType = /\.png($|\?)/i.test(imageUrl)
     ? "image/png"
     : /\.webp($|\?)/i.test(imageUrl)
       ? "image/webp"
       : "image/jpeg";
 
+  const title = brandify(opts.title, campaignName);
+  const description = brandify(opts.description, campaignName);
+  const siteName = brandify("IKI Laimės Ratas", campaignName);
+
   return {
-    title: opts.title,
-    description: opts.description,
+    title,
+    description,
     icons: { icon: "/favicon.ico" },
     robots: {
       index: true,
@@ -46,36 +88,38 @@ export async function buildShareMetadata(opts: {
         "max-snippet": -1,
       },
     },
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(origin),
     alternates: { canonical: opts.canonical },
     openGraph: {
       type: "website",
       determiner: "auto",
       locale: "lt_LT",
       alternateLocale: ["en_US", "pl_PL", "ru_RU"],
-      url: SITE_URL,
-      siteName: "IKI Laimės Ratas",
-      title: opts.title,
-      description: opts.description,
+      url: origin,
+      siteName,
+      title,
+      description,
       images: [
         {
           url: imageUrl,
           secureUrl: imageUrl,
-          alt: "IKI Laimės Ratas",
+          alt: siteName,
           type: imageType,
+          width: 1200,
+          height: 1200,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      site: SITE_URL,
-      title: opts.title,
-      description: opts.description,
+      site: origin,
+      title,
+      description,
       images: [imageUrl],
     },
     appLinks: {
       web: {
-        url: SITE_URL,
+        url: origin,
         should_fallback: true,
       },
     },

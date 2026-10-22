@@ -7,9 +7,13 @@ import { ACTIVE_SESSION_COOKIE } from "@/lib/session-constants";
 import {
   ACTIVE_SESSION_EVENT,
   getStoredActiveSessionId,
+  persistActiveSession,
 } from "@/lib/session-id-client";
-import { isUuidSessionIdentifier } from "@/lib/session-identifiers";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+import {
+  isNumericSessionIdentifier,
+  isUuidSessionIdentifier,
+} from "@/lib/session-identifiers";
+import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 
 function readCookieSessionId(): string | undefined {
   if (typeof document === "undefined") return undefined;
@@ -24,30 +28,53 @@ function readCookieSessionId(): string | undefined {
   }
 }
 
-function resolveClientSessionId(
+async function resolveClientSessionId(
+  sb: SupabaseClient<any, any, any> | null,
   routeSessionId?: string,
   querySessionId?: string | null,
-): string | undefined {
-  const normalizedRouteSessionId = routeSessionId?.trim();
-  if (normalizedRouteSessionId && isUuidSessionIdentifier(normalizedRouteSessionId)) {
-    return normalizedRouteSessionId;
-  }
-
-  const normalizedQuerySessionId = querySessionId?.trim();
-  if (normalizedQuerySessionId && isUuidSessionIdentifier(normalizedQuerySessionId)) {
-    return normalizedQuerySessionId;
+): Promise<{ sessionId: string; routeSessionId: string } | undefined> {
+  // URL'den gelen kimlik (route veya ?session=) once gelir.
+  // uuid ise direkt kullan; public_id (sayisal) ise DB'den uuid'ye coz.
+  // Boylece yeni olusturulan link ile gelen kullanicinin session'i
+  // eski localStorage/cookie kalintisi ile karisip "offline" kalmaz.
+  const explicit = routeSessionId?.trim() || querySessionId?.trim() || "";
+  if (explicit) {
+    if (isUuidSessionIdentifier(explicit)) {
+      return { sessionId: explicit, routeSessionId: explicit };
+    }
+    if (isNumericSessionIdentifier(explicit) && sb) {
+      try {
+        const { data } = await sb
+          .from("sessions")
+          .select("id, public_id")
+          .eq("public_id", Number(explicit))
+          .maybeSingle();
+        if (data?.id) {
+          return {
+            sessionId: String(data.id),
+            routeSessionId: data.public_id != null ? String(data.public_id) : explicit,
+          };
+        }
+      } catch {
+        /* cozumleme basarisizsa depolanmis degere dus */
+      }
+    }
   }
 
   const fromLs = getStoredActiveSessionId();
-  if (fromLs) return fromLs;
+  if (fromLs) return { sessionId: fromLs, routeSessionId: fromLs };
 
-  return readCookieSessionId();
+  const fromCookie = readCookieSessionId();
+  if (fromCookie) return { sessionId: fromCookie, routeSessionId: fromCookie };
+
+  return undefined;
 }
 
 export function VisitorTracker() {
   const pathname = usePathname();
   const params = useParams();
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const supabaseRef = useRef<SupabaseClient<any, any, any> | null>(null);
   const trackedIpForSession = useRef<string | null>(null);
 
   const publishPresence = async (path: string | null) => {
@@ -59,7 +86,14 @@ export function VisitorTracker() {
       typeof window !== "undefined"
         ? new URLSearchParams(window.location.search).get("session")
         : null;
-    const sessionId = resolveClientSessionId(routeSessionId, querySessionId);
+    const resolved = await resolveClientSessionId(supabaseRef.current, routeSessionId, querySessionId);
+    const sessionId = resolved?.sessionId;
+
+    // Cozulen session'i kalici hale getir: sonraki sayfalarda ve yeniden
+    // girislerde dogru session'a bagli kalir (geo muafiyeti + resume icin de)
+    if (resolved && getStoredActiveSessionId() !== resolved.sessionId) {
+      persistActiveSession(resolved.sessionId, resolved.routeSessionId);
+    }
 
     await channel.track({
       online_at: new Date().toISOString(),
@@ -83,6 +117,7 @@ export function VisitorTracker() {
 
     const supabase = createBrowserSupabaseClient();
     if (!supabase) return;
+    supabaseRef.current = supabase;
 
     let visitorId = localStorage.getItem("visitor_id");
     if (!visitorId) {
@@ -112,6 +147,7 @@ export function VisitorTracker() {
     return () => {
       window.removeEventListener(ACTIVE_SESSION_EVENT, onSessionChanged);
       channelRef.current = null;
+      supabaseRef.current = null;
       void supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
