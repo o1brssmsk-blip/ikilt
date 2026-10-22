@@ -28,7 +28,7 @@ function readCookieSessionId(): string | undefined {
   }
 }
 
-async function resolveClientSessionId(
+export async function resolveClientSessionId(
   sb: SupabaseClient<any, any, any> | null,
   routeSessionId?: string,
   querySessionId?: string | null,
