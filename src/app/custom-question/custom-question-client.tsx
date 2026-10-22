@@ -132,7 +132,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#0fae4e]/25 border-t-[#0fae4e]" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--brand)]/25 border-t-[var(--brand)]" />
       </div>
     );
   }
@@ -183,7 +183,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
 
             {/* Admin'in sorusu */}
             <div className="rounded-xl border-l-4 border-[#22c55e] bg-[#f0faf6] px-4 py-3">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#0fae4e]">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[var(--brand)]">
                 Klausimas
               </p>
               <p className="text-sm font-semibold text-gray-800 break-words">
@@ -218,7 +218,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             <button
               type="submit"
               disabled={saving || !answer.trim()}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0fae4e] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-lg shadow-[#0fae4e]/25 transition-all hover:bg-[#007a38] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-lg shadow-[var(--brand)]/25 transition-all hover:bg-[var(--brand-dark)] disabled:opacity-50"
             >
               {saving ? "Siunčiama..." : "Tęsti"}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">

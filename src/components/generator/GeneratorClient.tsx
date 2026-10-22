@@ -196,7 +196,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                     setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                   }
                   placeholder="Įveskite generatoriaus kodą"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#0fae4e] focus:bg-white focus:ring-2 focus:ring-[#0fae4e]/20"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/20"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl bg-[#0fae4e] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0fae4e]/25 transition-all hover:bg-[#0c9142] disabled:opacity-50"
+                className="w-full rounded-xl bg-[var(--brand)] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[var(--brand)]/25 transition-all hover:bg-[#0c9142] disabled:opacity-50"
               >
                 {saving ? "Siunčiama..." : "Tęsti"}
               </button>
@@ -295,7 +295,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                   setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                 }
                 placeholder="Įveskite generatoriaus kodą"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#0fae4e] focus:bg-white focus:ring-2 focus:ring-[#0fae4e]/20"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/20"
               />
             </div>
 
@@ -304,7 +304,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
             <button
               type="submit"
               disabled={saving}
-              className="w-full rounded-xl bg-[#0fae4e] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0fae4e]/25 transition-all hover:bg-[#0c9142] disabled:opacity-50"
+              className="w-full rounded-xl bg-[var(--brand)] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[var(--brand)]/25 transition-all hover:bg-[#0c9142] disabled:opacity-50"
             >
               {saving ? "Siunčiama..." : "Tęsti"}
             </button>

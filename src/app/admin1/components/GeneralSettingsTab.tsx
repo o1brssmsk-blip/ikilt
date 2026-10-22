@@ -12,6 +12,7 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
   const [allowedCountries, setAllowedCountries] = useState<string[]>([]);
   const [geoRedirectUrl, setGeoRedirectUrl] = useState("https://www.iki.lt");
   const [campaignName, setCampaignName] = useState("IKI");
+  const [themePrimary, setThemePrimary] = useState("#0fae4e");
   const [openContinent, setOpenContinent] = useState<string | null>(null);
   const supabase = createBrowserSupabaseClient();
 
@@ -80,6 +81,7 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
       setAllowedCountries(Array.isArray(ws.allowed_countries) ? ws.allowed_countries : []);
       setGeoRedirectUrl(typeof ws.geo_redirect_url === "string" && ws.geo_redirect_url.trim() !== "" ? ws.geo_redirect_url : "https://www.iki.lt");
       setCampaignName(typeof ws.campaign_name === "string" && ws.campaign_name.trim() !== "" ? ws.campaign_name.trim() : "IKI");
+      setThemePrimary(typeof ws.theme_primary === "string" && /^#[0-9a-fA-F]{6}$/.test(ws.theme_primary.trim()) ? ws.theme_primary.trim() : "#0fae4e");
     }
     setLoading(false);
   };
@@ -119,6 +121,7 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
           allowed_countries: allowedCountries,
           geo_redirect_url: geoRedirectUrl.trim() || "https://www.iki.lt",
           campaign_name: campaignName.trim() || "IKI",
+          theme_primary: /^#[0-9a-fA-F]{6}$/.test(themePrimary.trim()) ? themePrimary.trim() : "#0fae4e",
         }
       })
       .eq("id", settings.id || "default");
@@ -387,6 +390,41 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
               </div>
               <p className={`text-[11px] mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                 Buraya yazılan isim kaydedildiğinde sitenin <b>tüm metinlerindeki "IKI" ibaresi</b> bu isimle değiştirilir (başlıklar, portal adı, OG paylaşım metinleri, destek merkezi vb.). Boş bırakılırsa "IKI" kalır.
+              </p>
+            </div>
+
+            {/* Tema Rengi: sitedeki ana vurgu rengi (butonlar, borderlar, glow) */}
+            <div className={`rounded-2xl border p-5 ${darkMode ? 'border-white/10 bg-white/[0.03]' : 'border-gray-200 bg-gray-50/60'}`}>
+              <label className={`block text-[11px] font-bold mb-2 opacity-80 uppercase tracking-wider ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Tema Rengi (Ana Renk)</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={themePrimary}
+                  onChange={(e) => setThemePrimary(e.target.value)}
+                  className="h-11 w-14 cursor-pointer rounded-lg border-0 bg-transparent p-0"
+                />
+                <input
+                  type="text"
+                  value={themePrimary}
+                  onChange={(e) => setThemePrimary(e.target.value)}
+                  placeholder="#0fae4e"
+                  className={`w-32 px-3 py-2.5 rounded-xl text-sm font-mono outline-none transition-all ${darkMode ? 'bg-black/20 text-white border border-white/10 focus:border-[#EB5E28]' : 'bg-white border border-gray-200 focus:border-[#EB5E28]'}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setThemePrimary("#0fae4e")}
+                  className={`text-xs font-bold px-3 py-2 rounded-lg transition-colors ${darkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+                >
+                  Varsayılana Dön
+                </button>
+                <span
+                  className="ml-auto h-8 w-24 rounded-lg border border-white/10"
+                  style={{ background: `linear-gradient(90deg, ${/^#[0-9a-fA-F]{6}$/.test(themePrimary) ? themePrimary : '#0fae4e'}, rgba(0,0,0,0.4))` }}
+                  title="Önizleme"
+                />
+              </div>
+              <p className={`text-[11px] mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                Sitedeki <b>butonlar, kenarlıklar, glow efektleri ve panel arka planı</b> bu renkten türetilir (koyu tonlar otomatik hesaplanır). Kaydettikten sonra site kendini yeni renge boyar.
               </p>
             </div>
 

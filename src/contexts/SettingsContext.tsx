@@ -5,6 +5,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { normalizeCountryName } from "@/lib/country-utils";
 import { optimizeSupabaseImageUrl } from "@/lib/asset-url";
 import { brandifySettings, getCampaignNameFromSettings } from "@/lib/brand";
+import { applyBrandTheme, getThemePrimary } from "@/lib/theme";
 
 export type GlobalSettings = {
   logo_url: string;
@@ -201,6 +202,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     
     void loadSettings();
   }, [supabase]);
+
+  // Kampanya tema rengi (wheel_settings.theme_primary) -> CSS degiskenleri
+  useEffect(() => {
+    applyBrandTheme(getThemePrimary(settings));
+  }, [settings]);
 
   // Apply custom background image dynamically to the body
   useEffect(() => {

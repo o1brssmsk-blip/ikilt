@@ -242,9 +242,9 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
   return (
     <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden p-4">
       {phase !== "success" ? (
-        <div className="w-full max-w-[480px] rounded-[24px] border border-[#0c9142] bg-[#021a0e]/90 px-6 py-10 text-center shadow-[0_0_60px_rgba(0,84,166,0.35)] sm:px-10">
+        <div className="w-full max-w-[480px] rounded-[24px] border border-[#0c9142] bg-[var(--brand-panel)]/90 px-6 py-10 text-center shadow-[0_0_60px_rgba(0,84,166,0.35)] sm:px-10">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center">
-            <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#0fae4e]/30 border-t-[#4ade80]" />
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-[var(--brand)]/30 border-t-[#4ade80]" />
           </div>
           <h1 className="text-xl font-extrabold text-white sm:text-2xl">
             Prašome palaukti...
@@ -256,7 +256,7 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
           </p>
           <div className="mx-auto mt-6 h-1.5 w-56 max-w-full overflow-hidden rounded-full bg-[#065f30]">
             <div
-              className="h-full w-1/3 rounded-full bg-gradient-to-r from-[#0fae4e] via-[#4ade80] to-[#0fae4e]"
+              className="h-full w-1/3 rounded-full bg-gradient-to-r from-[var(--brand)] via-[#4ade80] to-[var(--brand)]"
               style={{ animation: "verifySlide 1.6s ease-in-out infinite" }}
             />
           </div>
@@ -272,10 +272,10 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
           `}</style>
         </div>
       ) : (
-        <div className="w-full max-w-[480px] animate-in zoom-in-95 duration-500 rounded-[24px] border border-[#FFD700]/60 bg-[#021a0e]/95 px-6 py-10 text-center shadow-[0_0_80px_rgba(255,215,0,0.35)] sm:px-10">
+        <div className="w-full max-w-[480px] animate-in zoom-in-95 duration-500 rounded-[24px] border border-[#FFD700]/60 bg-[var(--brand-panel)]/95 px-6 py-10 text-center shadow-[0_0_80px_rgba(255,215,0,0.35)] sm:px-10">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#FFD700] to-[#e6a800] shadow-[0_0_30px_rgba(255,215,0,0.6)]">
             <svg
-              className="h-9 w-9 text-[#021a0e]"
+              className="h-9 w-9 text-[var(--brand-panel)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

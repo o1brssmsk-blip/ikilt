@@ -7,11 +7,16 @@
   --font-instrument-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --background: #050816;
   --foreground: #ffffff;
+  /* Kampanya tema rengi (admin'den degistirilir, wheel_settings.theme_primary) */
+  --brand: #0fae4e;
+  --brand-rgb: 15,174,78;
+  --brand-dark: #007a38;
+  --brand-panel: #021a0e;
   /* 2026 Premium Luxury 3D Color Palette (IKI Litvanya kampanyasi: yesil + sari) */
   --luxury-deep-0: #020b06;
   --luxury-deep-1: #04170e;
   --luxury-deep-2: #062818;
-  --luxury-accent-1: #0fae4e; /* IKI parlak yesil */
+  --luxury-accent-1: var(--brand); /* IKI parlak yesil */
   --luxury-accent-2: #ffec49; /* IKI sari glow */
   --luxury-accent-3: #f5d90a; /* altin-sari vurgu */
   --luxury-glass-border: rgba(255, 255, 255, 0.10);
@@ -30,7 +35,7 @@ body {
   --font-sans: var(--font-manrope);
   --font-serif: var(--font-instrument-serif);
   --color-brand-gold: #ffec49;
-  --color-brand-blue: #0fae4e;
+  --color-brand-blue: var(--brand);
   --color-brand-cyan: #8ef06a;
 }
 

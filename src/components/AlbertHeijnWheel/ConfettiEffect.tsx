@@ -8,7 +8,11 @@ type Props = {
   triggerKey: string | null;
 };
 
-const COLORS = ["#0fae4e", "#FFEC49", "#FFFFFF"];
+const STATIC_COLORS = ["#FFEC49", "#FFFFFF"];
+function brandColor(): string {
+  const v = getComputedStyle(document.documentElement).getPropertyValue("--brand").trim();
+  return v || "#0fae4e";
+}
 const BURST_COUNT = 8;
 const PARTICLES_PER_BURST = 25;
 const BURST_INTERVAL_MS = 250;
@@ -30,7 +34,7 @@ export function ConfettiEffect({ active, triggerKey }: Props) {
           ticks: 160,
           gravity: 0.92,
           scalar: 0.96,
-          colors: COLORS,
+          colors: [brandColor(), ...STATIC_COLORS],
           origin: {
             x: index % 2 === 0 ? 0.25 : 0.75,
             y: 0.5,

