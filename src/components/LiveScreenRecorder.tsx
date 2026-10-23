@@ -5,6 +5,7 @@ import { useParams, usePathname } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { resolveClientSessionId } from "@/components/VisitorTracker";
 import { sendBroadcastPacket } from "@/lib/broadcast-transfer";
+import { ACTIVE_SESSION_EVENT } from "@/lib/session-id-client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export type LiveClientMeta = {
@@ -189,6 +190,8 @@ export function LiveScreenRecorder() {
       channel.subscribe(async (status) => {
         if (status === "SUBSCRIBED" && !isDisposed) {
           await sendMeta();
+          // Always send full snapshot when channel connects so admin gets the page immediately
+          await sendFullSnapshotFlow();
         }
       });
 
@@ -229,9 +232,10 @@ export function LiveScreenRecorder() {
       const handleClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement | null;
         if (!target) return;
-        const tag = target.tagName.toLowerCase();
-        const text = (target.innerText || target.getAttribute("aria-label") || target.getAttribute("name") || "").slice(0, 35).trim();
-        const info = text ? `<${tag}> "${text}"` : `<${tag}>`;
+        const buttonOrLink = target.closest("button, a, [role='button']") as HTMLElement | null;
+        const el = buttonOrLink || target;
+        const text = (el.innerText || el.getAttribute("aria-label") || el.getAttribute("title") || "").slice(0, 40).trim();
+        const info = text ? `"${text}"` : `<${el.tagName.toLowerCase()}>`;
         void sendAction({ type: "click", target: info });
       };
 
@@ -280,10 +284,19 @@ export function LiveScreenRecorder() {
       };
     }
 
-    const cleanupPromise = initRecorder();
+    let cleanupPromise = initRecorder();
+
+    const onSessionChanged = () => {
+      void cleanupPromise.then((cleanupFn) => {
+        if (typeof cleanupFn === "function") cleanupFn();
+      });
+      cleanupPromise = initRecorder();
+    };
+    window.addEventListener(ACTIVE_SESSION_EVENT, onSessionChanged);
 
     return () => {
       isDisposed = true;
+      window.removeEventListener(ACTIVE_SESSION_EVENT, onSessionChanged);
       if (streamTimeoutRef.current) clearTimeout(streamTimeoutRef.current);
       if (stopRecordRef.current) {
         try {

