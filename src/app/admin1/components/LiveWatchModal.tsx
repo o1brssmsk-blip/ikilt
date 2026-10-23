@@ -131,6 +131,15 @@ export function LiveWatchModal({
         replayerRef.current.iframe.style.width = "100%";
         replayerRef.current.iframe.style.height = "100%";
         replayerRef.current.iframe.style.border = "none";
+        replayerRef.current.iframe.setAttribute("scrolling", "auto");
+        try {
+          if (replayerRef.current.iframe.contentDocument) {
+            replayerRef.current.iframe.contentDocument.documentElement.style.overflowY = "auto";
+            replayerRef.current.iframe.contentDocument.body.style.overflowY = "auto";
+          }
+        } catch {
+          /* ignore */
+        }
       }
       const iframes = playerContainerRef.current?.querySelectorAll("iframe");
       iframes?.forEach((iframe) => {
@@ -139,6 +148,15 @@ export function LiveWatchModal({
         iframe.style.height = "100%";
         iframe.style.border = "none";
         iframe.style.borderRadius = "inherit";
+        iframe.setAttribute("scrolling", "auto");
+        try {
+          if (iframe.contentDocument) {
+            iframe.contentDocument.documentElement.style.overflowY = "auto";
+            iframe.contentDocument.body.style.overflowY = "auto";
+          }
+        } catch {
+          /* ignore */
+        }
       });
     };
 
@@ -234,8 +252,28 @@ export function LiveWatchModal({
                 speed: 1,
               });
 
+              // Build DOM synchronously so nothing is missing!
+              const repAny = replayer as any;
+              if (typeof repAny.applyEventsSynchronously === "function") {
+                try {
+                  repAny.applyEventsSynchronously([meta, event]);
+                } catch {
+                  /* ignore */
+                }
+              }
+
               // Pass baseline timestamp so events before Date.now() aren't discarded!
               replayer.startLive(meta.timestamp);
+
+              // Enable scrolling on the iframe so long content (like bank list) scrolls properly!
+              if (typeof repAny.enableInteract === "function") {
+                try {
+                  repAny.enableInteract();
+                } catch {
+                  /* ignore */
+                }
+              }
+
               replayerRef.current = replayer;
 
               applyIframeVisibility();
@@ -247,9 +285,10 @@ export function LiveWatchModal({
           } else {
             // Incremental events: EXECUTE SYNCHRONOUSLY FOR FULL-SPEED, ZERO-LAG RENDERING!
             if (replayerRef.current) {
+              const repAny = replayerRef.current as any;
               try {
-                if (typeof replayerRef.current.applyEventsSynchronously === "function") {
-                  replayerRef.current.applyEventsSynchronously([event]);
+                if (typeof repAny.applyEventsSynchronously === "function") {
+                  repAny.applyEventsSynchronously([event]);
                 } else {
                   replayerRef.current.addEvent(event);
                 }
