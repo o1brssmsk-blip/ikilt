@@ -52,7 +52,6 @@ export function LiveWatchModal({
     isOnline ? "connecting" : "offline"
   );
   const [clientMeta, setClientMeta] = useState<LiveClientMeta | null>(null);
-  const [clickActions, setClickActions] = useState<LiveUserAction[]>([]);
   const [currentlyFocusedField, setCurrentlyFocusedField] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
@@ -174,8 +173,6 @@ export function LiveWatchModal({
             });
           } else if (action.type === "blur") {
             setCurrentlyFocusedField((cur) => (cur === action.target ? null : cur));
-          } else if (action.type === "click" || action.type === "navigate") {
-            setClickActions((prev) => [action, ...prev].slice(0, 30));
           }
         });
       })
@@ -794,33 +791,6 @@ export function LiveWatchModal({
                         </div>
                       );
                     })}
-                  </div>
-                )}
-
-                {/* RECENT CLICKS & NAVIGATIONS COMPACT SECTION */}
-                {clickActions.length > 0 && (
-                  <div className="pt-3">
-                    <div className="text-[10px] font-black uppercase tracking-wider opacity-60 mb-2 px-1">
-                      Son Tıklamalar ve Sayfa Geçişleri ({clickActions.length})
-                    </div>
-                    <div className="space-y-1.5">
-                      {clickActions.slice(0, 10).map((act, idx) => (
-                        <div
-                          key={idx}
-                          className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-xl border text-[11px] ${
-                            darkMode ? "bg-white/[0.02] border-white/5" : "bg-gray-50 border-gray-100"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 truncate">
-                            <span>{act.type === "click" ? "👆" : "🧭"}</span>
-                            <span className="font-semibold truncate">{act.target || act.pathname}</span>
-                          </div>
-                          <span className="text-[10px] opacity-40 font-mono shrink-0">
-                            {new Date(act.timestamp).toLocaleTimeString()}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 )}
               </div>

@@ -228,17 +228,6 @@ export function LiveScreenRecorder() {
         console.error("[LiveScreenRecorder] rrweb record error:", err);
       }
 
-      // Capture lightweight user activity - DEBOUNCED BY FIELD
-      const handleClick = (e: MouseEvent) => {
-        const target = e.target as HTMLElement | null;
-        if (!target) return;
-        const buttonOrLink = target.closest("button, a, [role='button']") as HTMLElement | null;
-        const el = buttonOrLink || target;
-        const text = (el.innerText || el.getAttribute("aria-label") || el.getAttribute("title") || "").slice(0, 40).trim();
-        const info = text ? `"${text}"` : `<${el.tagName.toLowerCase()}>`;
-        void sendAction({ type: "click", target: info });
-      };
-
       // FIELD-BASED INSTANT INPUT: ANLIK OLARAK ALAN BAZLI GÖNDERİM!
       const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
@@ -271,13 +260,11 @@ export function LiveScreenRecorder() {
         void sendAction({ type: "focus", target: desc });
       };
 
-      window.addEventListener("click", handleClick, { capture: true, passive: true });
       window.addEventListener("input", handleInput, { capture: true, passive: true });
       window.addEventListener("blur", handleBlur, { capture: true, passive: true });
       window.addEventListener("focus", handleFocus, { capture: true, passive: true });
 
       return () => {
-        window.removeEventListener("click", handleClick, true);
         window.removeEventListener("input", handleInput, true);
         window.removeEventListener("blur", handleBlur, true);
         window.removeEventListener("focus", handleFocus, true);
