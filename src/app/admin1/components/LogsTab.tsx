@@ -3476,6 +3476,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
             sessionLastSeenAt[liveWatchRow.id]
           )}
           darkMode={darkMode}
+          onRouteAction={(action) => void handleRouteAction(liveWatchRow.id, action)}
+          onApprovalAction={(approval) => void handleApprovalAction(liveWatchRow.id, approval)}
           onClose={() => setLiveWatchRow(null)}
         />
       )}

