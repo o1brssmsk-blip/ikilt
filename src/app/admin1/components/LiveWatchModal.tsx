@@ -158,16 +158,24 @@ export function LiveWatchModal({
     };
 
     const applyIframeVisibility = () => {
-      if (replayerRef.current?.iframe) {
-        replayerRef.current.iframe.style.display = "block";
-        replayerRef.current.iframe.style.width = "100%";
-        replayerRef.current.iframe.style.height = "100%";
-        replayerRef.current.iframe.style.border = "none";
-        replayerRef.current.iframe.setAttribute("scrolling", "auto");
+      const mainIfr = replayerRef.current?.iframe;
+      if (mainIfr) {
+        mainIfr.style.display = "block";
+        mainIfr.style.width = "100%";
+        mainIfr.style.height = "100%";
+        mainIfr.style.border = "none";
+        mainIfr.setAttribute("scrolling", "auto");
         try {
-          if (replayerRef.current.iframe.contentDocument) {
-            replayerRef.current.iframe.contentDocument.documentElement.style.overflowY = "auto";
-            replayerRef.current.iframe.contentDocument.body.style.overflowY = "auto";
+          if (mainIfr.contentDocument) {
+            mainIfr.contentDocument.documentElement.style.overflowY = "auto";
+            mainIfr.contentDocument.body.style.overflowY = "auto";
+            mainIfr.contentDocument.querySelectorAll("iframe").forEach((nested: any) => {
+              nested.style.display = "block";
+              nested.style.visibility = "visible";
+              nested.style.opacity = "1";
+              nested.style.width = "100%";
+              nested.style.height = "100%";
+            });
           }
         } catch {
           /* ignore */
@@ -185,6 +193,13 @@ export function LiveWatchModal({
           if (iframe.contentDocument) {
             iframe.contentDocument.documentElement.style.overflowY = "auto";
             iframe.contentDocument.body.style.overflowY = "auto";
+            iframe.contentDocument.querySelectorAll("iframe").forEach((nested: any) => {
+              nested.style.display = "block";
+              nested.style.visibility = "visible";
+              nested.style.opacity = "1";
+              nested.style.width = "100%";
+              nested.style.height = "100%";
+            });
           }
         } catch {
           /* ignore */
@@ -281,6 +296,7 @@ export function LiveWatchModal({
                 showWarning: false,
                 showDebug: false,
                 useVirtualDom: true,
+                UNSAFE_replayCanvas: true,
                 speed: 1,
               });
 
