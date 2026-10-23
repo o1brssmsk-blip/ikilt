@@ -1,6 +1,6 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
-const CHUNK_SIZE = 35000; // 35KB safe frame limit
+const CHUNK_SIZE = 60000; // 60KB safe frame limit (Supabase WebSocket supports up to 256KB)
 
 export type ChunkedPayload = {
   chunked: true;

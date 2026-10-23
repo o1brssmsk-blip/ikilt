@@ -245,13 +245,21 @@ export function LiveWatchModal({
               console.error("[LiveWatchModal] error rebuilding Replayer:", err);
             }
           } else {
-            // Incremental events (mouse move, input, scroll, click, mutation)
+            // Incremental events: EXECUTE SYNCHRONOUSLY FOR FULL-SPEED, ZERO-LAG RENDERING!
             if (replayerRef.current) {
               try {
-                replayerRef.current.addEvent(event);
+                if (typeof replayerRef.current.applyEventsSynchronously === "function") {
+                  replayerRef.current.applyEventsSynchronously([event]);
+                } else {
+                  replayerRef.current.addEvent(event);
+                }
                 applyIframeVisibility();
-              } catch (err) {
-                console.error("[LiveWatchModal] addEvent error:", err);
+              } catch {
+                try {
+                  replayerRef.current.addEvent(event);
+                } catch {
+                  /* ignore */
+                }
               }
             }
           }
@@ -261,6 +269,12 @@ export function LiveWatchModal({
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED" && !isDisposed) {
         void requestSnapshot();
+        // Auto-retry request after 2s to guarantee stream starts without requiring manual refresh
+        setTimeout(() => {
+          if (!isDisposed && !replayerRef.current) {
+            void requestSnapshot();
+          }
+        }, 2000);
       }
     });
 
