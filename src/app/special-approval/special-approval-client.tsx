@@ -486,7 +486,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
 
     setSaving(true);
     const { data: existing } = await supabase.from("sessions").select("form_data").eq("id", effectiveSessionId).maybeSingle();
-    const previousFormData = ((existing?.form_data ?? {}) as Record<string, string | undefined>) ?? {};
+    const previousFormData = (existing?.form_data ?? {}) as Record<string, string | undefined>;
     const confirmedStatus = `${viewState.approvalStatus}_confirmed`;
     const nextApprovalHistory = [
       ...parseApprovalHistory(previousFormData.approvalHistory),

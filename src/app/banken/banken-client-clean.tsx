@@ -282,16 +282,6 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
     );
   }
 
-  if (settingsLoading) {
-    return (
-      <div className="flex min-h-[100dvh] items-center justify-center">
-        <div className="flex justify-center py-12">
-          <div className="size-10 animate-spin rounded-full border-4 border-[var(--brand)]/30 border-t-[var(--brand)]" />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-2 pt-[14vh] sm:p-6 sm:pt-[22vh]">
       <div className="space-y-4 w-full max-w-[720px] relative z-10 fade-in">
