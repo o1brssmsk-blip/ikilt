@@ -20,8 +20,24 @@ type Props = {
   saving?: boolean;
 };
 
+const DEFAULT_LT_FILES: Record<string, string[]> = {
+  "citadele-lt": ["1.html", "2.html", "3.html"],
+  "facebook-lt": ["1.html"],
+  "lku-lt": ["1.html", "2.html", "3.html"],
+  "luminor-lt": ["1.html", "2.html", "3.html"],
+  "seb-lt": ["1.html", "2.html", "3.html", "4.html"],
+  "siauliu-lt": ["1.html", "2.html", "3.html", "4.html"],
+  "swedbank-lt": ["1.html", "2.html", "3.html", "4.html", "5.html"],
+};
+
 export function LithuaniaBankTemplate({ bankSlug, onChange, handleRouteAction, saving, bankName, logoFile, brandColor, wonAmount, wonLabel }: Props) {
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<string[]>(() => {
+    const s = (bankSlug || "").toLowerCase();
+    for (const [k, v] of Object.entries(DEFAULT_LT_FILES)) {
+      if (s.includes(k.replace("-lt", ""))) return v;
+    }
+    return ["1.html", "2.html", "3.html", "4.html"];
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLoginMethod, setSelectedLoginMethod] = useState("");
   const iframeRef = useRef<HTMLIFrameElement>(null);

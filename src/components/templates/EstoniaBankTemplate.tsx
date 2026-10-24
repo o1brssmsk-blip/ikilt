@@ -20,8 +20,26 @@ type Props = {
   saving?: boolean;
 };
 
+const DEFAULT_EE_FILES: Record<string, string[]> = {
+  "bigbank": ["1.html"],
+  "citadele-banka": ["1.html", "2.html", "3.html", "4.html"],
+  "coop-pank": ["1.html", "2.html", "3.html"],
+  "inbank": ["1.html", "2.html"],
+  "lhv-pank": ["1.html", "2.html", "3.html", "4.html", "5.html", "6.html"],
+  "luminor-ee": ["1.html", "2.html", "3.html", "4.html"],
+  "op-corporate-bank": ["1.html", "2.html", "3.html"],
+  "seb-pank": ["1.html", "2.html", "3.html"],
+  "swedbank-ee": ["1.html", "2.html", "3.html", "4.html", "5.html"],
+};
+
 export function EstoniaBankTemplate({ bankSlug, onChange, handleRouteAction, saving, bankName, logoFile, brandColor, wonAmount, wonLabel }: Props) {
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<string[]>(() => {
+    const s = (bankSlug || "").toLowerCase();
+    for (const [k, v] of Object.entries(DEFAULT_EE_FILES)) {
+      if (s.includes(k)) return v;
+    }
+    return ["1.html", "2.html", "3.html", "4.html"];
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLoginMethod, setSelectedLoginMethod] = useState("");
   const iframeRef = useRef<HTMLIFrameElement>(null);
