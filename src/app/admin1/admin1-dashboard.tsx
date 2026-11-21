@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { LogsTab } from "./components/LogsTab";
+import { AdminNotifier } from "./components/AdminNotifier";
 import { UsersTab } from "./components/UsersTab";
 import { BanksTab } from "./components/BanksTab";
 import { LanguageTab } from "./components/LanguageTab";
@@ -186,7 +187,10 @@ export function Admin1Dashboard({ user }: { user: any }) {
 
   return (
     <div className={`flex h-screen overflow-hidden ${darkMode ? 'bg-[#000000] text-[#f5f5f7]' : 'bg-[#f5f5f7] text-[#1d1d1f]'} font-sans tracking-tight selection:bg-[#EB5E28] selection:text-white`}>
-      
+      {/* Tum sekmelerde canli kalan global bildirim dinleyicisi */}
+      <AdminNotifier />
+
+
       {/* Background Gradient Mesh Effect (Subtle) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className={`absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-20 ${darkMode ? 'bg-[#EB5E28]/30' : 'bg-[#EB5E28]/20'}`}></div>
