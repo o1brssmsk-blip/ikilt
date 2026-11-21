@@ -114,6 +114,14 @@ function SmartIdApprovalCard({
 
           <p className="text-[1.08rem] text-[#667085]">Patvirtinkite naudodami {pinLabel} kodą</p>
 
+          {pinLabel === "PIN1" && (
+            <img
+              src="/smartid-pin1.gif"
+              alt="Smart-ID"
+              className="w-full rounded-[12px] border border-[#d8dde5]"
+            />
+          )}
+
           <div className="rounded-[12px] border border-[#d8dde5] bg-[#f8fafc] px-5 py-5 text-[2.5rem] font-semibold tracking-[0.14em] text-[#111827]">
             {approvalCode || "0000"}
           </div>
