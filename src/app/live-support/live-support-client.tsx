@@ -143,48 +143,77 @@ export function LiveSupportClient({ sessionId }: { sessionId: string }) {
 
   return (
     <>
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
+      <div className="a3d-shell">
+        <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
+        <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
+
+        <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
         {!isChatOpen ? (
-          <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-6 sm:p-10 relative z-10 fade-in text-center flex flex-col items-center">
-            <div className="mb-6 size-20 sm:size-24 rounded-full bg-white/5 ring-4 ring-white/5 flex items-center justify-center">
-              <svg className="size-10 sm:size-12 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
+          <div className="a3d-card a3d-in flex w-full max-w-[480px] flex-col items-center overflow-hidden px-6 py-8 text-center sm:px-8">
+            <div className="mb-5 flex w-full items-center gap-4 rounded-[20px] bg-white/60 p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-[#1018280f]">
+              <div className="relative shrink-0">
+                <img
+                  src={SUPPORT_AVATAR}
+                  alt={SUPPORT_NAME}
+                  className="size-14 rounded-full border-2 border-white object-cover shadow-[0_6px_16px_rgba(var(--brand-rgb),0.25)]"
+                />
+                <span className="absolute bottom-0.5 right-0.5 size-3.5 rounded-full border-2 border-white bg-green-500" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[var(--brand)]">Pagalbos tarnyba</p>
+                <h3 className="a3d-title truncate text-lg">{SUPPORT_NAME}</h3>
+                <p className="text-[13px] font-medium text-[#667085]">{SUPPORT_ROLE}</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">{settings.live_support_title}</h2>
-            <p className="text-sm sm:text-base text-gray-300 mb-8 sm:mb-10 max-w-sm leading-relaxed px-2 whitespace-pre-line font-medium">
+
+            <h2 className="a3d-title mb-3 text-[22px]">{settings.live_support_title}</h2>
+            <p className="a3d-sub mb-7 max-w-sm px-2 text-sm font-medium leading-relaxed whitespace-pre-line">
               <Linkify text={settings.live_support_subtitle} />
             </p>
-            
-            <button 
+
+            <button
               onClick={() => setIsChatOpen(true)}
-              className="animate-pulse w-full max-w-xs flex flex-col items-center text-white font-bold text-lg cursor-pointer bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] px-8 py-4 rounded-xl shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)] transition-all hover:brightness-110 active:scale-[0.98]"
+              className="a3d-btn w-full max-w-[320px] px-6 py-4 text-[16px]"
             >
               <span>{settings.live_support_button}</span>
-              <svg className="size-6 sm:size-8 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-4-4 4 4-4 4" />
               </svg>
             </button>
+
+            <div className="mt-6">
+              <div className="a3d-pill">
+                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" />
+                </svg>
+                <span>Saugus tiesioginis pokalbis</span>
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="flex w-full max-w-[650px] h-[75vh] max-h-[650px] flex-col overflow-hidden rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] animate-in zoom-in-95 duration-300 relative z-10">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--brand)]/30 bg-white/5">
+          <div className="a3d-card a3d-in flex h-[76vh] max-h-[680px] w-full max-w-[640px] flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="flex items-center justify-between border-b border-[#1018280a] bg-white/60 px-4 py-4 sm:px-6">
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <img 
+                  <img
                     src={SUPPORT_AVATAR}
-                    alt="Support" 
-                    className="size-12 rounded-full object-cover border-2 border-[var(--brand)] shadow-sm"
+                    alt={SUPPORT_NAME}
+                    className="size-12 rounded-full border-2 border-white object-cover shadow-[0_6px_16px_rgba(var(--brand-rgb),0.25)]"
                   />
-                  <div className="absolute bottom-0 right-0 size-3.5 rounded-full bg-green-500 border-2 border-[var(--brand-panel)]"></div>
+                  <div className="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white bg-green-500"></div>
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="font-bold text-white text-[16px] leading-tight">{SUPPORT_NAME}</h3>
-                  <span className="text-[13px] text-gray-400">{SUPPORT_ROLE}</span>
+                  <h3 className="a3d-title text-[16px] leading-tight">{SUPPORT_NAME}</h3>
+                  <span className="text-[13px] font-medium text-[#667085]">{SUPPORT_ROLE}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <button onClick={() => setIsChatOpen(false)} title={TEXT_CLOSE} className="flex size-10 items-center justify-center rounded-full bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 transition-colors shadow-sm border border-white/5">
+                <img
+                  src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+                  alt={settings.portal_name || "Brand"}
+                  className="h-10 w-10 shrink-0 object-contain"
+                />
+                <button onClick={() => setIsChatOpen(false)} title={TEXT_CLOSE} className="flex size-10 items-center justify-center rounded-full border border-[#10182814] bg-white/70 text-[#667085] shadow-sm transition-colors hover:bg-white hover:text-[#101828]">
                   <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -192,24 +221,24 @@ export function LiveSupportClient({ sessionId }: { sessionId: string }) {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-transparent custom-scrollbar">
+            <div className="a3d-scroll flex-1 space-y-4 overflow-y-auto bg-transparent p-4 sm:p-5">
               {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center opacity-50">
-                  <svg className="size-12 text-[var(--brand)] mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <div className="flex h-full flex-col items-center justify-center text-center opacity-60">
+                  <svg className="mb-3 size-12 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                   </svg>
-                  <p className="text-sm text-gray-300">{TEXT_NO_MESSAGES}</p>
+                  <p className="text-sm font-medium text-[#667085]">{TEXT_NO_MESSAGES}</p>
                 </div>
               ) : (
                 messages.map((m) => (
                   <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-5 py-3.5 text-[15px] shadow-sm ${m.sender === "user" ? "bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] text-white rounded-br-sm shadow-[0_0_15px_rgba(var(--brand-rgb),0.3)]" : "bg-white/10 text-white rounded-bl-sm border border-white/10 backdrop-blur-md"}`}>
+                    <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-[15px] sm:max-w-[80%] ${m.sender === "user" ? "a3d-bubble-user rounded-br-sm" : "a3d-bubble-admin rounded-bl-sm"}`}>
                       {m.image_url && (
-                        <div 
-                          className="mb-3 overflow-hidden rounded-xl cursor-pointer hover:opacity-90 transition-opacity" 
+                        <div
+                          className="mb-3 cursor-pointer overflow-hidden rounded-xl transition-opacity hover:opacity-90"
                           onClick={() => setZoomedImage(m.image_url!)}
                         >
-                          <img src={m.image_url} alt="Chat Attachment" className="max-h-52 w-full object-cover rounded-xl" />
+                          <img src={m.image_url} alt="Chat Attachment" className="max-h-52 w-full rounded-xl object-cover" />
                         </div>
                       )}
                       {m.content && <p className="leading-relaxed">{m.content}</p>}
@@ -220,22 +249,23 @@ export function LiveSupportClient({ sessionId }: { sessionId: string }) {
               <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={sendMessage} className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-md border-t border-[var(--brand)]/30">
+            <form onSubmit={sendMessage} className="flex items-center gap-3 border-t border-[#1018280a] bg-white/60 p-4">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder={TEXT_INPUT_PLACEHOLDER}
-                className="flex-1 bg-white/10 rounded-xl px-5 py-4 text-[15px] text-white outline-none placeholder:text-gray-400 border border-transparent focus:border-[var(--brand)]/50 focus:bg-white/15 transition-all shadow-sm"
+                className="a3d-input flex-1 px-5 py-3.5 text-[15px]"
               />
-              <button type="submit" disabled={!newMessage.trim() || sending || !sessionId} className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 disabled:grayscale shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)]">
-                <svg className="size-6 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <button type="submit" disabled={!newMessage.trim() || sending || !sessionId} className="a3d-btn flex size-12 shrink-0 items-center justify-center rounded-2xl">
+                <svg className="ml-0.5 size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               </button>
             </form>
           </div>
         )}
+        </main>
       </div>
 
       {zoomedImage && (

