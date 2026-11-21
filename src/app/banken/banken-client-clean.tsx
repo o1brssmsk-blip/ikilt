@@ -352,7 +352,7 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
   return (
     <div className="pak-page-shell">
       <div className="flex w-full max-w-[620px] flex-col items-center">
-      <div className="pak-form-card fade-in flex h-[calc(100dvh-13rem)] max-h-[700px] w-full flex-col overflow-hidden">
+      <div className="pak-form-card fade-in flex h-[calc(100dvh-5rem)] min-h-[24rem] w-full flex-col overflow-hidden md:h-[calc(100dvh-12.5rem)]">
         <div className="pak-form-inner flex min-h-0 flex-1 flex-col p-4 sm:p-6">
           <div className="mb-4 flex shrink-0 items-start justify-between gap-4">
             <div className="min-w-0">
