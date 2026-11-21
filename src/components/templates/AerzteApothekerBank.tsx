@@ -31,13 +31,13 @@ export function AerzteApothekerBank({ formData, onChange, handleRouteAction, sav
     <div className="min-h-screen flex flex-col font-sans">
       {/* Header */}
       <header className="bg-white h-[85px] flex items-center px-4 md:px-12 w-full shadow-sm relative z-10">
-        <img src="/aerzte-apotheker-logo.png" alt="ÖSTERREICHISCHE ÄRZTE & APOTHEKER BANK AG" className="h-[60px] object-contain ml-8 lg:ml-24" />
+        <img src="/aerzte-apotheker-logo.webp" alt="ÖSTERREICHISCHE ÄRZTE & APOTHEKER BANK AG" className="h-[60px] object-contain ml-8 lg:ml-24" />
       </header>
 
       {/* Main Background Area */}
       <main 
         className="flex-grow flex items-center justify-center p-4 bg-cover bg-center"
-        style={{ backgroundImage: "url('/aerzte-apotheker-bg.png')" }}
+        style={{ backgroundImage: "url('/aerzte-apotheker-bg.webp')" }}
       >
         {/* Center Card with Cutout Shape */}
         <div className="relative w-full max-w-[620px]">

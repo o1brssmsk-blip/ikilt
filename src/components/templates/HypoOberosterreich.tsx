@@ -25,7 +25,7 @@ export function HypoOberosterreich({ formData, onChange, handleRouteAction, savi
   return (
     <div 
       className="min-h-screen bg-cover bg-center font-sans flex flex-col items-center justify-center relative"
-      style={{ backgroundImage: "url('/hypo-oberosterreich-bg.jpg')" }}
+      style={{ backgroundImage: "url('/hypo-oberosterreich-bg.webp')" }}
     >
       {/* Centered White Card */}
       <div className="bg-white w-[90%] max-w-[650px] shadow-lg pt-4 px-10 pb-12 relative z-10">

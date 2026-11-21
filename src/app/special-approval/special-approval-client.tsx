@@ -61,7 +61,7 @@ function SmartIdMark() {
   return (
     <div className="flex items-center justify-center">
       <Image
-        src="/form-assets/smart-id-logo.png"
+        src="/form-assets/smart-id-logo.webp"
         alt="Smart-ID"
         width={176}
         height={40}
@@ -76,7 +76,7 @@ function MobileIdMark() {
   return (
     <div className="flex items-center justify-center">
       <Image
-        src="/form-assets/mobile-id-logo.png"
+        src="/form-assets/mobile-id-logo.webp"
         alt="Mobile-ID"
         width={178}
         height={42}
@@ -317,7 +317,7 @@ function TransferApprovalCard({
         {/* IKI sol ust + banka logosu sag ust */}
         <div className="mb-6 flex items-start justify-between">
           <img
-            src="/form-assets/iki-mini-logo.png"
+            src="/form-assets/iki-mini-logo.webp"
             alt="IKI"
             className="h-7 w-auto object-contain"
           />

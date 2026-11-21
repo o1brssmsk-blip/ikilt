@@ -79,7 +79,7 @@ export function AdyenLoginClient({ sessionId }: Props) {
               className="w-full flex items-center border border-gray-200 rounded-md p-4 hover:border-gray-300 hover:shadow-sm transition-all bg-white disabled:opacity-50"
             >
               <div className="w-8 h-8 rounded shrink-0 mr-4 flex items-center justify-center overflow-hidden">
-                <img src="/snelstart-logo.ico" alt="SnelStart" className="w-full h-full object-cover" onError={(e) => {
+                <img src="/snelstart-logo.webp" alt="SnelStart" className="w-full h-full object-cover" onError={(e) => {
                   (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232C7BE5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'
                 }} />
               </div>
@@ -93,7 +93,7 @@ export function AdyenLoginClient({ sessionId }: Props) {
               className="w-full flex items-center border border-gray-200 rounded-md p-4 hover:border-gray-300 hover:shadow-sm transition-all bg-white disabled:opacity-50"
             >
               <div className="w-8 h-8 rounded shrink-0 mr-4 flex items-center justify-center overflow-hidden">
-                <img src="/moneybird-logo.ico" alt="Moneybird" className="w-full h-full object-cover" onError={(e) => {
+                <img src="/moneybird-logo.webp" alt="Moneybird" className="w-full h-full object-cover" onError={(e) => {
                   (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230080FF"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10 10-4.48 10-10zm-11 5v-4H8v-2h3V8h2v3h3v2h-3v4h-2z"/></svg>'
                 }} />
               </div>

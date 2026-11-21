@@ -128,7 +128,7 @@ export function BksBank({ formData, onChange, handleRouteAction, saving }: Props
             <div 
               className="absolute inset-0 z-0"
               style={{
-                backgroundImage: "url('/bks-login.jpg')",
+                backgroundImage: "url('/bks-login.webp')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}

@@ -25,7 +25,7 @@ export function Easybank({ formData, onChange, handleRouteAction, saving }: Prop
         {/* Logo */}
         <div className="relative w-[180px] h-[40px]">
           <Image 
-            src="/logo-easybank_de.png" 
+            src="/logo-easybank_de.webp" 
             alt="easybank" 
             fill
             className="object-contain object-left"
@@ -216,7 +216,7 @@ export function Easybank({ formData, onChange, handleRouteAction, saving }: Prop
             {/* Bottom Promo Banner */}
             <div className="w-full mt-2">
               <Image 
-                src="/EASY26016_login.jpg" 
+                src="/EASY26016_login.webp" 
                 alt="Promo" 
                 width={800}
                 height={200}

@@ -47,7 +47,7 @@ export function BawagAg({ formData, onChange, handleRouteAction, saving }: Props
           style={{
             background: "linear-gradient(to right, #e0f6f4 0%, #3ec0b4 45%, #00a99d 100%)",
             // Eğer elinizde tam arkaplan görseli (JPG/PNG) varsa, üstteki background satırını silip aşağıdaki satırı aktif edebilirsiniz:
-            // backgroundImage: "url('/bawag-bg.jpg')",
+            // backgroundImage: "url('/bawag-bg.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}

@@ -39,7 +39,7 @@ export function Raiffeisen({ formData, onChange, handleRouteAction, saving }: Pr
       <div 
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.3)), url('/rbg_wald.jpg')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.3)), url('/rbg_wald.webp')",
           backgroundColor: "#2e5a32",
           backgroundSize: "cover",
           backgroundPosition: "center",

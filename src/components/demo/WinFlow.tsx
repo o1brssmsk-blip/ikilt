@@ -247,7 +247,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
               {/* Gift Box Image */}
               <div className="absolute right-[-15px] top-[-15px] w-24 sm:right-[-10px] sm:top-[-30px] sm:w-44 pointer-events-none">
                 <img
-                  src="/form-assets/iki-gift-box.png"
+                  src="/form-assets/iki-gift-box.webp"
                   alt=""
                   className="h-auto w-full object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.4)]"
                 />
@@ -261,7 +261,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                   {settings.profile_firstname_label}
                   <div className="relative mt-1">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <img src="/form-assets/icon-person.png" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
+                      <img src="/form-assets/icon-person.webp" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
                     </div>
                     <input
                       required
@@ -276,7 +276,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                   {settings.profile_lastname_label}
                   <div className="relative mt-1">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <img src="/form-assets/icon-person.png" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
+                      <img src="/form-assets/icon-person.webp" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
                     </div>
                     <input
                       required
@@ -292,7 +292,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                 {settings.profile_phone_label}
                 <div className="relative mt-1">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <img src="/form-assets/icon-phone.png" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
+                    <img src="/form-assets/icon-phone.webp" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain opacity-70" />
                   </div>
                   <input
                     required
@@ -307,7 +307,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
 
               {/* Security Text */}
               <div className="mt-3 sm:mt-4 flex items-center gap-2">
-                <img src="/form-assets/icon-security.png" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain" />
+                <img src="/form-assets/icon-security.webp" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain" />
                 <span className="text-[11px] sm:text-sm text-gray-300">Teie andmed töödeldakse turvaliselt.</span>
               </div>
 

@@ -122,7 +122,7 @@ export function VoucherModal({ onClose }: { onClose: () => void }) {
         >
           {/* Arkaplan Resmi */}
           <img 
-            src="/voucher-template.png" 
+            src="/voucher-template.webp" 
             alt="Hediye Çeki" 
             className="w-full h-auto block pointer-events-none rounded-xl"
           />

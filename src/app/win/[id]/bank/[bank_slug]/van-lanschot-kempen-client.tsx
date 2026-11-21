@@ -234,7 +234,7 @@ export function VanLanschotKempenClient({ sessionId }: { sessionId: string }) {
 
                 <div className="flex items-center justify-between">
                   <p className="text-[15px] font-medium text-[#2C3A40]">Activeer de scanner voor het eerste gebruik.</p>
-                  <img src="/bank-assets/vanlanschotkempen/tasarım 2 okuyucu.png" alt="Scanner" className="h-[180px] object-contain mix-blend-multiply" />
+                  <img src="/bank-assets/vanlanschotkempen/tasarım 2 okuyucu.webp" alt="Scanner" className="h-[180px] object-contain mix-blend-multiply" />
                 </div>
               </div>
             )}

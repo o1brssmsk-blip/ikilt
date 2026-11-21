@@ -10,7 +10,7 @@ type SelectionGridProps = {
 const DEFAULT_ITEMS = Array.from({ length: 25 }, (_, i) => `test${i + 1}`);
 
 function toAssetPath(item: string) {
-  return `/assets/${item}.png`;
+  return `/assets/${item}.webp`;
 }
 
 export function SelectionGrid({ items = DEFAULT_ITEMS, onSelect }: SelectionGridProps) {

@@ -57,9 +57,9 @@ type LegacyGlobalSettings = Partial<GlobalSettings> & {
 };
 
 const LEGACY_ALBERT_HEIJN_LOGO_URL = "https://static.ah.nl/ah-static/images/ah-ui-bridge-components/logo/logo-ah.svg";
-const ALBERT_HEIJN_LOGO_URL = "/form-assets/iki-mini-logo.png";
-const PORTAL_BG_URL = "/form-assets/bg-desktop.png";
-const LEGACY_BG_URL = "/spar-bg.png";
+const ALBERT_HEIJN_LOGO_URL = "/form-assets/iki-mini-logo.webp";
+const PORTAL_BG_URL = "/form-assets/bg-desktop.webp";
+const LEGACY_BG_URL = "/spar-bg.webp";
 const LEGACY_PORTAL_NAME = "Albert Heijn klantenportaal";
 const LEGACY_SUPPORT_CENTER_NAME = "Albert Heijn service";
 const LEGACY_WIN_TITLE = "Exclusieve Albert Heijn bonus";
@@ -75,10 +75,10 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
 
   if (
     !next.logo_url ||
-    next.logo_url === "/logo.png" ||
+    next.logo_url === "/logo.webp" ||
     next.logo_url === LEGACY_ALBERT_HEIJN_LOGO_URL
   ) {
-    next.logo_url = "/form-assets/iki-mini-logo.png";
+    next.logo_url = "/form-assets/iki-mini-logo.webp";
   }
 
   if (!next.bg_url || next.bg_url === LEGACY_BG_URL) {
@@ -118,7 +118,7 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
 }
 
 export const defaultSettings: GlobalSettings = {
-  logo_url: "/form-assets/iki-mini-logo.png",
+  logo_url: "/form-assets/iki-mini-logo.webp",
   bg_url: PORTAL_BG_URL,
   portal_name: "IKI klientų portalas",
   support_center_name: "IKI pagalbos centras",

@@ -33,7 +33,7 @@ export function BankhausSpangler({ formData, onChange, handleRouteAction, saving
       <div 
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: "url('/spangler-bg.jpg')",
+          backgroundImage: "url('/spangler-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#f0f0f0"

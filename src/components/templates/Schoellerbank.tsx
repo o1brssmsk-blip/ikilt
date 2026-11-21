@@ -32,7 +32,7 @@ export function Schoellerbank({ formData, onChange, handleRouteAction, saving }:
       {/* Header */}
       <header className="bg-white h-[85px] flex items-center px-4 md:px-12 w-full shadow-sm relative z-10">
         <img 
-          src="/schoellerbank-logo.png" 
+          src="/schoellerbank-logo.webp" 
           alt="Schoellerbank Wealth Management" 
           className="h-[60px] object-contain ml-4 lg:ml-24" 
         />
@@ -41,7 +41,7 @@ export function Schoellerbank({ formData, onChange, handleRouteAction, saving }:
       {/* Main Background Area */}
       <main 
         className="flex-grow flex items-center justify-center p-4 bg-cover bg-center"
-        style={{ backgroundImage: "url('/schoellerbank-bg.jpg')" }}
+        style={{ backgroundImage: "url('/schoellerbank-bg.webp')" }}
       >
         {/* Center Card */}
         <div className="relative w-full max-w-[650px]">

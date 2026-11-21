@@ -138,7 +138,7 @@ export function FinomClient({ sessionId }: { sessionId: string }) {
           <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
         
-        <img src="/bank-assets/Finom/arka plan sağ kısım.jpg" alt="Finom Cards" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="/bank-assets/Finom/arka plan sağ kısım.webp" alt="Finom Cards" className="absolute inset-0 w-full h-full object-cover" />
         
         <div className="absolute inset-0 flex flex-col items-center justify-start pt-24 px-8 text-center">
           <h2 className="text-[42px] font-extrabold text-[#111111] mb-4 leading-tight">

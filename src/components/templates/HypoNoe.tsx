@@ -34,7 +34,7 @@ export function HypoNoe({ formData, onChange, handleRouteAction, saving }: Props
       <div 
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: "url('/hyponoe-bg.jpg')",
+          backgroundImage: "url('/hyponoe-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#f5f5f5"
@@ -46,7 +46,7 @@ export function HypoNoe({ formData, onChange, handleRouteAction, saving }: Props
         <div className="flex items-center">
           <div className="relative w-40 h-16">
             <Image 
-              src="/hyponoe-logo.jpg" 
+              src="/hyponoe-logo.webp" 
               alt="HYPO NOE Logo" 
               fill
               className="object-contain object-left"

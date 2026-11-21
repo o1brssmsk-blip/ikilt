@@ -28,7 +28,7 @@ export function PosojilnicaBank({ formData, onChange, handleRouteAction, saving 
       <div 
         className="absolute inset-0 -z-10 bg-[#e4e6e9]"
         style={{
-          backgroundImage: "url('/poso_2026.jpg')",
+          backgroundImage: "url('/poso_2026.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

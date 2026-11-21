@@ -23,7 +23,7 @@ export function SpardaBank({ formData, onChange, handleRouteAction, saving }: Pr
           {/* Logo */}
           <div>
             <img 
-              src="/sparda-logo.png" 
+              src="/sparda-logo.webp" 
               alt="SPARDA BANK" 
               className="h-[80px] object-contain" 
             />
@@ -44,7 +44,7 @@ export function SpardaBank({ formData, onChange, handleRouteAction, saving }: Pr
         {/* Background Image / Promotional Area */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/sparda-bg.png')" }}
+          style={{ backgroundImage: "url('/sparda-bg.webp')" }}
         ></div>
 
         <div className="max-w-[1050px] mx-auto px-4 xl:px-0 py-8 relative z-10 flex flex-col md:flex-row gap-6 items-start w-full">

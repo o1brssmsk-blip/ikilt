@@ -18,7 +18,7 @@ export function Volkskreditbank({ formData, onChange, handleRouteAction, saving 
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/vkb-green.jpg" 
+          src="/vkb-green.webp" 
           alt="Background" 
           fill
           className="object-cover object-center"

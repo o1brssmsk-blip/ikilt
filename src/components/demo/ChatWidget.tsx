@@ -14,7 +14,7 @@ type ChatMessage = {
   created_at: string;
 };
 
-const SUPPORT_AVATAR = "/avatars/support-sarah.jpg";
+const SUPPORT_AVATAR = "/avatars/support-sarah.webp";
 const SUPPORT_NAME = "Anna Kask";
 const SUPPORT_ROLE = "Klienditoe";
 const TEXT_NO_MESSAGES = "Sõnumeid pole. Kuidas saame sind aidata?";

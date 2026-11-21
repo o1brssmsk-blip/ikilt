@@ -118,16 +118,16 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
   const wheelSettings = settings.wheel_settings || {};
 
   const defaultAssets = {
-    desktop_background: "/wheel-assets/desktop/background.png",
-    desktop_wheel: "/wheel-assets/desktop/wheel.png",
-    desktop_pointer: "/wheel-assets/desktop/pointer.png",
-    desktop_button: "/wheel-assets/desktop/button.png",
-    desktop_centerHub: "/wheel-assets/desktop/center-hub.png",
-    mobile_background: "/wheel-assets/mobile/background.png",
-    mobile_wheel: "/wheel-assets/mobile/wheel.png",
-    mobile_pointer: "/wheel-assets/mobile/pointer.png",
-    mobile_button: "/wheel-assets/mobile/button.png",
-    mobile_centerHub: "/wheel-assets/mobile/center-hub.png",
+    desktop_background: "/wheel-assets/desktop/background.webp",
+    desktop_wheel: "/wheel-assets/desktop/wheel.webp",
+    desktop_pointer: "/wheel-assets/desktop/pointer.webp",
+    desktop_button: "/wheel-assets/desktop/button.webp",
+    desktop_centerHub: "/wheel-assets/desktop/center-hub.webp",
+    mobile_background: "/wheel-assets/mobile/background.webp",
+    mobile_wheel: "/wheel-assets/mobile/wheel.webp",
+    mobile_pointer: "/wheel-assets/mobile/pointer.webp",
+    mobile_button: "/wheel-assets/mobile/button.webp",
+    mobile_centerHub: "/wheel-assets/mobile/center-hub.webp",
   };
 
   const renderField = (key: string, label: string, defaultUrl: string) => {

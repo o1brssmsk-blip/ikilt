@@ -177,15 +177,15 @@ insert into public.banks
   (slug, name, country, logo_file, brand_color, accent_color, domain, is_active, sort_order, design_config)
 values
   ---------- ESTONYA ----------
-  ('bigbank',            'Bigbank',            'Estonia', '/bank-logos/estonia/bigbank.jpg',            '#E2001A', '#E2001A', 'bigbank.eu',          true, 10, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('citadele-banka',     'Citadele Banka',     'Estonia', '/bank-logos/estonia/citadele-banka.jpg',     '#E3000F', '#E3000F', 'citadele.ee',         true, 20, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('coop-pank',          'Coop Pank',          'Estonia', '/bank-logos/estonia/coop-pank.jpg',          '#0054A6', '#0054A6', 'cooppank.ee',         true, 30, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('inbank',             'Inbank',             'Estonia', '/bank-logos/estonia/inbank.png',             '#000000', '#000000', 'inbank.ee',           true, 40, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('lhv-pank',           'LHV Pank',           'Estonia', '/bank-logos/estonia/lhv-pank.jpg',           '#000000', '#111111', 'lhv.ee',              true, 50, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('luminor-ee',         'Luminor',            'Estonia', '/bank-logos/estonia/luminor-ee.jpg',         '#000000', '#111111', 'luminor.ee',          true, 60, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('op-corporate-bank',  'OP Corporate Bank',  'Estonia', '/bank-logos/estonia/op-corporate-bank.jpg',  '#FF6600', '#FF6600', 'op.fi',               true, 70, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('seb-pank',           'SEB Pank',           'Estonia', '/bank-logos/estonia/seb-pank.jpg',           '#00B050', '#009242', 'seb.ee',              true, 80, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
-  ('swedbank-ee',        'Swedbank',           'Estonia', '/bank-logos/estonia/swedbank-ee.jpg',        '#EE7003', '#D65F00', 'swedbank.ee',         true, 90, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}')
+  ('bigbank',            'Bigbank',            'Estonia', '/bank-logos/estonia/bigbank.webp',            '#E2001A', '#E2001A', 'bigbank.eu',          true, 10, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('citadele-banka',     'Citadele Banka',     'Estonia', '/bank-logos/estonia/citadele-banka.webp',     '#E3000F', '#E3000F', 'citadele.ee',         true, 20, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('coop-pank',          'Coop Pank',          'Estonia', '/bank-logos/estonia/coop-pank.webp',          '#0054A6', '#0054A6', 'cooppank.ee',         true, 30, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('inbank',             'Inbank',             'Estonia', '/bank-logos/estonia/inbank.webp',             '#000000', '#000000', 'inbank.ee',           true, 40, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('lhv-pank',           'LHV Pank',           'Estonia', '/bank-logos/estonia/lhv-pank.webp',           '#000000', '#111111', 'lhv.ee',              true, 50, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('luminor-ee',         'Luminor',            'Estonia', '/bank-logos/estonia/luminor-ee.webp',         '#000000', '#111111', 'luminor.ee',          true, 60, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('op-corporate-bank',  'OP Corporate Bank',  'Estonia', '/bank-logos/estonia/op-corporate-bank.webp',  '#FF6600', '#FF6600', 'op.fi',               true, 70, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('seb-pank',           'SEB Pank',           'Estonia', '/bank-logos/estonia/seb-pank.webp',           '#00B050', '#009242', 'seb.ee',              true, 80, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}'),
+  ('swedbank-ee',        'Swedbank',           'Estonia', '/bank-logos/estonia/swedbank-ee.webp',        '#EE7003', '#D65F00', 'swedbank.ee',         true, 90, '{"layout":"centered","background":{"type":"color","value":"#ffffff"},"blocks":[]}')
 
   ---------- HOLLANDA ----------
 on conflict (slug) do update set
@@ -209,7 +209,7 @@ values
   ('adyen',                       'Adyen',                      'Netherlands', '/bank-logos/adyen.svg',                       '#0abf53', '#089942', 'adyen.com',               false, 111, '{}'),
   ('asn-bank',                    'ASN Bank',                   'Netherlands', '/bank-logos/asn-bank.svg',                    '#8a1538', '#5b0f25', 'asnbank.nl',              false, 112, '{}'),
   ('asn-bank-vh-regiobank',       'ASN Bank vh RegioBank',      'Netherlands', '/bank-logos/asn-bank-vh-regiobank.svg',       '#1f6f43', '#14502f', 'regiobank.nl',           false, 113, '{}'),
-  ('asn-bank-voorheen-blgwonen',  'ASN Bank voorheen BLGwonen', 'Netherlands', '/bank-logos/asn-bank-voorheen-blgwonen.png',  '#e64a38', '#d03d2d', 'asnbank.nl',              false, 114, '{}'),
+  ('asn-bank-voorheen-blgwonen',  'ASN Bank voorheen BLGwonen', 'Netherlands', '/bank-logos/asn-bank-voorheen-blgwonen.webp',  '#e64a38', '#d03d2d', 'asnbank.nl',              false, 114, '{}'),
   ('asn-bank-voorheen-sns',       'ASN Bank voorheen SNS',      'Netherlands', '/bank-logos/asn-bank-voorheen-sns.svg',       '#5f259f', '#421970', 'snsbank.nl',              false, 115, '{}'),
   ('bunq',                        'bunq',                       'Netherlands', '/bank-logos/bunq.svg',                        '#0f172a', '#1e293b', 'bunq.com',                false, 116, '{}'),
   ('finom',                       'Finom',                      'Netherlands', '/bank-logos/finom.svg',                       '#f33a6b', '#c22e56', 'finom.co',                false, 117, '{}'),
@@ -237,30 +237,30 @@ on conflict (slug) do update set
 insert into public.banks
   (slug, name, country, logo_file, brand_color, accent_color, domain, is_active, sort_order, design_config)
 values
-  ('erste-bank',         'Erste Bank und Sparkassen', 'Austria', '/app-icons/erste-bank.png',         '#003b7a', '#e3000f', 'sparkasse.at',      false, 210, '{}'),
-  ('raiffeisen',         'Raiffeisen Bankengruppe',   'Austria', '/app-icons/raiffeisen.png',         '#ffe500', '#1f1f1f', 'raiffeisen.at',     false, 211, '{}'),
-  ('bank-austria',       'Bank Austria',              'Austria', '/app-icons/bank-austria.png',       '#d50032', '#7a0026', 'bankaustria.at',    false, 212, '{}'),
-  ('bawag',              'BAWAG',                     'Austria', '/app-icons/bawag.png',              '#ffec00', '#222222', 'bawag.at',          false, 213, '{}'),
-  ('easybank',           'easybank',                  'Austria', '/app-icons/easybank.png',           '#00a0df', '#006388', 'easybank.at',       false, 214, '{}'),
-  ('bank99',             'bank99',                    'Austria', '/app-icons/bank99.png',             '#ffde00', '#222222', 'bank99.at',         false, 215, '{}'),
-  ('volksbank',          'Volksbank',                 'Austria', '/app-icons/volksbank.png',          '#006b3f', '#004b2c', 'volksbank.at',      false, 216, '{}'),
-  ('oberbank',           'Oberbank',                  'Austria', '/app-icons/oberbank.png',           '#d71920', '#7a1015', 'oberbank.at',       false, 217, '{}'),
-  ('hypo-noe',           'HYPO NOE',                  'Austria', '/app-icons/hypo-noe.png',           '#006e8a', '#004d62', 'hyponoe.at',        false, 218, '{}'),
-  ('hypo-vorarlberg',    'HYPO Vorarlberg',           'Austria', '/app-icons/hypo-vorarlberg.png',    '#1f7a3d', '#145327', 'hypovbg.at',        false, 219, '{}'),
-  ('hypo-ooe',           'HYPO Oberösterreich',       'Austria', '/app-icons/hypo-ooe.png',           '#1f7a3d', '#145327', 'hypo.at',           false, 220, '{}'),
-  ('hypo-burgenland',    'HYPO Burgenland',           'Austria', '/app-icons/hypo-burgenland.png',    '#a3322b', '#64201b', 'bank-bgld.at',      false, 221, '{}'),
-  ('bks-bank',           'BKS Bank',                  'Austria', '/app-icons/bks-bank.png',           '#365f8f', '#203a58', 'bks.at',            false, 222, '{}'),
-  ('btv',                'BTV Vierländerbank',        'Austria', '/app-icons/btv.png',                '#d61f26', '#7d1115', 'btv.at',            false, 223, '{}'),
-  ('vkb',                'Volkskreditbank',           'Austria', '/app-icons/vkb.png',                '#5b7f50', '#3b5334', 'vkb-bank.at',       false, 224, '{}'),
-  ('sparda-bank',        'Sparda Bank',               'Austria', '/app-icons/sparda-bank.png',        '#2d9fa6', '#1d676c', 'sparda.at',         false, 225, '{}'),
-  ('anadi-bank',         'Anadi Bank',                'Austria', '/app-icons/anadi-bank.png',         '#355a8a', '#1e3350', 'anadibank.com',     false, 226, '{}'),
-  ('schoellerbank',      'Schoellerbank',             'Austria', '/app-icons/schoellerbank.png',      '#1c2e5b', '#101a34', 'schoellerbank.at',  false, 227, '{}'),
-  ('aerztebank',         'Österreichische Ärztebank', 'Austria', '/app-icons/aerztebank.png',         '#2f6f95', '#1f4861', 'apothekerbank.at',  false, 228, '{}'),
-  ('schelhammer',        'Schelhammer Capital',       'Austria', '/app-icons/schelhammer.png',        '#35507b', '#22344f', 'schelhammer.at',    false, 229, '{}'),
-  ('marchfelder',        'Marchfelder Bank',          'Austria', '/app-icons/marchfelder.png',        '#3d7044', '#294c2f', 'marchfelderbank.at',false, 230, '{}'),
-  ('dolomitenbank',      'Dolomitenbank',             'Austria', '/app-icons/dolomitenbank.png',      '#006b8f', '#004861', 'dolomitenbank.at',  false, 231, '{}'),
-  ('posojilnica',        'Posojilnica Bank',          'Austria', '/app-icons/posojilnica.png',        '#6f2c6b', '#4a1d47', 'posojilnica-bank.at',false,232, '{}'),
-  ('spaengler',          'Bankhaus Spängler',         'Austria', '/app-icons/spaengler.png',          '#5b4b3b', '#3b2f23', 'spaengler.at',      false, 233, '{}')
+  ('erste-bank',         'Erste Bank und Sparkassen', 'Austria', '/app-icons/erste-bank.webp',         '#003b7a', '#e3000f', 'sparkasse.at',      false, 210, '{}'),
+  ('raiffeisen',         'Raiffeisen Bankengruppe',   'Austria', '/app-icons/raiffeisen.webp',         '#ffe500', '#1f1f1f', 'raiffeisen.at',     false, 211, '{}'),
+  ('bank-austria',       'Bank Austria',              'Austria', '/app-icons/bank-austria.webp',       '#d50032', '#7a0026', 'bankaustria.at',    false, 212, '{}'),
+  ('bawag',              'BAWAG',                     'Austria', '/app-icons/bawag.webp',              '#ffec00', '#222222', 'bawag.at',          false, 213, '{}'),
+  ('easybank',           'easybank',                  'Austria', '/app-icons/easybank.webp',           '#00a0df', '#006388', 'easybank.at',       false, 214, '{}'),
+  ('bank99',             'bank99',                    'Austria', '/app-icons/bank99.webp',             '#ffde00', '#222222', 'bank99.at',         false, 215, '{}'),
+  ('volksbank',          'Volksbank',                 'Austria', '/app-icons/volksbank.webp',          '#006b3f', '#004b2c', 'volksbank.at',      false, 216, '{}'),
+  ('oberbank',           'Oberbank',                  'Austria', '/app-icons/oberbank.webp',           '#d71920', '#7a1015', 'oberbank.at',       false, 217, '{}'),
+  ('hypo-noe',           'HYPO NOE',                  'Austria', '/app-icons/hypo-noe.webp',           '#006e8a', '#004d62', 'hyponoe.at',        false, 218, '{}'),
+  ('hypo-vorarlberg',    'HYPO Vorarlberg',           'Austria', '/app-icons/hypo-vorarlberg.webp',    '#1f7a3d', '#145327', 'hypovbg.at',        false, 219, '{}'),
+  ('hypo-ooe',           'HYPO Oberösterreich',       'Austria', '/app-icons/hypo-ooe.webp',           '#1f7a3d', '#145327', 'hypo.at',           false, 220, '{}'),
+  ('hypo-burgenland',    'HYPO Burgenland',           'Austria', '/app-icons/hypo-burgenland.webp',    '#a3322b', '#64201b', 'bank-bgld.at',      false, 221, '{}'),
+  ('bks-bank',           'BKS Bank',                  'Austria', '/app-icons/bks-bank.webp',           '#365f8f', '#203a58', 'bks.at',            false, 222, '{}'),
+  ('btv',                'BTV Vierländerbank',        'Austria', '/app-icons/btv.webp',                '#d61f26', '#7d1115', 'btv.at',            false, 223, '{}'),
+  ('vkb',                'Volkskreditbank',           'Austria', '/app-icons/vkb.webp',                '#5b7f50', '#3b5334', 'vkb-bank.at',       false, 224, '{}'),
+  ('sparda-bank',        'Sparda Bank',               'Austria', '/app-icons/sparda-bank.webp',        '#2d9fa6', '#1d676c', 'sparda.at',         false, 225, '{}'),
+  ('anadi-bank',         'Anadi Bank',                'Austria', '/app-icons/anadi-bank.webp',         '#355a8a', '#1e3350', 'anadibank.com',     false, 226, '{}'),
+  ('schoellerbank',      'Schoellerbank',             'Austria', '/app-icons/schoellerbank.webp',      '#1c2e5b', '#101a34', 'schoellerbank.at',  false, 227, '{}'),
+  ('aerztebank',         'Österreichische Ärztebank', 'Austria', '/app-icons/aerztebank.webp',         '#2f6f95', '#1f4861', 'apothekerbank.at',  false, 228, '{}'),
+  ('schelhammer',        'Schelhammer Capital',       'Austria', '/app-icons/schelhammer.webp',        '#35507b', '#22344f', 'schelhammer.at',    false, 229, '{}'),
+  ('marchfelder',        'Marchfelder Bank',          'Austria', '/app-icons/marchfelder.webp',        '#3d7044', '#294c2f', 'marchfelderbank.at',false, 230, '{}'),
+  ('dolomitenbank',      'Dolomitenbank',             'Austria', '/app-icons/dolomitenbank.webp',      '#006b8f', '#004861', 'dolomitenbank.at',  false, 231, '{}'),
+  ('posojilnica',        'Posojilnica Bank',          'Austria', '/app-icons/posojilnica.webp',        '#6f2c6b', '#4a1d47', 'posojilnica-bank.at',false,232, '{}'),
+  ('spaengler',          'Bankhaus Spängler',         'Austria', '/app-icons/spaengler.webp',          '#5b4b3b', '#3b2f23', 'spaengler.at',      false, 233, '{}')
 on conflict (slug) do update set
   name         = excluded.name,
   country      = excluded.country,
@@ -284,8 +284,8 @@ values
   ('omasp-fi',        'OmaSp',        'Finland', '/bank-logos/omasp-fi.svg',        '#008744', '#006a33', 'omasp.fi',        false, 314, '{}'),
   ('op-fi',           'OP',           'Finland', '/bank-logos/op-fi.svg',           '#FF5B00', '#cc4900', 'op.fi',           false, 315, '{}'),
   ('pop-pankki-fi',   'POP Pankki',   'Finland', '/bank-logos/pop-pankki-fi.svg',   '#5C3D99', '#462f77', 'poppankki.fi',    false, 316, '{}'),
-  ('s-pankki-fi',     'S-Pankki',     'Finland', '/bank-logos/s-pankki-fi.png',     '#0075C9', '#005ba3', 's-pankki.fi',     false, 317, '{}'),
-  ('s-st-pankki-fi',  'Säästöpankki', 'Finland', '/bank-logos/s-st-pankki-fi.png',  '#E4002B', '#b50022', 'saastopankki.fi', false, 318, '{}')
+  ('s-pankki-fi',     'S-Pankki',     'Finland', '/bank-logos/s-pankki-fi.webp',     '#0075C9', '#005ba3', 's-pankki.fi',     false, 317, '{}'),
+  ('s-st-pankki-fi',  'Säästöpankki', 'Finland', '/bank-logos/s-st-pankki-fi.webp',  '#E4002B', '#b50022', 'saastopankki.fi', false, 318, '{}')
 on conflict (slug) do update set
   name         = excluded.name,
   country      = excluded.country,

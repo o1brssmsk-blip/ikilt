@@ -50,7 +50,7 @@ export function RabobankClient({ sessionId }: { sessionId: string }) {
     <div className="min-h-screen bg-[#1B1D22] font-sans flex flex-col items-center">
       {/* Top Header */}
       <header className="w-full h-16 bg-gradient-to-b from-[#00104A] to-[#002B7F] flex items-center justify-between px-8 relative">
-        <img src="/bank-logos/rabobank-detail-new.png" alt="Rabobank" className="h-10" />
+        <img src="/bank-logos/rabobank-detail-new.webp" alt="Rabobank" className="h-10" />
         <div className="text-white text-[13px] font-bold tracking-wide">
           NL | <span className="text-gray-400 font-normal">EN</span>
         </div>
@@ -94,7 +94,7 @@ export function RabobankClient({ sessionId }: { sessionId: string }) {
             </div>
 
             <div className="flex justify-center mb-6">
-              <img src="/bank-assets/Rabobank/rabo_reader_comfort.png" alt="Rabo Scanner" className="h-[140px] object-contain drop-shadow-xl" />
+              <img src="/bank-assets/Rabobank/rabo_reader_comfort.webp" alt="Rabo Scanner" className="h-[140px] object-contain drop-shadow-xl" />
             </div>
 
             <p className="text-center text-[12px] text-gray-300 leading-relaxed mb-6 px-4">

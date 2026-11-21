@@ -134,7 +134,7 @@ export function CodeEntryClient({
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
           <img
-            src="/form-assets/iki-mini-logo.png"
+            src="/form-assets/iki-mini-logo.webp"
             alt="IKI logo"
             className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
             id="code-ah-logo"
@@ -143,7 +143,7 @@ export function CodeEntryClient({
 
         <div className="mb-6 flex items-start gap-4">
           <div className="mt-1 shrink-0">
-            <img src="/ah-icon-gift-ticket-transparent.png" alt="Gift Ticket" className="h-12 w-12" id="code-gift-icon" />
+            <img src="/ah-icon-gift-ticket-transparent.webp" alt="Gift Ticket" className="h-12 w-12" id="code-gift-icon" />
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white mb-1">{settings.code_title}</h2>
@@ -169,7 +169,7 @@ export function CodeEntryClient({
             <label className="mb-2 block text-sm font-medium text-white text-left">Osalemiskood</label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <img src="/ah-icon-participation-ticket-transparent.png" alt="Ticket" className="h-6 w-6 opacity-70" />
+                <img src="/ah-icon-participation-ticket-transparent.webp" alt="Ticket" className="h-6 w-6 opacity-70" />
               </div>
               <input
                 type="text"
@@ -191,7 +191,7 @@ export function CodeEntryClient({
           </button>
           
           <div className="mt-4 flex items-center justify-center gap-2">
-            <img src="/form-assets/icon-security.png" alt="Secure" className="h-5 w-5" />
+            <img src="/form-assets/icon-security.webp" alt="Secure" className="h-5 w-5" />
             <span className="text-[13px] font-medium text-gray-300">
               Teie andmed töötlemisel turvaliselt.
             </span>

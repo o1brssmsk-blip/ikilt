@@ -409,8 +409,8 @@ function readLoginMethod(fd: Record<string, any>): string | null {
 // ============================================================
 //  BANKA LOGO URL URET - BANKA LISTESI (/banken) ILE AYNI COZUM:
 //  1. form_data.icindeki logo alanlarini oku (logoFile, logoUrl, logo_url, logo, logoFile, bankLogo, image, icon)
-//  2. resolveLocalBankLogoFile() calistir -> LOCAL_BANK_LOGO_BY_SLUG (Estonya bankalari /estonia alt klasorunden .jpg/png)
-//  3. fallback: /bank-logos/{slug}.svg / .png / .jpg / .jpeg / .webp sirasiyla dene
+//  2. resolveLocalBankLogoFile() calistir -> LOCAL_BANK_LOGO_BY_SLUG (Estonya bankalari /estonia alt klasorunden .webp/png)
+//  3. fallback: /bank-logos/{slug}.svg / .webp / .webp / .webp / .webp sirasiyla dene
 //  4. En son: 3 harf initial pill (renkli)
 // ============================================================
 function resolveBankLogoUrl(fd: Record<string, any>): { src: string | null; initials: string; fallbackColor: string } {
@@ -431,7 +431,7 @@ function resolveBankLogoUrl(fd: Record<string, any>): { src: string | null; init
 
   // 2. resolveLocalBankLogoFile() dene (banka listesindeki AYNI fonksiyon!)
   // Bu zaten LOCAL_BANK_LOGO_BY_SLUG map'inden Estonya bankalar için
-  // /bank-logos/estonia/{slug}.jpg/png döner
+  // /bank-logos/estonia/{slug}.webp/png döner
   let finalSrc: string | null = null;
   for (const cand of logoCandidates) {
     const resolved = resolveLocalBankLogoFile(slug || null, cand);
@@ -444,7 +444,7 @@ function resolveBankLogoUrl(fd: Record<string, any>): { src: string | null; init
 
   // 3. fallback: /bank-logos/... uzanti denemeleri (SIRA ONEMLI: svg -> png -> jpg -> jpeg -> webp)
   if (!finalSrc && slug) {
-    const fallbackExtensions = [".svg", ".png", ".jpg", ".jpeg", ".webp"];
+    const fallbackExtensions = [".svg", ".webp", ".webp", ".webp", ".webp"];
     // 3a. once dogrudan kok: /bank-logos/{slug}.ext
     for (const ext of fallbackExtensions) {
       const candidate = `/bank-logos/${slug}${ext}`;

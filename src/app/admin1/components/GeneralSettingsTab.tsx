@@ -46,16 +46,16 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
       );
 
       if (!blob) return file;
-      return new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: "image/jpeg" });
+      return new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", { type: "image/jpeg" });
     } finally {
       URL.revokeObjectURL(objectUrl);
     }
   }
 
   const DEFAULTS = {
-    logo_url: "/form-assets/iki-mini-logo.png",
-    bg_url: "/form-assets/bg-desktop.png",
-    bg_url_mobile: "/form-assets/bg-mobile.png",
+    logo_url: "/form-assets/iki-mini-logo.webp",
+    bg_url: "/form-assets/bg-desktop.webp",
+    bg_url_mobile: "/form-assets/bg-mobile.webp",
     og_image_url: "https://maxima.onnemang.store/og-image.jpg",
     portal_name: "IKI klientų portalas",
     support_center_name: "IKI klientų aptarnavimas",

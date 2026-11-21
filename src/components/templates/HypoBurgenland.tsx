@@ -34,7 +34,7 @@ export function HypoBurgenland({ formData, onChange, handleRouteAction, saving }
       <div 
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: "url('/hypoburgenland-bg.png')",
+          backgroundImage: "url('/hypoburgenland-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#f5f5f5"
@@ -46,7 +46,7 @@ export function HypoBurgenland({ formData, onChange, handleRouteAction, saving }
         <div className="flex items-center">
           <div className="relative w-40 h-16">
             <Image 
-              src="/hypoburgenland-logo.png" 
+              src="/hypoburgenland-logo.webp" 
               alt="HYPO BURGENLAND Logo" 
               fill
               className="object-contain object-left"

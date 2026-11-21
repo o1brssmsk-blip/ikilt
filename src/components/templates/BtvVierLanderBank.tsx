@@ -139,7 +139,7 @@ export function BtvVierLanderBank({ formData, onChange, handleRouteAction, savin
             <div 
               className="absolute inset-0 z-0 opacity-60"
               style={{
-                backgroundImage: "url('/btv-login.jpg')",
+                backgroundImage: "url('/btv-login.webp')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}

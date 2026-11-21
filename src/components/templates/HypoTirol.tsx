@@ -35,7 +35,7 @@ export function HypoTirol({ formData, onChange, handleRouteAction, saving }: Pro
       <header className="w-full bg-[#495b68] h-[72px] flex items-center justify-center md:justify-start md:pl-24 shrink-0 shadow-sm">
         <div className="relative h-12 w-[240px]">
           <Image 
-            src="/hypotirol-logo.png" 
+            src="/hypotirol-logo.webp" 
             alt="HYPO TIROL" 
             fill
             className="object-contain object-left"

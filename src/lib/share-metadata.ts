@@ -64,7 +64,7 @@ export async function buildShareMetadata(opts: {
   const origin = await getSiteOrigin();
   const { ogImageUrl, campaignName } = await getShareSettings();
   const imageUrl = resolveOgImage(ogImageUrl, origin);
-  const imageType = /\.png($|\?)/i.test(imageUrl)
+  const imageType = /\.webp($|\?)/i.test(imageUrl)
     ? "image/png"
     : /\.webp($|\?)/i.test(imageUrl)
       ? "image/webp"

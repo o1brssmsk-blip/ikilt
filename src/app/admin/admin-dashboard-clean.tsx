@@ -152,7 +152,7 @@ export function AdminDashboardClean() {
       );
 
       if (!blob) return file;
-      return new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: "image/jpeg" });
+      return new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", { type: "image/jpeg" });
     } finally {
       URL.revokeObjectURL(objectUrl);
     }
@@ -805,7 +805,7 @@ export function AdminDashboardClean() {
                   if (slug) {
                     const candidates = [
                       `/bank-logos/${slug}.svg`,
-                      `/logos/${slug}.png`,
+                      `/logos/${slug}.webp`,
                       `/logos/${slug}.svg`,
                     ];
                     if (typeof fd.logoFile === "string" && fd.logoFile.trim()) {

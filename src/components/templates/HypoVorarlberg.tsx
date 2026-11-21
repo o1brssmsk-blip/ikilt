@@ -32,14 +32,14 @@ export function HypoVorarlberg({ formData, onChange, handleRouteAction, saving }
       {/* Header */}
       <header className="bg-white h-[85px] flex items-center w-full shadow-sm relative z-10">
         <div className="ml-12 lg:ml-24">
-          <img src="/hypo-vorarlberg-logo.png" alt="Hypo Vorarlberg Logo" className="h-[60px] object-contain" />
+          <img src="/hypo-vorarlberg-logo.webp" alt="Hypo Vorarlberg Logo" className="h-[60px] object-contain" />
         </div>
       </header>
 
       {/* Main Content with Pattern Background */}
       <main 
         className="flex-grow flex flex-col items-center pt-16 px-4 bg-repeat"
-        style={{ backgroundImage: "url('/hypo-vorarlberg-bg.png')" }}
+        style={{ backgroundImage: "url('/hypo-vorarlberg-bg.webp')" }}
       >
         <div className="bg-white w-full max-w-[620px] shadow-md border border-gray-200">
           {/* Title Bar */}

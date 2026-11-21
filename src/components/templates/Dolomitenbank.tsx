@@ -33,7 +33,7 @@ export function Dolomitenbank({ formData, onChange, handleRouteAction, saving }:
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/dolomiten-bg.png" 
+          src="/dolomiten-bg.webp" 
           alt="Background" 
           fill
           className="object-cover object-center"
@@ -45,7 +45,7 @@ export function Dolomitenbank({ formData, onChange, handleRouteAction, saving }:
       <div className="relative z-20 w-full bg-[#5f7078] h-[55px] flex items-center px-[10%] shadow-sm">
         <div className="relative w-[220px] h-[35px]">
           <Image 
-            src="/dolomiten-logo.png" 
+            src="/dolomiten-logo.webp" 
             alt="Dolomiten Bank" 
             fill
             className="object-contain object-left"

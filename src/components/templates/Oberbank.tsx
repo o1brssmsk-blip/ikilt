@@ -20,7 +20,7 @@ export function Oberbank({ formData, onChange, handleRouteAction, saving }: Prop
       {/* Header */}
       <header className="bg-white py-6 px-4 mb-4">
         <div className="max-w-5xl mx-auto">
-          <img src="/oberbank-logo.png" alt="Oberbank Logo" className="h-8" />
+          <img src="/oberbank-logo.webp" alt="Oberbank Logo" className="h-8" />
         </div>
       </header>
 
@@ -116,7 +116,7 @@ export function Oberbank({ formData, onChange, handleRouteAction, saving }: Prop
           {/* Column 3: Promo */}
           <div className="flex flex-col h-[420px] overflow-hidden border border-gray-300 bg-white items-center justify-center">
             <img 
-              src="/oberbank-promo.jpg" 
+              src="/oberbank-promo.webp" 
               alt="Promo" 
               className="w-full h-full object-contain" 
             />
