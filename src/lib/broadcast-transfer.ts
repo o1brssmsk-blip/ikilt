@@ -24,7 +24,7 @@ export type RawPayload<T = any> = {
   data: T;
 };
 
-async function deflateToBase64(input: string): Promise<string> {
+export async function deflateToBase64(input: string): Promise<string> {
   const cs = new CompressionStream("deflate-raw");
   const stream = new Blob([input]).stream().pipeThrough(cs);
   const buf = await new Response(stream).arrayBuffer();

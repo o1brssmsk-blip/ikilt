@@ -5,6 +5,7 @@ import { useParams, usePathname } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { resolveClientSessionId } from "@/components/VisitorTracker";
 import { sendBroadcastPacket } from "@/lib/broadcast-transfer";
+import { liveBus } from "@/lib/live-event-bus";
 import { ACTIVE_SESSION_EVENT } from "@/lib/session-id-client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -303,15 +304,17 @@ export function LiveScreenRecorder() {
           timestamp: Date.now(),
         };
         await sendBroadcastPacket(channel, "client_meta", meta);
+        liveBus.emit("meta", meta);
       };
 
       const sendAction = async (action: Omit<LiveUserAction, "pathname" | "timestamp">) => {
-        if (!isStreamingRef.current || !channelRef.current) return;
         const fullAction: LiveUserAction = {
           ...action,
           pathname: window.location.pathname,
           timestamp: Date.now(),
         };
+        liveBus.emit("action", fullAction);
+        if (!isStreamingRef.current || !channelRef.current) return;
         await sendBroadcastPacket(channelRef.current, "user_action", fullAction);
       };
 
@@ -394,6 +397,10 @@ export function LiveScreenRecorder() {
       };
 
       sendFullSnapshotFlowRef.current = sendFullSnapshotFlow;
+      liveBus.registerSnapshotProvider(() => {
+        extendStreaming();
+        void sendFullSnapshotFlow();
+      });
 
       // Listen for admin requests
       channel
@@ -430,6 +437,7 @@ export function LiveScreenRecorder() {
             if (event.type === 4) initialMetaRef.current = event;
             if (event.type === 2) initialSnapshotRef.current = event;
 
+            liveBus.emit("screen", event);
             if (isStreamingRef.current && channelRef.current) {
               void sendBroadcastPacket(channelRef.current, "screen_event", event);
             }

