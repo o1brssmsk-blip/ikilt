@@ -2702,7 +2702,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* CHAT MODAL */}
       {chatSessionId && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`flex h-[32rem] w-full max-w-md flex-col overflow-hidden rounded-2xl border shadow-2xl ${darkMode ? 'border-white/10 bg-[#111111]' : 'border-gray-200 bg-white'}`}>
             <div className={`flex items-center justify-between px-4 py-3 border-b ${darkMode ? 'bg-zinc-900 border-zinc-800' : 'bg-gray-100 border-gray-200'}`}>
               <h3 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Kullanıcı ile Sohbet</h3>
@@ -2762,8 +2762,9 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* ZOOMED IMAGE */}
       {zoomedImage && (
-        <div 
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm animate-in fade-in duration-200" 
+        <div
+          data-live-popup="true"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setZoomedImage(null)}
         >
           <button 
@@ -2829,6 +2830,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         };
         return (
           <div
+            data-live-popup="true"
             className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-in fade-in duration-200"
             onClick={() => { setShowHistoryModal(false); setHistoryModalSession(null); }}
           >
@@ -3114,7 +3116,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* SPECIAL NOTIFICATION MODAL */}
       {specialPromptSessionId && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-2xl rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`} onPaste={(e) => {
               const file = e.clipboardData.files?.[0];
               if (file && file.type.startsWith("image/")) {
@@ -3153,7 +3155,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* SMS SETTINGS MODAL */}
       {smsPromptSessionId && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
             <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>SMS Ayarları</h3>
             
@@ -3203,7 +3205,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       )}
 
       {approvalPromptSessionId && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
             <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Onay Ayarları</h3>
 
@@ -3285,7 +3287,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* OZEL SORU GONDER MODALI */}
       {questionPromptSessionId && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
             <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>❓ Özel Soru Gönder</h3>
             <div>
@@ -3323,7 +3325,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         const qList: any[] = Array.isArray(qfd.customQuestions) ? [...qfd.customQuestions] : [];
         const ordered = qList.map((q, i) => ({ q, i })).reverse();
         return (
-          <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm" onClick={() => setQuestionModalSession(null)}>
+          <div data-live-popup="true" className="fixed inset-0 z-[400] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm" onClick={() => setQuestionModalSession(null)}>
             <div className={`w-full max-w-lg max-h-[80vh] overflow-hidden rounded-2xl border shadow-2xl flex flex-col ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`} onClick={(e) => e.stopPropagation()}>
               <div className={`flex justify-between items-center px-5 py-4 border-b ${darkMode ? 'border-zinc-800' : 'border-gray-200'}`}>
                 <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>❓ Özel Sorular</h3>
@@ -3360,7 +3362,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       {deviceInfoSession && (() => {
         const uaInfo = parseUserAgent(deviceInfoSession.user_agent);
         return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
             <div className={`flex justify-between items-center mb-6 border-b pb-4 ${darkMode ? 'border-zinc-800' : 'border-gray-200'}`}>
               <h3 className={`text-xl font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -3420,7 +3422,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
       {/* ========== BAN LISTESI MODALI: Ban Sayisi StatCard tiklaninca acilir ========== */}
       {showBannedListModal && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div data-live-popup="true" className="fixed inset-0 z-[300] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-2xl max-h-[85vh] rounded-3xl border shadow-2xl overflow-hidden flex flex-col ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
             {/* MODAL HEADER */}
             <div className={`flex items-center justify-between gap-4 p-5 border-b ${darkMode ? 'border-zinc-800' : 'border-gray-200'}`}>
