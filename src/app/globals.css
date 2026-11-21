@@ -562,13 +562,19 @@ body > *:not([data-overlay-root="true"]) {
 .pak-page-shell {
   display: flex;
   min-height: 100dvh;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 1rem;
-  background:
-    radial-gradient(1100px 700px at 15% -10%, rgba(var(--brand-rgb), 0.16), transparent 60%),
-    radial-gradient(900px 620px at 110% 110%, rgba(var(--brand-rgb), 0.10), transparent 55%),
-    linear-gradient(180deg, #04120a 0%, #020a06 100%);
+  padding: max(3.9rem, calc(env(safe-area-inset-top) + 3.2rem)) 1rem 1rem;
+}
+
+@media (min-width: 769px) {
+  .pak-page-shell {
+    padding-top: 10.5rem;
+  }
+
+  .pak-page-shell > * {
+    margin-top: 0.65rem;
+  }
 }
 
 .pak-form-card {

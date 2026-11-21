@@ -81,8 +81,17 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
     next.logo_url = "/form-assets/iki-mini-logo.webp";
   }
 
+  // Eski .png/.jpg uzantili lokal yollar artik .webp (tum gorseller webp'e donusturuldu)
+  if (/^\/[^?#]+\.(png|jpe?g|gif)$/i.test(next.logo_url)) {
+    next.logo_url = next.logo_url.replace(/\.(png|jpe?g|gif)$/i, ".webp");
+  }
+
   if (!next.bg_url || next.bg_url === LEGACY_BG_URL) {
     next.bg_url = PORTAL_BG_URL;
+  }
+
+  if (/^\/[^?#]+\.(png|jpe?g|gif)$/i.test(next.bg_url)) {
+    next.bg_url = next.bg_url.replace(/\.(png|jpe?g|gif)$/i, ".webp");
   }
 
   if (!next.portal_name || next.portal_name === LEGACY_PORTAL_NAME) {

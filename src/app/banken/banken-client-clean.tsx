@@ -351,7 +351,8 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
 
   return (
     <div className="pak-page-shell">
-      <div className="pak-form-card fade-in flex h-[calc(100dvh-3rem)] max-h-[780px] w-full max-w-[620px] flex-col overflow-hidden">
+      <div className="flex w-full max-w-[620px] flex-col items-center">
+      <div className="pak-form-card fade-in flex h-[calc(100dvh-13rem)] max-h-[700px] w-full flex-col overflow-hidden">
         <div className="pak-form-inner flex min-h-0 flex-1 flex-col p-4 sm:p-6">
           <div className="mb-4 flex shrink-0 items-start justify-between gap-4">
             <div className="min-w-0">
@@ -448,10 +449,11 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
       </div>
 
       {msg ? (
-        <div className="mt-3 w-full max-w-[620px] rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-center text-sm text-red-400">
+        <div className="mt-3 w-full rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-center text-sm text-red-400">
           {msg}
         </div>
       ) : null}
+      </div>
     </div>
   );
 }
