@@ -777,7 +777,27 @@ export function LiveWatchModal2({
     let answerReceived = false;
     let offerRetryTimer: ReturnType<typeof setInterval> | null = null;
 
+    const sendOffer = async () => {
+      try {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        await channel.send({
+          type: "broadcast",
+          event: RTC_SIGNAL.OFFER,
+          payload: { sdp: pc.localDescription?.toJSON(), clientId },
+        });
+      } catch {
+        /* ignore */
+      }
+    };
+
     channel
+      .on("broadcast", { event: RTC_SIGNAL.READY }, () => {
+        // Visitor hazir oldugunu bildirdi — hemen offer gonder
+        if (!answerReceived && dcRef.current?.readyState !== "open") {
+          void sendOffer();
+        }
+      })
       .on("broadcast", { event: RTC_SIGNAL.ANSWER }, (payload) => {
         const p = payload.payload as any;
         if (!p?.sdp || (p.clientId && p.clientId !== clientId)) return;
@@ -796,19 +816,6 @@ export function LiveWatchModal2({
 
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED" && !isDisposed) {
-        const sendOffer = async () => {
-          try {
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-            await channel.send({
-              type: "broadcast",
-              event: RTC_SIGNAL.OFFER,
-              payload: { sdp: pc.localDescription?.toJSON(), clientId },
-            });
-          } catch {
-            /* ignore */
-          }
-        };
         await sendOffer();
         // Visitor henuz subscribe olmadiysa offer kaybolabilir — answer gelene
         // kadar 3sn'de bir tekrarla.

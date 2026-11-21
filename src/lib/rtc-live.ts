@@ -6,6 +6,7 @@ export const RTC_SIGNAL = {
   ANSWER: "rtc_answer",
   ICE: "rtc_ice",
   CLOSE: "rtc_close",
+  READY: "rtc_ready",
 } as const;
 
 export const RTC_ICE_SERVERS: RTCIceServer[] = [

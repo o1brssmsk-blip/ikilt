@@ -6,6 +6,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { resolveClientSessionId } from "@/components/VisitorTracker";
 import { liveBus } from "@/lib/live-event-bus";
 import { RTC_ICE_SERVERS, RTC_SIGNAL, sendDataChannelPacket } from "@/lib/rtc-live";
+import { ACTIVE_SESSION_EVENT } from "@/lib/session-id-client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 // IZLEME 2 (P2P): Admin RTC offer gonderdiginde WebRTC baglantisi kurulur,
@@ -17,6 +18,7 @@ export function RtcLiveStreamer() {
   const dcRef = useRef<RTCDataChannel | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const clientIdRef = useRef<string | null>(null);
+  const currentSessionRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -60,6 +62,8 @@ export function RtcLiveStreamer() {
       }
     };
 
+    let offBus: (() => void) | null = null;
+
     async function setup() {
       const routeSessionId = params?.id as string | undefined;
       const querySessionId = new URLSearchParams(window.location.search).get("session");
@@ -70,6 +74,18 @@ export function RtcLiveStreamer() {
       }
       const sessionId = resolved?.sessionId;
       if (!sessionId || isDisposed || !supabase) return;
+      if (channelRef.current && currentSessionRef.current === sessionId) return;
+
+      closePeer();
+      if (channelRef.current) {
+        try {
+          void supabase.removeChannel(channelRef.current);
+        } catch {
+          /* ignore */
+        }
+        channelRef.current = null;
+      }
+      currentSessionRef.current = sessionId;
 
       const channel = supabase.channel(`rtc-live:${sessionId}`, {
         config: { broadcast: { ack: false } },
@@ -83,6 +99,7 @@ export function RtcLiveStreamer() {
           const { sdp, clientId } = (msg.payload || {}) as any;
           if (!sdp) return;
 
+          console.info("[RtcLiveStreamer] offer alindi, peer kuruluyor");
           closePeer();
           clientIdRef.current = clientId || null;
 
@@ -99,6 +116,7 @@ export function RtcLiveStreamer() {
           };
 
           pc.onconnectionstatechange = () => {
+            console.info("[RtcLiveStreamer] connection:", pc.connectionState);
             if (pc.connectionState === "failed" || pc.connectionState === "closed") {
               closePeer();
             }
@@ -111,7 +129,7 @@ export function RtcLiveStreamer() {
             dc.binaryType = "arraybuffer";
 
             dc.onopen = () => {
-              // Baglanti acilir acilmaz: meta + taze snapshot P2P'den gitsin
+              console.info("[RtcLiveStreamer] datachannel ACIK — P2P yayin basladi");
               liveBus.requestSnapshot();
             };
 
@@ -158,10 +176,16 @@ export function RtcLiveStreamer() {
           closePeer();
         });
 
-      channel.subscribe();
+      channel.subscribe(async (status) => {
+        if (status === "SUBSCRIBED" && !isDisposed) {
+          // Admin'e hazir oldugumuzu bildir — o an offer gonderebilir
+          await sendSignal(RTC_SIGNAL.READY, { ts: Date.now() });
+        }
+      });
 
       // rrweb + action + meta eventlerini DC'ye yonlendir
-      const offBus = liveBus.onEvent((kind, data) => {
+      if (offBus) offBus();
+      offBus = liveBus.onEvent((kind, data) => {
         const dc = dcRef.current;
         if (!dc || dc.readyState !== "open") return;
         const event =
@@ -170,14 +194,26 @@ export function RtcLiveStreamer() {
       });
 
       return () => {
-        offBus();
+        if (offBus) {
+          offBus();
+          offBus = null;
+        }
       };
     }
 
     let cleanupPromise = setup();
 
+    const onSessionChanged = () => {
+      void cleanupPromise.then((fn) => {
+        if (typeof fn === "function") fn();
+      });
+      cleanupPromise = setup();
+    };
+    window.addEventListener(ACTIVE_SESSION_EVENT, onSessionChanged);
+
     return () => {
       isDisposed = true;
+      window.removeEventListener(ACTIVE_SESSION_EVENT, onSessionChanged);
       closePeer();
       void cleanupPromise.then((fn) => {
         if (typeof fn === "function") fn();
