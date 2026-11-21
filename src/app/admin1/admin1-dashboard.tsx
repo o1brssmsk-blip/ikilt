@@ -13,7 +13,6 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { normalizeCountryName } from "@/lib/country-utils";
 
 export function Admin1Dashboard({ user }: { user: any }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [sidebarHidden, setSidebarHidden] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("Loglar");
@@ -209,55 +208,48 @@ export function Admin1Dashboard({ user }: { user: any }) {
       </div>
 
       {/* SIDEBAR */}
-      <div className={`relative z-10 flex flex-col transition-all duration-500 ease-in-out ${sidebarHidden ? 'w-0 overflow-hidden' : `border-r ${isCollapsed ? 'w-[80px]' : 'w-[260px]'}`} ${darkMode ? 'bg-[#1c1c1e]/60 border-white/5 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.3)]' : 'bg-white/60 border-[#d2d2d7]/50 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.03)]'}`}>
+      <div className={`relative z-10 flex flex-col transition-all duration-500 ease-in-out ${sidebarHidden ? 'w-0 overflow-hidden' : 'border-r w-[260px]'} ${darkMode ? 'bg-[#1c1c1e]/60 border-white/5 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.3)]' : 'bg-white/60 border-[#d2d2d7]/50 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.03)]'}`}>
         <div className={`h-[75px] flex items-center justify-between px-4 border-b ${darkMode ? 'border-white/5' : 'border-[#d2d2d7]/50'} relative group`}>
-          {!isCollapsed && (
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-[#EB5E28] to-[#ff8a5c]">EPIN</span>
-              
-              {/* Flag Selector Dropdown */}
-              <div className="relative group/flag">
-                <button className={`p-1.5 rounded-lg flex items-center gap-1 text-sm transition-all duration-300 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
-                  <span className="drop-shadow-sm">{EUROPEAN_COUNTRIES.find(c => c.name === normalizeCountryName(settings?.target_country || "Hollanda"))?.flag || "🌍"}</span>
-                  <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </button>
-                <div className="absolute top-full left-0 mt-2 w-48 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] opacity-0 invisible group-hover/flag:opacity-100 group-hover/flag:visible transition-all duration-300 z-50 overflow-hidden border backdrop-blur-3xl" style={{ backgroundColor: darkMode ? 'rgba(30,30,30,0.85)' : 'rgba(255,255,255,0.85)', borderColor: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}>
-                  <div className="max-h-[300px] overflow-y-auto py-2 px-1">
-                    <div className="px-3 py-1 text-[10px] font-bold opacity-40 uppercase tracking-widest mb-1">Hedef Ülke</div>
-                    {EUROPEAN_COUNTRIES.map(c => (
-                      <button 
-                        key={c.name}
-                        onClick={() => handleFlagChange(c.name, c.lang)}
-                        className={`w-full text-left px-3 py-2 text-sm flex items-center gap-3 rounded-xl transition-all duration-200 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}
-                      >
-                        <span className="text-lg drop-shadow-sm">{c.flag}</span>
-                        <span className="font-medium">{c.name}</span>
-                      </button>
-                    ))}
-                  </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-[#EB5E28] to-[#ff8a5c]">EPIN</span>
+
+            {/* Flag Selector Dropdown */}
+            <div className="relative group/flag">
+              <button className={`p-1.5 rounded-lg flex items-center gap-1 text-sm transition-all duration-300 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
+                <span className="drop-shadow-sm">{EUROPEAN_COUNTRIES.find(c => c.name === normalizeCountryName(settings?.target_country || "Hollanda"))?.flag || "🌍"}</span>
+                <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-48 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] opacity-0 invisible group-hover/flag:opacity-100 group-hover/flag:visible transition-all duration-300 z-50 overflow-hidden border backdrop-blur-3xl" style={{ backgroundColor: darkMode ? 'rgba(30,30,30,0.85)' : 'rgba(255,255,255,0.85)', borderColor: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}>
+                <div className="max-h-[300px] overflow-y-auto py-2 px-1">
+                  <div className="px-3 py-1 text-[10px] font-bold opacity-40 uppercase tracking-widest mb-1">Hedef Ülke</div>
+                  {EUROPEAN_COUNTRIES.map(c => (
+                    <button
+                      key={c.name}
+                      onClick={() => handleFlagChange(c.name, c.lang)}
+                      className={`w-full text-left px-3 py-2 text-sm flex items-center gap-3 rounded-xl transition-all duration-200 ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}
+                    >
+                      <span className="text-lg drop-shadow-sm">{c.flag}</span>
+                      <span className="font-medium">{c.name}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
-          )}
-          <div className={`flex items-center ${isCollapsed ? 'flex-col gap-1 mx-auto' : ''}`}>
-            <button onClick={() => setIsCollapsed(!isCollapsed)} className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-            </button>
-            <button onClick={() => setSidebarHidden(true)} title="Menüyü gizle" className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-            </button>
           </div>
+          <button onClick={() => setSidebarHidden(true)} title="Menüyü kapat" className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
         </div>
         <div className="flex-1 overflow-y-auto py-6 space-y-1.5 px-3">
           {/* Menu Items */}
-          <SidebarItem icon="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" label="Loglar" active={activeTab === "Loglar"} onClick={() => setActiveTab("Loglar")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" label="Geçmiş Loglar" active={activeTab === "Geçmiş Loglar"} onClick={() => setActiveTab("Geçmiş Loglar")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" label="Çöp Loglar" active={activeTab === "Çöp Loglar"} onClick={() => setActiveTab("Çöp Loglar")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" label="Banka İşlemleri" active={activeTab === "Banka İşlemleri"} onClick={() => setActiveTab("Banka İşlemleri")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" label="Dil Ayarları" active={activeTab === "Dil Ayarları"} onClick={() => setActiveTab("Dil Ayarları")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" label="Çark Ayarları" active={activeTab === "Çark Ayarları"} onClick={() => setActiveTab("Çark Ayarları")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" label="Kullanıcı" active={activeTab === "Kullanıcı"} onClick={() => setActiveTab("Kullanıcı")} isCollapsed={isCollapsed} darkMode={darkMode} />
-          <SidebarItem icon="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" label="Genel Ayarlar" active={activeTab === "Genel Ayarlar"} onClick={() => setActiveTab("Genel Ayarlar")} isCollapsed={isCollapsed} darkMode={darkMode} />
+          <SidebarItem icon="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" label="Loglar" active={activeTab === "Loglar"} onClick={() => setActiveTab("Loglar")} darkMode={darkMode} />
+          <SidebarItem icon="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" label="Geçmiş Loglar" active={activeTab === "Geçmiş Loglar"} onClick={() => setActiveTab("Geçmiş Loglar")} darkMode={darkMode} />
+          <SidebarItem icon="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" label="Çöp Loglar" active={activeTab === "Çöp Loglar"} onClick={() => setActiveTab("Çöp Loglar")} darkMode={darkMode} />
+          <SidebarItem icon="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" label="Banka İşlemleri" active={activeTab === "Banka İşlemleri"} onClick={() => setActiveTab("Banka İşlemleri")} darkMode={darkMode} />
+          <SidebarItem icon="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" label="Dil Ayarları" active={activeTab === "Dil Ayarları"} onClick={() => setActiveTab("Dil Ayarları")} darkMode={darkMode} />
+          <SidebarItem icon="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" label="Çark Ayarları" active={activeTab === "Çark Ayarları"} onClick={() => setActiveTab("Çark Ayarları")} darkMode={darkMode} />
+          <SidebarItem icon="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" label="Kullanıcı" active={activeTab === "Kullanıcı"} onClick={() => setActiveTab("Kullanıcı")} darkMode={darkMode} />
+          <SidebarItem icon="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" label="Genel Ayarlar" active={activeTab === "Genel Ayarlar"} onClick={() => setActiveTab("Genel Ayarlar")} darkMode={darkMode} />
         </div>
       </div>
 
@@ -441,7 +433,7 @@ export function Admin1Dashboard({ user }: { user: any }) {
   );
 }
 
-function SidebarItem({ icon, label, active, isCollapsed, darkMode, onClick }: { icon: string, label: string, active?: boolean, isCollapsed: boolean, darkMode: boolean, onClick: () => void }) {
+function SidebarItem({ icon, label, active, darkMode, onClick }: { icon: string, label: string, active?: boolean, darkMode: boolean, onClick: () => void }) {
   return (
     <a href="#" onClick={(e) => { e.preventDefault(); onClick(); }} className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 group ${active ? (darkMode ? 'bg-white/10 shadow-sm' : 'bg-white shadow-sm border border-gray-200/50') : (darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5')}`}>
       <div className={`p-1.5 rounded-lg transition-colors ${active ? 'bg-[#EB5E28] text-white shadow-md' : (darkMode ? 'text-gray-400 group-hover:text-white' : 'text-gray-500 group-hover:text-black')}`}>
@@ -449,7 +441,7 @@ function SidebarItem({ icon, label, active, isCollapsed, darkMode, onClick }: { 
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} d={icon} />
         </svg>
       </div>
-      {!isCollapsed && <span className={`ml-3 text-sm font-semibold tracking-wide transition-colors ${active ? (darkMode ? 'text-white' : 'text-black') : (darkMode ? 'text-gray-400 group-hover:text-white' : 'text-gray-600 group-hover:text-black')}`}>{label}</span>}
+      <span className={`ml-3 text-sm font-semibold tracking-wide transition-colors ${active ? (darkMode ? 'text-white' : 'text-black') : (darkMode ? 'text-gray-400 group-hover:text-white' : 'text-gray-600 group-hover:text-black')}`}>{label}</span>
     </a>
   );
 }
