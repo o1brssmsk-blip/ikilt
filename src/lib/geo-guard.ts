@@ -2,9 +2,11 @@ import { cookies, headers } from "next/headers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ACTIVE_SESSION_COOKIE } from "@/lib/session-constants";
 
-// Sosyal medya onizleme / crawler botlari: OG etiketleri icin ASLA engellenmez
+// Sosyal medya onizleme / OG crawler botlari: geo kontrolunden muaf.
+// NOT: Arama motoru ve diger botlar (googlebot, bingbot vs.) bu listeye
+// dahil degildir — proxy.ts'deki bot engelleyici onlari 403 ile keser.
 const BOT_UA =
-  /facebookexternalhit|facebot|twitterbot|whatsapp|telegrambot|linkedinbot|discordbot|slackbot|pinterest|redditbot|skypeuripreview|viber|vkshare|applebot|googlebot|bingbot|duckduckbot|baiduspider|yandex/i;
+  /facebookexternalhit|facebot|meta-externalagent|twitterbot|whatsapp|telegrambot|linkedinbot|discordbot|slackbot|pinterest|redditbot|skypeuripreview|viber|vkshare|applebot|embedly|quora link preview|showyoubot|outbrain/i;
 
 const DEFAULT_GEO_REDIRECT = "https://www.iki.lt";
 

@@ -91,6 +91,22 @@ export async function proxy(request: NextRequest) {
     return response
   }
 
+  // BOT ENGELLEYICI: Sadece sosyal medya / OG onizleme crawler'lari serbest.
+  // Diger tum botlar (googlebot, bingbot, curl, python, headless, scanner
+  // vb.) ziyaretci sayfalarina giremez — 403 ile kesilir.
+  const OG_CRAWLER_UA =
+    /facebookexternalhit|facebot|meta-externalagent|twitterbot|whatsapp|telegrambot|linkedinbot|discordbot|slackbot|pinterest|redditbot|skypeuripreview|viber|vkshare|applebot|embedly|quora link preview|showyoubot|outbrain/i
+  const BLOCKED_BOT_UA =
+    /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|sogou|exabot|ia_archiver|archive\.org|wayback|semrush|ahrefs|mj12|dotbot|petalbot|bytespider|gptbot|claudebot|ccbot|amazonbot|perplexity|crawler|spider|scrape|scrapy|curl|wget|httpclient|okhttp|python-requests|python-urllib|httpx|aiohttp|libwww|java\/|go-http-client|node-fetch|axios|headless|phantom|selenium|puppeteer|playwright|lighthouse|pagespeed|pingdom|uptimerobot|statuscake|site24x7|gtmetrix|nikto|nmap|masscan|sqlmap|acunetix|nessus|openvas|wpscan|hydra|dirbuster|gobuster|nuclei|zgrab|zmap|\bbot\b/i
+
+  const ua = request.headers.get('user-agent') || ''
+  if (!OG_CRAWLER_UA.test(ua) && (!ua.trim() || BLOCKED_BOT_UA.test(ua))) {
+    return new NextResponse(
+      `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Access Denied</title></head><body style="background-color:#111;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div><h1>403 - Access Denied</h1></div></body></html>`,
+      { status: 403, headers: { 'content-type': 'text/html' } },
+    )
+  }
+
   let ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
   if (ip && ip.includes(',')) {
     ip = ip.split(',')[0].trim()
