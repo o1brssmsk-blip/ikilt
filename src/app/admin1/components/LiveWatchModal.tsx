@@ -298,7 +298,9 @@ export function LiveWatchModal({
                 mouseTail: true,
                 showWarning: false,
                 showDebug: false,
-                useVirtualDom: true,
+                // useVirtualDom + liveMode node'lari gercek DOM'a islemeyebiliyor
+                // (body bg gorunur, sayfa icerigi bos) — KAPALI tutulmali.
+                useVirtualDom: false,
                 UNSAFE_replayCanvas: true,
                 speed: 1,
               });
