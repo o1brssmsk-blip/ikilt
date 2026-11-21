@@ -917,12 +917,19 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
   const [soundEnabled, setSoundEnabled] = useState(false);
   const soundEnabledRef = useRef(false);
+  const [notifEnabled, setNotifEnabled] = useState(true);
+  const notifEnabledRef = useRef(true);
 
   useEffect(() => {
     const savedSound = localStorage.getItem('admin1SoundEnabled');
     if (savedSound === 'true') {
       setSoundEnabled(true);
       soundEnabledRef.current = true;
+    }
+    const savedNotif = localStorage.getItem('admin1NotifEnabled');
+    if (savedNotif === 'false') {
+      setNotifEnabled(false);
+      notifEnabledRef.current = false;
     }
   }, []);
 
@@ -931,6 +938,11 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     localStorage.setItem('admin1SoundEnabled', soundEnabled.toString());
   }, [soundEnabled]);
 
+  useEffect(() => {
+    notifEnabledRef.current = notifEnabled;
+    localStorage.setItem('admin1NotifEnabled', notifEnabled.toString());
+  }, [notifEnabled]);
+
   const playNotificationSound = useCallback((title: string = "Bildirim", desc?: string) => {
     // Global AdminNotifier ile ayni olay icin cift bildirimi engelle
     const w = window as any;
@@ -938,8 +950,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     if (w.__adminNotifyAt && now - w.__adminNotifyAt < 2000) return;
     w.__adminNotifyAt = now;
     try {
-      playBeautifulNotification();
-      showBeautifulToast(title, desc);
+      if (soundEnabledRef.current) playBeautifulNotification();
+      if (notifEnabledRef.current) showBeautifulToast(title, desc);
     } catch (e) {
       console.error("Audio error:", e);
     }
@@ -1125,7 +1137,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
             return;
           }
 
-          if (soundEnabledRef.current && oldRow) {
+          if ((soundEnabledRef.current || notifEnabledRef.current) && oldRow) {
             const w = window as any;
             const isRecentAdminAction = w.__lastAdminActionAt && Date.now() - w.__lastAdminActionAt < 4000;
             if (!isRecentAdminAction) {
@@ -2182,6 +2194,36 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 <>
                   <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
                   Ses Kapalı
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setNotifEnabled(!notifEnabled);
+                if (!notifEnabled) {
+                  try { showBeautifulToast("Bildirim Testi", "Bildirimler başarıyla açıldı."); } catch { /* ignore */ }
+                  try {
+                    if ("Notification" in window && Notification.permission === "default") {
+                      void Notification.requestPermission();
+                    }
+                  } catch { /* ignore */ }
+                }
+              }}
+              className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 shadow-sm text-[12px] font-bold tracking-wider uppercase transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-md ${
+                notifEnabled
+                  ? "bg-[#EB5E28]/10 border border-[#EB5E28]/20 text-[#EB5E28] ring-1 ring-[#EB5E28]/50"
+                  : (darkMode ? "bg-[#1c1c1e] border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white" : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-black")
+              }`}
+            >
+              {notifEnabled ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                  Bildirim Açık
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                  Bildirim Kapalı
                 </>
               )}
             </button>

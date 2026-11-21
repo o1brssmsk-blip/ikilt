@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { LogsTab } from "./components/LogsTab";
 import { AdminNotifier } from "./components/AdminNotifier";
@@ -14,6 +14,7 @@ import { normalizeCountryName } from "@/lib/country-utils";
 
 export function Admin1Dashboard({ user }: { user: any }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("Loglar");
   const [showNewLinkModal, setShowNewLinkModal] = useState(false);
@@ -31,6 +32,16 @@ export function Admin1Dashboard({ user }: { user: any }) {
   const adminIdentifier = user?.user_metadata?.username || user?.email?.split('@')[0] || "admin";
   const supabase = createBrowserSupabaseClient();
   const { settings } = useSettings();
+
+  // Sidebar tam-gizleme tercihi kalici olsun
+  useEffect(() => {
+    try {
+      setSidebarHidden(localStorage.getItem('admin1SidebarHidden') === 'true');
+    } catch { /* ignore */ }
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem('admin1SidebarHidden', sidebarHidden.toString()); } catch { /* ignore */ }
+  }, [sidebarHidden]);
 
   async function handleCreateLink() {
     if (!supabase) return;
@@ -198,7 +209,7 @@ export function Admin1Dashboard({ user }: { user: any }) {
       </div>
 
       {/* SIDEBAR */}
-      <div className={`relative z-10 flex flex-col transition-all duration-500 ease-in-out border-r ${darkMode ? 'bg-[#1c1c1e]/60 border-white/5 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.3)]' : 'bg-white/60 border-[#d2d2d7]/50 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.03)]'} ${isCollapsed ? 'w-[80px]' : 'w-[260px]'}`}>
+      <div className={`relative z-10 flex flex-col transition-all duration-500 ease-in-out ${sidebarHidden ? 'w-0 overflow-hidden' : `border-r ${isCollapsed ? 'w-[80px]' : 'w-[260px]'}`} ${darkMode ? 'bg-[#1c1c1e]/60 border-white/5 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.3)]' : 'bg-white/60 border-[#d2d2d7]/50 backdrop-blur-2xl shadow-[1px_0_20px_rgba(0,0,0,0.03)]'}`}>
         <div className={`h-[75px] flex items-center justify-between px-4 border-b ${darkMode ? 'border-white/5' : 'border-[#d2d2d7]/50'} relative group`}>
           {!isCollapsed && (
             <div className="flex items-center gap-2">
@@ -228,9 +239,14 @@ export function Admin1Dashboard({ user }: { user: any }) {
               </div>
             </div>
           )}
-          <button onClick={() => setIsCollapsed(!isCollapsed)} className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'} ${isCollapsed ? 'mx-auto' : ''}`}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </button>
+          <div className={`flex items-center ${isCollapsed ? 'flex-col gap-1 mx-auto' : ''}`}>
+            <button onClick={() => setIsCollapsed(!isCollapsed)} className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+            <button onClick={() => setSidebarHidden(true)} title="Menüyü gizle" className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            </button>
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto py-6 space-y-1.5 px-3">
           {/* Menu Items */}
@@ -250,6 +266,11 @@ export function Admin1Dashboard({ user }: { user: any }) {
         {/* TOPBAR */}
         <div className={`h-[75px] border-b flex items-center justify-between px-8 shrink-0 backdrop-blur-2xl ${darkMode ? 'border-white/5 bg-[#1c1c1e]/60' : 'border-[#d2d2d7]/50 bg-white/60'}`}>
           <div className="flex items-center gap-3">
+            {sidebarHidden && (
+              <button onClick={() => setSidebarHidden(false)} title="Menüyü göster" className={`p-2 rounded-xl transition-all duration-300 ${darkMode ? 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white' : 'bg-black/5 hover:bg-black/10 text-gray-500 hover:text-black'}`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
+            )}
             <span className="text-xl font-semibold opacity-90">{activeTab}</span>
           </div>
           <div className="flex items-center space-x-5">
