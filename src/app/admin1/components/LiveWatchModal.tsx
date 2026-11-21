@@ -356,12 +356,14 @@ export function LiveWatchModal({
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED" && !isDisposed) {
         void requestSnapshot();
-        // Auto-retry request after 2s to guarantee stream starts without requiring manual refresh
-        setTimeout(() => {
-          if (!isDisposed && !replayerRef.current) {
-            void requestSnapshot();
-          }
-        }, 2000);
+        // Auto-retry requests to guarantee stream starts without manual refresh
+        for (const delay of [2000, 5000]) {
+          setTimeout(() => {
+            if (!isDisposed && !replayerRef.current) {
+              void requestSnapshot();
+            }
+          }, delay);
+        }
       }
     });
 

