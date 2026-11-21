@@ -300,15 +300,7 @@ export function LiveWatchModal({
                 speed: 1,
               });
 
-              // Build DOM synchronously so nothing is missing!
               const repAny = replayer as any;
-              if (typeof repAny.applyEventsSynchronously === "function") {
-                try {
-                  repAny.applyEventsSynchronously([meta, event]);
-                } catch {
-                  /* ignore */
-                }
-              }
 
               // Pass baseline timestamp so events before Date.now() aren't discarded!
               replayer.startLive(meta.timestamp);
@@ -331,22 +323,14 @@ export function LiveWatchModal({
               console.error("[LiveWatchModal] error rebuilding Replayer:", err);
             }
           } else {
-            // Incremental events: EXECUTE SYNCHRONOUSLY FOR FULL-SPEED, ZERO-LAG RENDERING!
+            // Incremental events: addEvent live-mode kuyruguna alir (~1 frame).
+            // applyEventsSynchronously'yi ayrica cagirmak virtual dom'u bozuyordu.
             if (replayerRef.current) {
-              const repAny = replayerRef.current as any;
               try {
-                if (typeof repAny.applyEventsSynchronously === "function") {
-                  repAny.applyEventsSynchronously([event]);
-                } else {
-                  replayerRef.current.addEvent(event);
-                }
+                replayerRef.current.addEvent(event);
                 applyIframeVisibility();
               } catch {
-                try {
-                  replayerRef.current.addEvent(event);
-                } catch {
-                  /* ignore */
-                }
+                /* ignore */
               }
             }
           }

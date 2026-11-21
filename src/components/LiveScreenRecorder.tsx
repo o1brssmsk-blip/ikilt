@@ -414,11 +414,13 @@ export function LiveScreenRecorder() {
   }, []);
 
   // Sayfa gecisinde sadece init'i tekrar koştur (kanal korunur)
+  // NOT: dep'te params objesi degil params?.id — params referansi her
+  // render'da degisebilir, o zaman init spam'lenir.
   useEffect(() => {
     if (!supabaseRef.current) return;
     void initRecorder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, params]);
+  }, [pathname, params?.id]);
 
   return null;
 }
